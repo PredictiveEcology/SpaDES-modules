@@ -1,0 +1,13 @@
+---
+title: "LccToBeaconsReclassify"
+author: "Eliot McIntire"
+date: "`r Sys.Date()`"
+output: pdf_document
+---
+
+This is a translator module to convert from 39 vegetation classes in the Land Cover Classification 2005 to the 11 classes that the forestSuccessionBeacons module needs.
+
+## Module Info
+
+This is entirely drawn from an unpublished document from the BEACONS team. 
+

@@ -54,13 +54,13 @@ doEvent.caribouMovementLcc <- function(sim, eventTime, eventType, debug=FALSE) {
               gp=gpar(fill="white", col="white"), just = c(1,1))
     }
 
-    Plot(caribou, pch=19, size=0.1)
+    Plot(caribouRas, pch=19, size=0.1, zero.color = "white")
 
     # schedule the next event
     sim <- scheduleEvent(sim, simCurrentTime(sim) + simParams(sim)$caribouMovementLcc$.plotInterval, "caribouMovementLcc", "plot")
   } else if (eventType=="plot") {
     # do stuff for this event
-    Plot(caribou, pch=19, size=0.1)
+    Plot(caribouRas, pch=19, size=0.1, zero.color = "white")
 
     # schedule the next event
     sim <- scheduleEvent(sim, simCurrentTime(sim) + simParams(sim)$caribouMovementLcc$.plotInterval, "caribouMovementLcc", "plot")
@@ -172,7 +172,7 @@ caribouMovementMove <- function(sim) {
   caribou <<- crop(caribou, vegMap)
 
   caribouRas[caribou] <- caribouRas[caribou] + 1
-  setColors(caribouRas,maxValue(caribouRas)+1) <- c("#FFFFFF", rev(heat.colors(maxValue(caribouRas))))
+  setColors(caribouRas) <- c("#FFFFFF", rev(heat.colors(maxValue(caribouRas))))
   assign("caribouRas",caribouRas,envir=.GlobalEnv)
 
 #     #rads <- sample(10:30, length(caribou), replace=TRUE)

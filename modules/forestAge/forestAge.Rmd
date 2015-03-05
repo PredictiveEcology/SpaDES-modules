@@ -1,0 +1,17 @@
+---
+title: "forestAge"
+author: "Eliot McIntire"
+date: "`r Sys.Date()`"
+output: pdf_document
+---
+
+
+This is a simple agine module that adds a unit to the ageMap with each unit of SpaDES time that has passed.
+
+## Plotting
+
+The module plots 1 plot: a map of forest age, ageMap.
+
+## Saving
+
+There is no default saving. The saving follows the .saveInterval and .save

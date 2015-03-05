@@ -78,7 +78,7 @@ doEvent.fireSpreadLcc <- function(sim, eventTime, eventType, debug=FALSE) {
     sim <- scheduleEvent(sim, simCurrentTime(sim) + simParams(sim)$fireSpreadLcc$.plotInterval, "fireSpreadLcc", "plot")
   } else if (eventType=="plot") {
     # do stuff for this event
-    Plot(FiresCumul)
+    Plot(FiresCumul, zero.color = "white")
     FireSizeDistribution <- qplot(main = "", nPixelsBurned*6.25, xlab="Hectares")
     FireSizeDistribution <- FireSizeDistribution +
       theme(axis.text.x = element_text(size=6, angle = 45, hjust = 1, colour="black"),
