@@ -1,73 +1,5 @@
-###
-### name:         caribouMovementLcc
-###
-### description:  Simulate caribou movement via correlated random walk.
-###
-### keywords:     caribou; individual based movement model; correlated random walk
-###
-### authors:      Eliot J. B. McIntire <Eliot.McIntire@NRCan.gc.ca>
-###
-### version:      0.2.0
-###
-### spatialExtent: NA
-###
-### timeframe:    NA
-###
-### timestep:     31557600 (1 year)
-###
-### citation:     NA
-###
-### reqdPkgs:     grid; raster; sp
-###
-### parameters:   paramName: glmInitialTime
-###               paramClass: numeric
-###               default: 1.00
-###
-###               paramName: moveInterval
-###               paramClass: numeric
-###               default: 1.0
-###
-###               paramName: startTime
-###               paramClass: numeric
-###               default: 1.0
-###
-###               paramName: .plotInitialTime
-###               paramClass: numeric
-###               default: 0
-###
-###               paramName: .plotInterval
-###               paramClass: numeric
-###               default: 1
-###
-###               paramName: .saveInitialTime
-###               paramClass: numeric
-###               default: NA
-###
-###               paramName: .saveInterval
-###               paramClass: numeric
-###               default: NA
-###
-### inputObjects: objectName: vegMap
-###               objectClass: RasterLayer
-###               other: NA
-###
-### outputObjects: objectName: caribou
-###                objectClass: SpatialPointsDataFrame
-###                other: NA
-###
-###                objectName: caribouRas
-###                objectClass: RasterLayer
-###                other: NA
-###
-###                objectName: glmPlot
-###                objectClass: gg
-###                other: NA
-###
-###                objectName: glmPVals
-###                objectClass: numeric
-###                other: NA
-###
-### caribouMovementLcc module metadata
+stopifnot(packageVersion("SpaDES") >= "0.99.0")
+
 defineModule(sim, list(
   name="caribouMovementLcc",
   description="Simulate caribou movement via correlated random walk.",
@@ -76,19 +8,21 @@ defineModule(sim, list(
   version=numeric_version("0.2.0"),
   spatialExtent=raster::extent(rep(NA_real_, 4)),
   timeframe=as.POSIXlt(c(NA, NA)),
-  timestep=31557600,
+  timeunit="month",
   citation=list(),
   reqdPkgs=list("grid", "raster", "sp"),
   parameters=rbind(
-    defineParameter("glmInitialTime", "numeric", 100.0),
-    defineParameter("glmInterval", "numeric", 10.0),
-    defineParameter("N", "numeric", 100.0),
-    defineParameter("moveInterval", "numeric", 1.0),
-    defineParameter("startTime", "numeric", 1.0),
-    defineParameter(".plotInitialTime", "numeric", 0),
-    defineParameter(".plotInterval", "numeric", 1),
-    defineParameter(".saveInitialTime", "numeric", NA_real_),
-    defineParameter(".saveInterval", "numeric", NA_real_)),
+    defineParameter("glmInitialTime", "numeric", 100.0, NA, NA, desc="Simulation time for doing first glm fit
+                    between cumulative caribou and cumulative caribou"),
+    defineParameter("glmInterval", "numeric", 10.0, NA, NA, desc="Time interval between glm fitting"),
+    defineParameter("N", "numeric", 100.0, 0.0, 10000.0, desc="Number of caribou to intiate at startTime"),
+    defineParameter("torus", "logical", TRUE, NA, NA, desc="Whether caribou should wrap around map if they go off map sides"),
+    defineParameter("moveInterval", "numeric", 1.0, NA, NA, desc="Time interval between move events"),
+    defineParameter("startTime", "numeric", 1.0, NA, NA, desc="Simulation time at which to initiate caribou movement"),
+    defineParameter(".plotInitialTime", "numeric", 0, NA, NA, desc="Initial time for plotting"),
+    defineParameter(".plotInterval", "numeric", 1, NA, NA, desc="Interval between plotting"),
+    defineParameter(".saveInitialTime", "numeric", NA_real_, NA, NA, desc="Initial time for saving"),
+    defineParameter(".saveInterval", "numeric", NA_real_, NA, NA, desc="Interval between save events")),
   inputObjects=data.frame(objectName=c("ageMap", "vegMap"),
                           objectClass=c("RasterLayer", "RasterLayer"),
                           other=rep(NA_character_, 2L), stringsAsFactors=FALSE),
@@ -103,21 +37,25 @@ doEvent.caribouMovementLcc <- function(sim, eventTime, eventType, debug=FALSE) {
   if (eventType=="init") {
     ### check for object dependencies:
     ### (use `checkObject` or similar)
-    checkObject("vegMap")
+    checkObject(sim, "vegMap")
     # do stuff for this event
     sim <- caribouMovementInit(sim)
 
+
     # schedule the next event
-    sim <- scheduleEvent(sim, simParams(sim)$caribouMovementLcc$startTime, "caribouMovementLcc", "move")
-    sim <- scheduleEvent(sim, simParams(sim)$caribouMovementLcc$.plotInitialTime, "caribouMovementLcc", "plot.init")
-    sim <- scheduleEvent(sim, simParams(sim)$caribouMovementLcc$glmInitialTime, "caribouMovementLcc", "glm.init")
+    sim <- scheduleEvent(sim, params(sim)$caribouMovementLcc$startTime, "caribouMovementLcc", "move")
+    sim <- scheduleEvent(sim, params(sim)$caribouMovementLcc$.plotInitialTime, "caribouMovementLcc", "plot.init")
+    sim <- scheduleEvent(sim, params(sim)$caribouMovementLcc$glmInitialTime, "caribouMovementLcc", "glm.init")
 
   } else if (eventType=="move") {
     # do stuff for this event
     sim <- caribouMovementMove(sim)
+    #print(paste("Caribou: current:",time(sim),"of",end(sim),"in",.callingFrameTimeunit(sim)))
 
     # schedule the next event
-    sim <- scheduleEvent(sim, simCurrentTime(sim) + simParams(sim)$caribouMovementLcc$moveInterval, "caribouMovementLcc", "move")
+    sim <- scheduleEvent(sim, time(sim) +
+                           params(sim)$caribouMovementLcc$moveInterval,
+                         "caribouMovementLcc", "move")
   } else if (eventType=="plot.init") {
     # do stuff for this event
 
@@ -132,33 +70,38 @@ doEvent.caribouMovementLcc <- function(sim, eventTime, eventType, debug=FALSE) {
     #dependencies <<- depsGraph(sim, plot=TRUE)
     #Plot(dependencies, vertex.size=60, vertex.label.cex=0.65)
 
-    Plot(caribouRas, pch=19, size=0.1, zero.color = "white", legendRange=c(0, simStopTime(sim)))
+
+    Plot(sim$caribouRas, zero.color="white",
+         legendRange=c(0, end(sim, "year")-start(sim, "year")))
 
     # schedule the next event
-    sim <- scheduleEvent(sim, simCurrentTime(sim) + simParams(sim)$caribouMovementLcc$.plotInterval, "caribouMovementLcc", "plot")
+    sim <- scheduleEvent(sim, time(sim) + params(sim)$caribouMovementLcc$.plotInterval, "caribouMovementLcc", "plot")
   } else if (eventType=="plot") {
     # do stuff for this event
-    Plot(caribouRas, pch=19, size=0.1, zero.color = "white", legendRange=c(0, simStopTime(sim)))
+    Plot(sim$caribouRas, zero.color="white",
+         legendRange=c(0, end(sim, "year")-start(sim, "year")))
 
     # schedule the next event
-    sim <- scheduleEvent(sim, simCurrentTime(sim) + simParams(sim)$caribouMovementLcc$.plotInterval, "caribouMovementLcc", "plot")
+    sim <- scheduleEvent(sim, time(sim) + params(sim)$caribouMovementLcc$.plotInterval, "caribouMovementLcc", "plot")
   } else if (eventType=="save") {
     # do stuff for this event
-    saveFiles(sim)
+    sim <- saveFiles(sim)
 
     # schedule the next event
-    sim <- scheduleEvent(sim, simCurrentTime(sim) + simParams(sim)$caribouMovementLcc$.saveInterval, "caribouMovementLcc", "save")
+    sim <- scheduleEvent(sim, time(sim) + params(sim)$caribouMovementLcc$.saveInterval, "caribouMovementLcc", "save")
 
   } else if (eventType=="glm.init") {
 
     # do stuff for this event
-    glmPVals <- numeric(simStopTime(sim))
-    glmCaribouFire <- glm(getValues(caribouRas)~getValues(FiresCumul))
-    glmPVals[1] <- summary(glmCaribouFire)[[13]]["getValues(FiresCumul)",'Pr(>|t|)']
-    glmPlot <- qplot((simParams(sim)$caribouMovementLcc$glmInitialTime):simCurrentTime(sim),
-          glmPVals[simParams(sim)$caribouMovementLcc$glmInitialTime:simCurrentTime(sim)],
-          xlab="Simulation Time", ylab="p value: caribou ~ Fire",
-          xlim=c(simParams(sim)$caribouMovementLcc$glmInitialTime,simStopTime(sim)))
+    sim$glmPVals <- rep(NA_real_,end(sim, "month"))
+    glmCaribouFire <- glm(getValues(sim$caribouRas)~getValues(sim$FiresCumul))
+    sim$glmPVals[time(sim)] <- summary(glmCaribouFire)[[13]]["getValues(sim$FiresCumul)",'Pr(>|t|)']
+    glmPlot <- qplot(((params(sim)$caribouMovementLcc$glmInitialTime):
+                        time(sim,"month")-start(sim))/12+
+                       start(sim),
+                     sim$glmPVals[params(sim)$caribouMovementLcc$glmInitialTime:time(sim,"month")],
+                     xlab="Simulation Time", ylab="p value: caribou ~ Fire",
+                     xlim=c((params(sim)$caribouMovementLcc$glmInitialTime-start(sim))/12+start(sim),end(sim,"year")))
     glmPlot <- glmPlot +
       theme(axis.text.x = element_text(size=10, colour="black"),
           axis.text.y = element_text(size=10, colour="black"),
@@ -166,59 +109,53 @@ doEvent.caribouMovementLcc <- function(sim, eventTime, eventType, debug=FALSE) {
           axis.title.y = element_text(size=12, colour="black"),
           legend.position="none")
 
-    assign("glmPlot", glmPlot, envir=.GlobalEnv)
-    assign("glmPVals", glmPVals, envir=.GlobalEnv)
     Plot(glmPlot)
-    sim <- scheduleEvent(sim, simCurrentTime(sim) + simParams(sim)$caribouMovementLcc$glmInterval, "caribouMovementLcc", "glm.plot")
+    sim <- scheduleEvent(sim, time(sim) + params(sim)$caribouMovementLcc$glmInterval, "caribouMovementLcc", "glm.plot")
     # schedule the next event
 
   } else if (eventType=="glm.plot") {
     # do stuff for this event
-    glmCaribouFire <- glm(getValues(caribouRas)~getValues(FiresCumul))
-    glmPVals[round(simCurrentTime(sim))] <- summary(glmCaribouFire)[[13]]["getValues(FiresCumul)",'Pr(>|t|)']
-    glmPlot <- qplot((simParams(sim)$caribouMovementLcc$glmInitialTime):simCurrentTime(sim),
-                     glmPVals[simParams(sim)$caribouMovementLcc$glmInitialTime:simCurrentTime(sim)],
+    glmCaribouFire <- glm(getValues(sim$caribouRas)~getValues(sim$FiresCumul))
+    sim$glmPVals[round(time(sim, "month"))] <-
+      summary(glmCaribouFire)[[13]]["getValues(sim$FiresCumul)",'Pr(>|t|)']
+    glmPlot <- qplot(((params(sim)$caribouMovementLcc$glmInitialTime):
+                        time(sim,"month")-start(sim))/12+
+                       start(sim),
+                     sim$glmPVals[params(sim)$caribouMovementLcc$glmInitialTime:time(sim,"month")],
                      xlab="Simulation Time", ylab="p value: caribou ~ Fire",
-                     xlim=c(simParams(sim)$caribouMovementLcc$glmInitialTime,simStopTime(sim)))
+                     xlim=c((params(sim)$caribouMovementLcc$glmInitialTime-start(sim))/12+start(sim),end(sim,"year")))
     glmPlot <- glmPlot +
       theme(axis.text.x = element_text(size=10, colour="black"),
             axis.text.y = element_text(size=10, colour="black"),
             axis.title.x = element_text(size=12, colour="black"),
             axis.title.y = element_text(size=12, colour="black"),
             legend.position="none")
-    assign("glmPlot", glmPlot, envir=.GlobalEnv)
-    assign("glmPVals", glmPVals, envir=.GlobalEnv)
     Plot(glmPlot)
 
     # schedule the next event
-    sim <- scheduleEvent(sim, simCurrentTime(sim) + simParams(sim)$caribouMovementLcc$glmInterval, "caribouMovementLcc", "glm.plot")
+    sim <- scheduleEvent(sim, time(sim) + params(sim)$caribouMovementLcc$glmInterval, "caribouMovementLcc", "glm.plot")
 
   } else {
-    warning(paste("Undefined event type: \'",simEvents(sim)[1,"eventType",with=FALSE],
-                  "\' in module \'", simEvents(sim)[1,"moduleName",with=FALSE],"\'",sep=""))
+    warning(paste("Undefined event type: \'",events(sim)[1,"eventType",with=FALSE],
+                  "\' in module \'", events(sim)[1,"moduleName",with=FALSE],"\'",sep=""))
   }
   return(invisible(sim))
 }
 
 caribouMovementInit <- function(sim) {
   cellsFromXY <<- cellFromXY # the raster Package has a bug
-  #vegMap <- getGlobal("vegMap")
-  caribouRas <- raster(extent(getGlobal("vegMap")), ncol=ncol(getGlobal("vegMap")), nrow=nrow(getGlobal("vegMap")), vals=0)
-  setColors(caribouRas, n=simStopTime(sim)) <-
-    c("white", colorRampPalette(colors = c("grey","black"))(ceiling(simStopTime(sim)-1)))
+  #vegMap <- sim$vegMap
+  sim$caribouRas <- raster(extent(sim$vegMap), ncol=ncol(sim$vegMap), nrow=nrow(sim$vegMap), vals=0)
+  #sim$caribouRas <- as(sim$caribouRas, "RasterLayerSparse")
+  setColors(sim$caribouRas, n=end(sim, unit="year")-start(sim, unit="year")) <-
+     c("light grey","black")
 
 
-  yrange <- c(ymin(getGlobal("vegMap")), ymax(getGlobal("vegMap")))
-  xrange <- c(xmin(getGlobal("vegMap")), xmax(getGlobal("vegMap")))
-#    best <- max(values(getGlobal("vegMap")))
-#    worst <- min(values(getGlobal("vegMap")))
-#    good <- Which(getGlobal("vegMap")>0.8*best)
-#
-#   al <- agentLocation(good)    # good getGlobal("vegMap"), from above
-#   initialCoords <- probInit(getGlobal("vegMap"), al)
+  yrange <- c(ymin(sim$vegMap), ymax(sim$vegMap))
+  xrange <- c(xmin(sim$vegMap), xmax(sim$vegMap))
 
   # initialize caribou agents
-  N <- simParams(sim)$caribouMovementLcc$N
+  N <- params(sim)$caribouMovementLcc$N
   IDs <- as.character(1:N)
   sex <- sample(c("female", "male"), N, replace=TRUE)
   age <- round(rnorm(N, mean=8, sd=3))
@@ -227,16 +164,13 @@ caribouMovementInit <- function(sim) {
   starts <- cbind(x=runif(N, xrange[1],xrange[2]),
                   y=runif(N, yrange[1],yrange[2]))
 
-#browser()
   # create the caribou agent object
-  caribou <- SpatialPointsDataFrame(coords=starts,
+  sim$caribou <- SpatialPointsDataFrame(coords=starts,
                                      data=data.frame(x1, y1, sex, age))
-  
-  row.names(caribou) <- IDs # alternatively, add IDs as column in data.frame above
-  caribouRas[caribou] <- caribouRas[caribou]+1
-  caribouRas[is.na(getGlobal("vegMap"))] <- NA
-  assignGlobal("caribouRas", caribouRas)
-  assignGlobal("caribou", caribou)
+
+  row.names(sim$caribou) <- IDs # alternatively, add IDs as column in data.frame above
+  sim$caribouRas[sim$caribou] <- sim$caribouRas[sim$caribou]+1
+  sim$caribouRas[is.na(sim$vegMap)] <- NA
 
   return(invisible(sim))
 }
@@ -244,31 +178,77 @@ caribouMovementInit <- function(sim) {
 caribouMovementMove <- function(sim) {
   # crop any caribou that went off maps
 
-  caribou <- getGlobal("caribou")
-  if(length(caribou)==0) stop("All agents are off map")
+  if(length(sim$caribou)==0) stop("All agents are off map")
 
   # find out what pixels the individuals are on now
-  ex <- getGlobal("ageMap")[caribou]
+  ex <- sim$ageMap[sim$caribou]
+  # assume age = 0 if no age data.
+  ex[is.na(ex)] <- 0
 
   # step length is a function of current cell's habitat quality
-  sl <- 20/log(ex+5)
+  sl <- 20/log(ex+10)
 
-  ln <- rlnorm(length(ex), sl, 0.02) # log normal step length
+  ln <- suppressWarnings(rlnorm(length(ex), sl, 0.02)) # log normal step length, will return NA if ex is off map
   sd <- 30 # could be specified globally in params
 
-  caribou <- move("crw", caribou, stepLength=ln, stddev=sd, lonlat=FALSE)
-  
-  caribou <- crop(caribou, getGlobal("vegMap"))
+  sim$caribou <- move("crw", sim$caribou, stepLength=ln, stddev=sd,
+                      lonlat=FALSE, extent=extent(sim$vegMap), torus=params(sim)$caribouMovementLcc$torus)
 
-  caribouRas[caribou] <- caribouRas[caribou] + 1
-#   setColors(caribouRas, n=simStopTime(sim)) <-
-#     c("white", colorRampPalette(colors = c("grey","black"))(simStopTime(sim)/2-1))
+  sim$caribou <- crop(sim$caribou, sim$vegMap)
 
-  assignGlobal("caribou", caribou)
-  assignGlobal("caribouRas", caribouRas)
+  sim$caribouRas[sim$caribou] <- sim$caribouRas[sim$caribou] + 1
 
-#     #rads <- sample(10:30, length(caribou), replace=TRUE)
-#     #rings <- cir(caribou, radiuses=rads, vegMap, 1)
+#   #temp <- sim$caribouRas
+#   sim$caribouRas <- temp
+#
+#   extr <- extract(sim$caribouRas, sim$caribou, cellnumbers=TRUE)
+#   sim$caribouRas[extr[,"cells"]] <- extr[,"layer"] + 1
+#   a <- sim$caribouRas
+#
+#   sim$caribouRas <- temp
+#   sim$caribouRas[sim$caribou] <- sim$caribouRas[sim$caribou] + 1
+#   b <- sim$caribouRas
+#
+#   sim$caribouRas <- temp
+#   gv <- getValues(sim$caribouRas)
+#   extr <- extract(sim$caribouRas, sim$caribou, cellnumbers=TRUE)
+#   gv[extr[,"cells"]] <- extr[,"layer"] + 1
+#
+#   all.equal(getValues(a), gv)
+#   all.equal(getValues(b), gv)
+#
+#   (mb <- microbenchmark(times=40,
+#     a={
+#     extr <- extract(sim$caribouRas, sim$caribou, cellnumbers=TRUE)
+#     sim$caribouRas[extr[,"cells"]] <- extr[,"layer"] + 1
+#   },b={
+#     gv <- getValues(sim$caribouRas)
+#     extr <- extract(sim$caribouRas, sim$caribou, cellnumbers=TRUE)
+#     gv[extr[,"cells"]] <- extr[,"layer"] + 1
+#     #caribouRas <- raster(sim$caribouRas)
+#     sim$caribouRas[] <- gv
+#   },c={
+#     sim$caribouRas[coordinates(sim$caribou)] <-
+#       sim$caribouRas[coordinates(sim$caribou)] + 1
+#   },d={
+#     sim$caribouRas[sim$caribou] + 1
+#   },e={
+#     extract(sim$caribouRas, sim$caribou) + 1
+#   },f={
+#     extract(sim$caribouRas, coordinates(sim$caribou)) + 1
+#   }))
+#
+#   sim$caribouRasSpa <- as(sim$caribouRas, "RasterLayerSparse")
+#   microbenchmark(times=200,
+#   sim$caribouRasSpa[sim$caribou]+1,
+#   sim$caribouRas[sim$caribou]+1
+#   )
+
+#   setColors(sim$caribouRas, n=end(sim)) <-
+#     c("white", colorRampPalette(colors = c("grey","black"))(end(sim)/2-1))
+
+#     #rads <- sample(10:30, length(sim$caribou), replace=TRUE)
+#     #rings <- cir(sim$caribou, radiuses=rads, vegMap, 1)
 #     #points(rings$x, rings$y, col=rings$ids, pch=19, cex=0.1)
 
     return(invisible(sim))

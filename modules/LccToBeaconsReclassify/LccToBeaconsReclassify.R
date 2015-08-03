@@ -1,57 +1,5 @@
-stopifnot(packageVersion("SpaDES") >= "0.6.0")
-###
-### name:         LccToBeaconsReclassify
-###
-### description:  Takes the LCC05 classification of 39 land cover classes, and
-###               reclassifies it to the 11 classes of the Beacons succession model.
-###
-### keywords:     forest succession; LCC05; land cover classification 2005; Beacons
-###
-### authors:      Eliot J. B. McIntire <Eliot.McIntire@NRCan.gc.ca>
-###               Alex M. Chubaty <Alexander.Chubaty@NRCan.gc.ca>
-###               Steve Cumming <Steve.Cumming@sbf.ulaval.ca>
-###
-### version:      0.2.0
-###
-### spatialExtent: NA
-###
-### timeframe:    2005 - NA
-###
-### timestep:     NA
-###
-### citation:     NA
-###
-### reqdPkgs:     raster; RColorBrewer
-###
-### parameters:   paramName: .plotInitialTime
-###               paramClass: numeric
-###               default: 0
-###
-###               paramName: .plotInterval
-###               paramClass: numeric
-###               default: 1
-###
-###               paramName: .saveInitialTime
-###               paramClass: numeric
-###               default: NA
-###
-###               paramName: .saveInterval
-###               paramClass: numeric
-###               default: NA
-###
-### inputObjects: objectName: vegMapLcc
-###               objectClass: RasterLayer
-###               other: NA
-###
-### outputObjects: objectName: trajMapBeacons
-###                objectClass: RasterLayer
-###                other: NA
-###
-###                objectName: vegMapBeacons
-###                objectClass: RasterLayer
-###                other: NA
-###
-### LccToBeaconsReclassify module metadata
+stopifnot(packageVersion("SpaDES") >= "0.99.0")
+
 defineModule(sim, list(
   name="LccToBeaconsReclassify",
   description="Takes the LCC05 classification of 39 land cover classes, and reclassifies it to the 11 classes of the Beacons succession model.",
@@ -62,14 +10,14 @@ defineModule(sim, list(
   version=numeric_version("0.2.0"),
   spatialExtent=raster::extent(rep(NA_real_, 4)),
   timeframe=as.POSIXlt(c("2005-01-01", NA)),
-  timestep=NA_real_,
+  timeunit="year",
   citation=list(),
-  reqdPkgs=list("raster", "RColorBrewer"),
+  reqdPkgs=list("raster", "RColorBrewer", "fastmatch", "dplyr"),
   parameters=rbind(
-    defineParameter(".plotInitialTime", "numeric", NA_real_),
-    defineParameter(".plotInterval", "numeric", NA_real_),
-    defineParameter(".saveInitialTime", "numeric", NA_real_),
-    defineParameter(".saveInterval", "numeric", NA_real_)),
+    defineParameter(".plotInitialTime", "numeric", NA_real_, NA, NA, desc="Initial time for plotting"),
+    defineParameter(".plotInterval", "numeric", NA_real_, NA, NA, desc="Interval between plotting"),
+    defineParameter(".saveInitialTime", "numeric", NA_real_, NA, NA, desc="Initial time for saving"),
+    defineParameter(".saveInterval", "numeric", NA_real_, NA, NA, desc="Interval between save events")),
   inputObjects=data.frame(objectName="vegMapLcc",
                           objectClass="RasterLayer",
                           other=NA_character_, stringsAsFactors=FALSE),
@@ -80,27 +28,26 @@ defineModule(sim, list(
 
 doEvent.LccToBeaconsReclassify = function(sim, eventTime, eventType, debug=FALSE) {
   if (eventType=="init") {
-    ### check for object dependencies:
-    ### (use `checkObject` or similar)
-    checkObject(name="vegMapLcc") # Lcc map or a clipped extent version
+    checkObject(sim, name="vegMapLcc") # Lcc map or a clipped extent version
 
     sim <- LccToBeaconsReclassifyInit(sim)
-    sim <- scheduleEvent(sim, simParams(sim)$LccToBeaconsReclassify$.plotInitialTime,
+
+    sim <- scheduleEvent(sim, params(sim)$LccToBeaconsReclassify$.plotInitialTime,
                          "LccToBeaconsReclassify", "plot")
-    sim <- scheduleEvent(sim, simParams(sim)$LccToBeaconsReclassify$.saveInitialTime,
+    sim <- scheduleEvent(sim, params(sim)$LccToBeaconsReclassify$.saveInitialTime,
                          "LccToBeaconsReclassify", "save")
   } else if (eventType=="plot") {
     Plot(vegMapBeacons, trajMapBeacons, new=TRUE)
     # schedule future event(s)
-    sim <- scheduleEvent(sim, simCurrentTime(sim) + simParams(sim)$LccToBeaconsReclassify$.plotInterval, "LccToBeaconsReclassify", "plot")
+    sim <- scheduleEvent(sim, time(sim) + params(sim)$LccToBeaconsReclassify$.plotInterval, "LccToBeaconsReclassify", "plot")
   } else if (eventType=="save") {
     # the raster package does not keep colors when writing to a tif file
 
     # schedule future event(s)
-    sim <- scheduleEvent(sim, simCurrentTime(sim) + simParams(sim)$LccToBeaconsReclassify$.saveInterval, "LccToBeaconsReclassify", "save")
+    sim <- scheduleEvent(sim, time(sim) + params(sim)$LccToBeaconsReclassify$.saveInterval, "LccToBeaconsReclassify", "save")
   } else {
-      warning(paste("Undefined event type: '", simEvents(sim)[1, "eventType", with=FALSE],
-                    "' in module '", simEvents(sim)[1, "moduleName", with=FALSE], "'", sep=""))
+      warning(paste("Undefined event type: '", events(sim)[1, "eventType", with=FALSE],
+                    "' in module '", events(sim)[1, "moduleName", with=FALSE], "'", sep=""))
   }
   return(invisible(sim))
 }
@@ -150,7 +97,6 @@ LccToBeaconsReclassifyInit = function(sim) {
     .Names = c("LCC05.classes", "VEG.reclass", "Description"),
     class = "data.frame", row.names = c(NA, -11L))
 
-
   lcc05VegLabels <- as.numeric(strsplit(paste(lcc05VegReclass$LCC05.classes, collapse=","),",")[[1]])
   numLccInVeg <- sapply(strsplit(unname(sapply(as.character(lcc05VegReclass$LCC05.classes), function(x) x)), ","), length)
   lcc05VegTable <- cbind(lcc05VegLabels,rep(lcc05VegReclass$VEG.reclass,numLccInVeg))
@@ -171,11 +117,6 @@ LccToBeaconsReclassifyInit = function(sim) {
                resample(lcc05TrajReclass$TrajectoryNum[[x]],
                       numLccInTraj[x],replace=T))))
 
-  #  lcc05TrajTable <- cbind(lcc05TrajLabels,rep(lcc05TrajReclass$Trajectory,numLccInTraj))
-
-
-  # trajObj.raw <- read.table(file="clipboard", sep="\t", header=TRUE, stringsAsFactors=FALSE)
-  # dput(trajObj.raw)
   trajObj.raw <- structure(
     list(Veg.Type=c("Closed coniferous", "Open coniferous", "Mixedwood",
                     "Deciduous*", "Deciduous*", "Shrub", "Herbaceous"),
@@ -195,31 +136,42 @@ LccToBeaconsReclassifyInit = function(sim) {
                  "Closed coniferous", "Closed coniferous", "Closed coniferous",
                  "Herbaceous")),
     .Names=c("Veg.Type", "X0.2", "X3.20", "X21.60", "X61.80", "X81.120", "X121.160", "X.160"),
-    class="data.frame", row.names=c(NA, -7L))
+    class="data.frame", row.names=c(NA, -7L)) %>%
+    as.tbl
 
-  numYearsPer <- na.omit(unlist(lapply(strsplit(substr(colnames(trajObj.raw), 2, 9),"\\."),
-                                       function(x) diff(as.numeric(x))))+1)
+
+  numYearsPer <- trajObj.raw %>%
+    dplyr::select(-Veg.Type, -X.160) %>%
+    colnames %>%
+    sub(pattern = "X",replacement="", x = .) %>%
+    strsplit(.,"\\.") %>%
+    sapply(., function(x) diff(as.numeric(x)))
+
   maxAge <- 200L
   ages <- 0L:maxAge
 
-  trajObj1 <- apply(trajObj.raw[-7,-c(1)], 1, function(x) {
-    rep(x, times=c(numYearsPer, maxAge+1-sum(numYearsPer)))
-    })
-  trajObj2 <- cbind(trajObj1,
-                    matrix(rep(c("Burned", "Wetland", "Water", "Cropland","Other"),
+  trajObj1 <- trajObj.raw %>%
+    filter(Veg.Type != "Herbaceous") %>%
+    dplyr::select(-Veg.Type) %>%
+    apply(., 1, function(x) rep(x, times=c(numYearsPer, maxAge+1-sum(numYearsPer))))
+
+  trajObj2 <- trajObj1 %>%
+    cbind(matrix(rep(c("Burned", "Wetland", "Water", "Cropland","Other"),
                                each=maxAge+1), ncol=5))
-  assignGlobal("trajObj", matrix(match(trajObj2, as.character(lcc05TrajReclass$Description)),
-                     ncol=ncol(trajObj2)))
+  sim$trajObj <- matrix(fmatch(trajObj2, as.character(lcc05TrajReclass$Description)),
+                     ncol=ncol(trajObj2))
 
   # Make a factor map, allowing for character labels
-  vegMap <- ratify(reclassify(vegMapLcc, lcc05VegTable))
-  levels(vegMap)<-data.frame(ID=lcc05VegReclass$VEG.reclass, Class=lcc05VegReclass$Description)
-  indices <- c(1,lcc05VegTable[,1][match(1:11, lcc05VegTable[,2])]+1)
-  setColors(vegMap, n=12 ) <- getColors(vegMapLcc)[[1]][indices]
-  assign("vegMapBeacons", vegMap, envir=.GlobalEnv)
+  sim$vegMapBeacons <- ratify(reclassify(sim$vegMapLcc, lcc05VegTable))
+  levels(sim$vegMapBeacons)<-
+    data.frame(ID=lcc05VegReclass$VEG.reclass, Class=lcc05VegReclass$Description) %>%
+      .[levels(sim$vegMapBeacons)[[1]]$ID,]
 
-  trajMap <- reclassify(vegMapLcc, lcc05TrajTable)
-  setColors(trajMap,n=12) <- colorRampPalette(brewer.pal(8,"Set1"))(12)
-  assign("trajMapBeacons", trajMap, envir=.GlobalEnv)
+  indices <- c(1,lcc05VegTable[,1][fmatch(1:11, lcc05VegTable[,2])]+1)
+  setColors(sim$vegMapBeacons, n=12 ) <- getColors(sim$vegMapLcc)[[1]][indices]
+
+  sim$trajMapBeacons <- reclassify(sim$vegMapLcc, lcc05TrajTable)
+  setColors(sim$trajMapBeacons, n=12) <- colorRampPalette(brewer.pal(8, "Set1"))(12)
+
   return(invisible(sim))
 }

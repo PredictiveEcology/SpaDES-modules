@@ -1,8 +1,7 @@
 ---
 title: "fireSpreadLcc"
-author: "Eliot McIntire"
-author: "Alex Chubaty"
-date: "`r Sys.Date()`"
+author: "Eliot McIntire, Alex Chubaty, and Steve Cumming"
+date: "April 30, 2015"
 output: pdf_document
 ---
 

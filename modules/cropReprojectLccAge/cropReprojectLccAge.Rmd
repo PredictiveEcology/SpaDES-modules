@@ -1,61 +1,17 @@
 ---
 title: "cropReprojectLccAge"
-author: "Module Author"
-date: "`r Sys.Date()`"
+author: "Eliot McIntire and Alex Chubaty"
+date: "April 30, 2015"
 output: pdf_document
 ---
 
-Module documentation should be written so that others can use your module.
-This is a template for module documentation, and should be changed.
+This is a translator module that crops and reprojects the data from the [Landcover Classification 2005 data set](ftp://ftp.ccrs.nrcan.gc.ca/ad/NLCCLandCover/LandcoverCanada2005_250m/LandCoverOfCanada2005_V1_4.zip) and the 1000m age map data set from Pan et al. 2012. They are both returned in the projection of the LCC2005 data set.
 
-## Plotting
+## Module Info
 
-Write what is plotted.
+This is entirely drawn from an unpublished document from the BEACONS team. 
 
-## Saving
 
-Write what is saved.
+## Literature Cited
 
-## Input data
-
-## Output data
-
-## Anticipated linkages to other modules
-
-## Other Markdown help
-For help writing in RMarkdown, see http://rmarkdown.rstudio.com/. We have also included
-The `html_vignette` template includes a basic CSS theme. To override this theme you can specify your own CSS in the document metadata as follows:
-
-output:
-rmarkdown::html_vignette:
-css: mystyles.css
-
-## Figures
-
-The figure sizes have been customised so that you can easily put two images side-by-side.
-
-```{r, fig.show='hold'}
-plot(1:10)
-plot(10:1)
-```
-
-You can enable figure captions by `fig_caption: yes` in YAML:
-
-output:
-rmarkdown::html_vignette:
-fig_caption: yes
-
-Then you can use the chunk option `fig.cap = "Your figure caption."` in **knitr**.
-
-## More Examples
-
-You can write math expressions, e.g. $Y = X\beta + \epsilon$, footnotes^[A footnote here.], and tables, e.g. using `knitr::kable()`.
-
-```{r, echo=FALSE, results='asis'}
-knitr::kable(head(mtcars, 10))
-```
-
-Also a quote using `>`:
-
-> "He who gives up [code] safety for [code] speed deserves neither."
-([via](https://twitter.com/hadleywickham/status/504368538874703872))
+Pan, Y., J. M. Chen, R. Birdsey, K. McCullough, L. He, and F. Deng. 2012. NACP Forest Age Maps at 1-km Resolution for Canada (2004) and the U.S.A. (2006). Data set. Available on-line [http://daac.ornl.gov] from ORNL DAAC, Oak Ridge, Tennessee, U.S.A. http://dx.doi.org/10.3334/ORNLDAAC/1096
