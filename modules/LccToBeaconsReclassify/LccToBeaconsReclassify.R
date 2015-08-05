@@ -4,6 +4,7 @@ defineModule(sim, list(
   name="LccToBeaconsReclassify",
   description="Takes the LCC05 classification of 39 land cover classes, and reclassifies it to the 11 classes of the Beacons succession model.",
   keywords=c("forest succession", "LCC05", "land cover classification 2005", "Beacons"),
+  childModules=character(),
   authors=c(person(c("Eliot", "J", "B"), "McIntire", email="Eliot.McIntire@NRCan.gc.ca", role=c("aut", "cre")),
             person(c("Alex", "M"), "Chubaty", email="Alexander.Chubaty@NRCan.gc.ca", role=c("aut")),
             person("Steve", "Cumming", email="Steve.Cumming@sbf.ulaval.ca", role=c("aut"))),

@@ -4,6 +4,7 @@ defineModule(sim, list(
   name="forestAge",
   description="A basic forest age module based on Canada Land Cover Classes 2005.",
   keywords=c("forest age", "LCC05", "land cover classification 2005"),
+  childModules=character(),
   authors=c(person(c("Alex", "M"), "Chubaty", email="Alexander.Chubaty@NRCan.gc.ca", role=c("aut", "cre")),
             person(c("Eliot", "J", "B"), "McIntire", email="Eliot.McIntire@NRCan.gc.ca", role=c("aut", "cre")),
             person("Steve", "Cumming", email="Steve.Cumming@sbf.ulaval.ca", role=c("aut"))),
