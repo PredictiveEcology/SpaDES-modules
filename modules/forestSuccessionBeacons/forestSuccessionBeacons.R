@@ -1,4 +1,4 @@
-stopifnot(packageVersion("SpaDES") >= "0.99.0")
+stopifnot(packageVersion("SpaDES") >= "1.0.1")
 
 defineModule(sim, list(
   name="forestSuccessionBeacons",
@@ -8,7 +8,7 @@ defineModule(sim, list(
   authors=c(person(c("Eliot", "J", "B"), "McIntire", email="Eliot.McIntire@NRCan.gc.ca", role=c("aut", "cre")),
             person(c("Alex", "M"), "Chubaty", email="Alexander.Chubaty@NRCan.gc.ca", role=c("aut")),
             person("Steve", "Cumming", email="Steve.Cumming@sbf.ulaval.ca", role=c("aut"))),
-  version=numeric_version("0.2.0"),
+  version=numeric_version("0.0.3"),
   spatialExtent=raster::extent(rep(NA_real_, 4)),
   timeframe=as.POSIXlt(c("2015-01-01", NA)),
   timeunit="year",
@@ -35,7 +35,7 @@ defineModule(sim, list(
 doEvent.forestSuccessionBeacons <- function(sim, eventTime, eventType, debug=FALSE) {
   if (eventType=="init") {
     # do stuff for this event
-    sim <- forestSuccessionInit(sim)
+    sim <- sim$forestSuccessionInit(sim)
 
     # schedule the next event
     sim <- scheduleEvent(sim, params(sim)$forestSuccessionBeacons$startTime,
@@ -46,7 +46,7 @@ doEvent.forestSuccessionBeacons <- function(sim, eventTime, eventType, debug=FAL
                          "forestSuccessionBeacons", "plot.init")
   } else if (eventType=="succession") {
     # do stuff for this event
-    sim <- forestSuccessionSuccession(sim)
+    sim <- sim$forestSuccessionSuccession(sim)
 
     # schedule the next event
     sim <- scheduleEvent(sim, time(sim) +
@@ -66,10 +66,11 @@ doEvent.forestSuccessionBeacons <- function(sim, eventTime, eventType, debug=FAL
     Plot(sim$vegMap)
 
     # ggplot
-    #browser()
     labelsShort <- character(max(levels(sim$vegMap)[[1]]$ID))
-    labelsShort[levels(sim$vegMap)[[1]]$ID] <- sapply(strsplit(as.character(levels(sim$vegMap)[[1]]$Class)," "),
-                          function(x) paste(substr(x, 1, 3),collapse="_"))
+    labelsShort[levels(sim$vegMap)[[1]]$ID] <- sapply(
+      strsplit(as.character(levels(sim$vegMap)[[1]]$Class)," "),
+      function(x) paste(substr(x, 1, 3),collapse="_")
+    )
     veg <- data.frame(veg=sort(na.omit(getValues(sim$vegMap))))
     histColors <- getColors(sim$vegMap)$layer
     sim$vegTypeDistribution <- ggplot(veg, aes(factor(veg), fill=factor(veg)),

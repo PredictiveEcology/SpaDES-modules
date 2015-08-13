@@ -1,4 +1,4 @@
-stopifnot(packageVersion("SpaDES") >= "0.99.0")
+stopifnot(packageVersion("SpaDES") >= "1.0.1")
 
 defineModule(sim, list(
   name="fireSpreadLcc",
@@ -48,7 +48,7 @@ doEvent.fireSpreadLcc <- function(sim, eventTime, eventType, debug=FALSE) {
     sim[[globals(sim)$burnStats]] <- numeric()
 
     # do stuff for this event
-    sim <- fireSpreadLccInit(sim)
+    sim <- sim$fireSpreadLccInit(sim)
 
     # schedule the next event
     sim <- scheduleEvent(sim, params(sim)$fireSpreadLcc$startTime, "fireSpreadLcc", "burn")
@@ -56,13 +56,13 @@ doEvent.fireSpreadLcc <- function(sim, eventTime, eventType, debug=FALSE) {
     sim <- scheduleEvent(sim, params(sim)$fireSpreadLcc$.plotInitialTime, "fireSpreadLcc", "plot.init")
   } else if (eventType=="burn") {
     # do stuff for this event
-    sim <- fireSpreadLccBurn(sim)
+    sim <- sim$fireSpreadLccBurn(sim)
     # schedule the next events
     sim <- scheduleEvent(sim, time(sim), "fireSpreadLcc", "stats") # do stats immediately following burn
     sim <- scheduleEvent(sim, time(sim) + params(sim)$fireSpreadLcc$returnInterval, "fireSpreadLcc", "burn")
   } else if (eventType=="stats") {
     # do stuff for this event
-    sim <- fireSpreadLccStats(sim)
+    sim <- sim$fireSpreadLccStats(sim)
 
     # schedule the next event
     ## stats scheduling done by burn event

@@ -1,4 +1,4 @@
-stopifnot(packageVersion("SpaDES") >= "0.99.0")
+stopifnot(packageVersion("SpaDES") >= "1.0.1")
 
 defineModule(sim, list(
   name="forestAge",
@@ -8,7 +8,7 @@ defineModule(sim, list(
   authors=c(person(c("Alex", "M"), "Chubaty", email="Alexander.Chubaty@NRCan.gc.ca", role=c("aut", "cre")),
             person(c("Eliot", "J", "B"), "McIntire", email="Eliot.McIntire@NRCan.gc.ca", role=c("aut", "cre")),
             person("Steve", "Cumming", email="Steve.Cumming@sbf.ulaval.ca", role=c("aut"))),
-  version=numeric_version("0.2.0"),
+  version=numeric_version("0.0.3"),
   spatialExtent=raster::extent(rep(NA_real_, 4)),
   timeframe=as.POSIXlt(c(NA, NA)),
   timeunit="year",
@@ -17,7 +17,7 @@ defineModule(sim, list(
   parameters=rbind(
     defineParameter("returnInterval", "numeric", 1.0, NA, NA, desc="Time interval between aging events"),
     defineParameter("startTime", "numeric", 1.0, NA, NA, desc="Simulation time at which to initiate forest aging"),
-    defineParameter(".plotInitialTime", "numeric", NA, NA, 0, desc="Initial time for plotting"),
+    defineParameter(".plotInitialTime", "numeric", 0, NA, 0, desc="Initial time for plotting"),
     defineParameter(".plotInterval", "numeric", 1, NA, NA, desc="Interval between plotting"),
     defineParameter(".saveInitialTime", "numeric", NA_real_, NA, NA, desc="Initial time for saving"),
     defineParameter(".saveInterval", "numeric", NA_real_, NA, NA, desc="Interval between save events")),
@@ -36,7 +36,7 @@ doEvent.forestAge <- function(sim, eventTime, eventType, debug=FALSE) {
     ### (use `checkObject` or similar)
 
     # do stuff for this event
-    sim <- forestAgeInit(sim)
+    sim <- sim$forestAgeInit(sim)
 
     # schedule the next event
     sim <- scheduleEvent(sim, params(sim)$forestAge$startTime, "forestAge", "age")
@@ -45,7 +45,7 @@ doEvent.forestAge <- function(sim, eventTime, eventType, debug=FALSE) {
 
   } else if (eventType=="age") {
       # do stuff for this event
-    sim <- forestAgeAge(sim)
+    sim <- sim$forestAgeAge(sim)
 
       # schedule the next event
     sim <- scheduleEvent(sim, time(sim) +

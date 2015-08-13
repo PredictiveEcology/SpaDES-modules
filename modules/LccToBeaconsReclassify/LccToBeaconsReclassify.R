@@ -1,4 +1,4 @@
-stopifnot(packageVersion("SpaDES") >= "0.99.0")
+stopifnot(packageVersion("SpaDES") >= "1.0.1")
 
 defineModule(sim, list(
   name="LccToBeaconsReclassify",
@@ -8,7 +8,7 @@ defineModule(sim, list(
   authors=c(person(c("Eliot", "J", "B"), "McIntire", email="Eliot.McIntire@NRCan.gc.ca", role=c("aut", "cre")),
             person(c("Alex", "M"), "Chubaty", email="Alexander.Chubaty@NRCan.gc.ca", role=c("aut")),
             person("Steve", "Cumming", email="Steve.Cumming@sbf.ulaval.ca", role=c("aut"))),
-  version=numeric_version("0.2.0"),
+  version=numeric_version("0.0.3"),
   spatialExtent=raster::extent(rep(NA_real_, 4)),
   timeframe=as.POSIXlt(c("2005-01-01", NA)),
   timeunit="year",
@@ -31,7 +31,7 @@ doEvent.LccToBeaconsReclassify = function(sim, eventTime, eventType, debug=FALSE
   if (eventType=="init") {
     checkObject(sim, name="vegMapLcc") # Lcc map or a clipped extent version
 
-    sim <- LccToBeaconsReclassifyInit(sim)
+    sim <- sim$LccToBeaconsReclassifyInit(sim)
 
     sim <- scheduleEvent(sim, params(sim)$LccToBeaconsReclassify$.plotInitialTime,
                          "LccToBeaconsReclassify", "plot")
