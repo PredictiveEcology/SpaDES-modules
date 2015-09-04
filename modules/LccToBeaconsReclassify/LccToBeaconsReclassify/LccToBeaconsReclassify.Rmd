@@ -1,0 +1,26 @@
+---
+title: "LccToBeaconsReclassify"
+author: "Eliot McIntire and Alex Chubaty"
+date: "June 25, 2015"
+output: pdf_document
+---
+
+This is a translator module to convert from 39 vegetation classes in the Land Cover Classification 2005 to the 11 classes that the forestSuccessionBeacons module needs.
+
+## Module Info
+
+This is entirely drawn from an unpublished document from the BEACONS team. 
+
+## External data requirements
+
+Canada Land Cover Classification 2005 available from [ftp://ftp.ccrs.nrcan.gc.ca/ad/NLCCLandCover/LandcoverCanada2005_250m/LandCoverOfCanada2005_V1_4.zip](ftp://ftp.ccrs.nrcan.gc.ca/ad/NLCCLandCover/LandcoverCanada2005_250m/LandCoverOfCanada2005_V1_4.zip) needs to be downloaded and unzipped to `LandCoverOfCanada2005_V1_4/LCC2005_V1_4a.tif`.
+
+```{r download-data}
+if (!file.exists("LandCoverOfCanada2005_V1_4")) {
+  dir.create("LandCoverOfCanada2005_V1_4")
+}
+filename <- "lcc05.zip"
+download.file("ftp://ftp.ccrs.nrcan.gc.ca/ad/NLCCLandCover/LandcoverCanada2005_250m/LandCoverOfCanada2005_V1_4.zip", filename, mode="wb")
+unzip(filename, files="LandCoverOfCanada2005_V1_4/LCC2005_V1_4a.tif")
+file.remove(filename)
+```

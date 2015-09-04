@@ -1,0 +1,16 @@
+---
+title: "caribouMovementLcc"
+author: "Eliot McIntire"
+date: "April 30, 2015"
+output: pdf_document
+---
+
+This is a simple, dummy, individual based movement model. It has no biology, and no data. Each individual follows a correlated random walk, where step length is a function of ageMap, i.e., a map of forest age.
+
+## Plotting
+
+The module plots 1 plot: a cumulative occurrence map, i.e., counts of the number of times that a caribou landed on a pixel.
+
+## Saving
+
+There is no default saving. The saving follows the .saveInterval and .save

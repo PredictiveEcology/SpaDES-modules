@@ -1,0 +1,27 @@
+---
+title: "forestAge"
+author: "Eliot McIntire and Alex Chubaty"
+date: "June 25, 2015"
+output: pdf_document
+---
+
+This is a simple aging module that adds a unit to the ageMap with each unit of SpaDES time that has passed.
+
+## External data requirements
+
+Age map available from [ftp://ftp.daac.ornl.gov/data/nacp/NA_TreeAge//data/can_age04_1km.tif](ftp://ftp.daac.ornl.gov/data/nacp/NA_TreeAge//data/can_age04_1km.tif) should be saved as `age/age.tif`.
+
+```{r download-data}
+if (!file.exists("age")) {
+  dir.create("age")
+}
+download.file("ftp://ftp.daac.ornl.gov/data/nacp/NA_TreeAge//data/can_age04_1km.tif", "age/age.tif", mode="wb")
+```
+
+## Plotting
+
+The module plots 1 plot: a map of forest age, ageMap.
+
+## Saving
+
+There is no default saving. The saving follows the .saveInterval and .save

@@ -1,0 +1,18 @@
+---
+title: "forestSuccessionBeacons"
+author: "Eliot McIntire and Alex Chubaty"
+date: "April 30, 2015"
+output: pdf_document
+---
+
+This is a dummy fire module that spreads fires in a raster landscape. It takes a vegetation map, with the BEACONS 11 classifications, 7 of which are primarily used for forests. Contact Steve Cumming (Steve Cumming <stevec@sbf.ulaval.ca>) to get latest version of the documentation for this. It is primarily a show piece for the spread function within SpaDES.
+
+The fires respond to the vegetation layer, with a simple, expert opinion of flammability by type. The mapping of vegetation layers to flammability is through different `spreadProb` values for each vegetation type.
+
+## Plotting
+
+The module plots 2 plots: a cumulative fire map, and a dynamic histogram of fire size distribution through the course of a spades simulation.
+
+## Saving
+
+There is no default saving. The saving follows the .saveInterval and .save
