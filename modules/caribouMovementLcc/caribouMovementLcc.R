@@ -6,11 +6,12 @@ defineModule(sim, list(
   keywords=c("caribou", "individual based movement model", "correlated random walk"),
   childModules=character(),
   authors=c(person(c("Eliot", "J", "B"), "McIntire", email="Eliot.McIntire@NRCan.gc.ca", role=c("aut", "cre"))),
-  version=numeric_version("0.3.0"),
+  version=numeric_version("0.0.4"),
   spatialExtent=raster::extent(rep(NA_real_, 4)),
   timeframe=as.POSIXlt(c(NA, NA)),
   timeunit="month",
-  citation=list(),
+  citation=list("citation.bib"),
+  documentation=list("README.txt", "caribouMovementLcc.Rmd"),
   reqdPkgs=list("grid", "raster", "sp"),
   parameters=rbind(
     defineParameter("glmInitialTime", "numeric", 100.0, NA, NA, desc="Simulation time for doing first glm fit

@@ -8,11 +8,12 @@ defineModule(sim, list(
   authors=c(person(c("Alex", "M"), "Chubaty", email="Alexander.Chubaty@NRCan.gc.ca", role=c("aut", "cre")),
             person(c("Eliot", "J", "B"), "McIntire", email="Eliot.McIntire@NRCan.gc.ca", role=c("aut", "cre")),
             person("Steve", "Cumming", email="Steve.Cumming@sbf.ulaval.ca", role=c("aut"))),
-  version=numeric_version("0.2.0"),
+  version=numeric_version("0.0.4"),
   spatialExtent=raster::extent(rep(NA_real_, 4)),
   timeframe=as.POSIXlt(c("2005-01-01", NA)),
   timeunit="year",
-  citation=list(),
+  citation=list("citation.bib"),
+  documentation=list("README.txt", "fireSpreadLcc.Rmd"),
   reqdPkgs=list("ggplot2", "methods", "raster", "RColorBrewer"),
   parameters=rbind(
     defineParameter("drought", "numeric", 1.00, 0.8, 1.4, desc="An arbitrary index of drought, where 1 is 'normal', and greater than 1 is more dry"),
@@ -112,7 +113,8 @@ fireSpreadLccInit <- function(sim) {
   sim$maxFiresCumul <- 7 # used in legend scale
 
   sim$Fires <- raster(extent(sim$vegMap), ncol=ncol(sim$vegMap),
-                  nrow=nrow(sim$vegMap), vals=0)
+                  nrow=nrow(sim$vegMap), vals=0) %>%
+    mask(sim$vegMap)
   #sim$Fires <- as(sim$Fires, "RasterLayerSparse")
   setColors(sim$Fires,n=params(sim)$fireSpreadLcc$nFires+1) <-
     c("#FFFFFF", rev(heat.colors(params(sim)$fireSpreadLcc$nFires)))
