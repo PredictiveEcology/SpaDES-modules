@@ -7,7 +7,7 @@ defineModule(sim, list(
   keywords=c("translator", "lcc05", "Land Cover Classification", "vegetation"),
   childModules=character(),
   authors=c(person(c("Eliot", "J","B"), "McIntire", email="emcintir@nrcan.gc.ca", role=c("aut", "cre"))),
-  version=numeric_version("0.0.4"),
+  version=numeric_version("0.0.5"),
   spatialExtent=raster::extent(rep(NA_real_, 4)),
   timeframe=as.POSIXlt(c(NA, NA)),
   timeunit=NA_character_,
@@ -20,7 +20,7 @@ defineModule(sim, list(
     defineParameter(".plotInterval", "numeric", NA_real_, NA, NA, desc="Interval between plotting"),
     defineParameter(".saveInitialTime", "numeric", NA_real_, NA, NA, desc="Initial time for saving"),
     defineParameter(".saveInterval", "numeric", NA_real_, NA, NA, desc="Interval between save events")),
-  inputObjects=data.frame(objectName=c("lcc05", "age", ".shinyPolygon"),
+  inputObjects=data.frame(objectName=c("lcc05", "age", "inputMapPolygon"),
                           objectClass=c("RasterLayer", "RasterLayer", "SpatialPolygons"),
                           other=rep(NA_character_, 3L), stringsAsFactors=FALSE),
   outputObjects=data.frame(objectName=c("vegMapLcc", "ageMapInit"),
@@ -48,13 +48,13 @@ cropReprojectLccInit = function(sim) {
 
   lcc05CRS <- CRS("+proj=lcc +lat_1=49 +lat_2=77 +lat_0=0 +lon_0=-95 +x_0=0 +y_0=0 +ellps=GRS80
     +units=m +no_defs")
-  .shinyPolygonLcc05 <- sim$spTransform(sim$.shinyPolygon, CRSobj =lcc05CRS)
-  totalArea <- rgeos::gArea(.shinyPolygonLcc05)/1e4
+  inputMapPolygonLcc05 <- sim$spTransform(sim$inputMapPolygon, CRSobj =lcc05CRS)
+  totalArea <- rgeos::gArea(inputMapPolygonLcc05)/1e4
   if(totalArea > 100e6) {
     stop("In the current implementation, please select another, smaller polygon",
          " (less than 100 million hectares).")
   }
-  shinyPolygon <- .shinyPolygonLcc05
+  shinyPolygon <- inputMapPolygonLcc05
   sim$vegMapLcc <- sim$crop(sim$lcc05, shinyPolygon)
   crs(sim$vegMapLcc) <- lcc05CRS
 
@@ -66,9 +66,9 @@ cropReprojectLccInit = function(sim) {
     # age will not run with projectRaster directly.
     # Instead, project the vegMap to age, then crop, then project back to vegMap.
     vegMapLcc.crsAge <- sim$projectRaster(sim$vegMapLcc, crs=crs(sim$age))
-    age.crsAge <- sim$crop(sim$age, sim$spTransform(sim$.shinyPolygon, CRSobj = crs(sim$age)))
+    age.crsAge <- sim$crop(sim$age, sim$spTransform(sim$inputMapPolygon, CRSobj = crs(sim$age)))
     age.crsAge <- sim$mask(x=age.crsAge,
-                          mask=sim$spTransform(sim$.shinyPolygon, CRSobj = crs(sim$age)))
+                          mask=sim$spTransform(sim$inputMapPolygon, CRSobj = crs(sim$age)))
     sim$ageMapInit <- sim$projectRaster(age.crsAge, to=sim$vegMapLcc, method="ngb")
 
     if (sum(!is.na(getValues(sim$ageMapInit)))==0) {
