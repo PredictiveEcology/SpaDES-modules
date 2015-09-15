@@ -14,25 +14,86 @@ This is an example of a 'module group' containing several child modules:
 - `forestSuccessionBeacons`
 - `LccToBeaconsReclassify`
 
+```{r model-inputs, eval=FALSE}
+library(igraph)
+library(raster)
+library(SpaDES)
+
+inputDir <- file.path(tempdir(), "inputs") %>% checkPath(create=TRUE)
+
+# download data (these are large files!)
+if (!file.exists(file.path(inputPath, "LandCoverOfCanada2005_V1_4", "LCC2005_V1_4a.tif"))) {
+  dir.create(file.path(inputPath, "LandCoverOfCanada2005_V1_4"))
+  url <- "ftp://ftp.ccrs.nrcan.gc.ca/ad/NLCCLandCover/LandcoverCanada2005_250m/LandCoverOfCanada2005_V1_4.zip"
+  download.file(url = url, destfile = file.path(inputPath, "LandCoverOfCanada2005_V1_4.zip"))
+  unzip(file.path(inputPath, "LandCoverOfCanada2005_V1_4.zip"))
+}
+
+if (!file.exists(file.path(inputPath, "age", "age.tif"))) {
+  dir.create(file.path(inputPath, "age"))
+  url <- "ftp://ftp.daac.ornl.gov/data/nacp/NA_TreeAge//data/can_age04_1km.tif"
+  download.file(url = url, destfile = file.path(inputPath, "age", "age.tif"))
+}
+
+# load data
+age <- raster(file.path(inputPath, "age/age.tif"))
+lcc05 <- raster(file.path(inputPath, "LandCoverOfCanada2005_V1_4/LCC2005_V1_4a.tif"))
+lcc05CRS <- crs(lcc05)
+
+# Random polygon
+areaKm2 <- 2000
+minX <- -1072250.2
+maxX <- minX + sqrt(areaKm2*1e6)
+minY <- 7438877-1.6e5
+maxY <- minY + sqrt(areaKm2*1e6)
+meanY <- mean(c(minY, maxY))
+
+# Add random noise to polygon
+set.seed(5567913)
+xAdd <- round(runif(1, -5e5, 1.5e6))
+yAdd <- round(runif(1, 1e5, 5e5)) - xAdd/2
+nPoints <- 20
+betaPar <- 0.6
+X = c(jitter(sort(rbeta(nPoints, betaPar, betaPar)*(maxX-minX)+minX)),
+      jitter(sort(rbeta(nPoints, betaPar, betaPar)*(maxX-minX)+minX, decreasing = TRUE)))
+Y = c(jitter(sort(rbeta(nPoints/2, betaPar, betaPar)*(maxY-meanY)+meanY)),
+      jitter(sort(rbeta(nPoints, betaPar, betaPar)*(maxY-minY)+minY, decreasing = TRUE)),
+      jitter(sort(rbeta(nPoints/2, betaPar, betaPar)*(meanY-minY)+minY)))
+
+inputMapPolygon <- Polygon(cbind(X+xAdd, Y+yAdd)) %>%  list %>% 
+  Polygons("s1") %>%  list %>%  SpatialPolygons(1L)
+crs(inputMapPolygon) <- lcc05CRS
+```
+
 Module groups make loading multiple modules easier: only the name of the module group needs to be specified in the `simInit` call, which will then initialize the simulation with the child modules.
 
 ```{r module-group-init, eval=FALSE}
-library(SpaDES)
-
+# setup simulation
 outputDir <- file.path(tempdir(), "simOutputs")
-times <- list(start=0.0, end=20.0)
-parameters <- list(.globals=list(stackName="landscape", burnStats="nPixelsBurned"),
-                   .progress=list(NA),
-                   randomLandscapes=list(nx=100L, ny=100L, inRAM=TRUE),
-                   fireSpread=list(nFires=10L, spreadprob=0.225, its=1e6,
-                                   persistprob=0, returnInterval=10, startTime=0,
-                                  .plotInitialTime=0.1, .plotInterval=10),
-                   caribouMovement=list(N=100L, moveInterval=1, torus=TRUE,
-                                        .plotInitialTime=1.01, .plotInterval=1))
+times <- list(start=2005.0, end=2020.0)
+parameters <- list(
+  .globals = list(burnStats="nPixelsBurned", rnorm(1)),
+  .progress = list(type="text", interval=1),
+  cropReprojectLccAge = list(useCache=TRUE),
+  forestSuccessionBeacons = list(returnInterval=1, startTime=times$start,
+                                 .plotInitialTime=times$start, .plotInterval=1),
+  forestAge = list(returnInterval=1, startTime=times$start+0.5,
+                   .plotInitialTime=times$start, .plotInterval=1),
+  fireSpreadLcc = list(nFires= 3, its=1e6, drought=1.2,
+                       persistprob=0, returnInterval=1, startTime=times$start+1,
+                       .plotInitialTime=times$start, .plotInterval=1),
+  caribouMovementLcc = list(N=1e3, moveInterval=1, startTime=times$start+1,
+                            torus=TRUE, glmInitialTime = NA_real_,
+                            .plotInitialTime=times$start, .plotInterval=1)
+)
 modules <- list("LCC2005")
-objects <- list()
-paths <- list(modulePath="~/GitHub/McIntire-lab/modules",
-              outputPath=outputDir)
+objects <- list(age="age", lcc05="lcc05", inputMapPolygon="inputMapPolygon")
+paths <- list(
+  cachePath = file.path(outputDir, "cache"),
+  modulePath = "~/GitHub/McIntire-lab/modules",
+  inputPath = inputDir,
+  outputPath = outputDir
+)
 
 mySim <- simInit(times=times, params=parameters, modules=modules,
                  objects=objects, paths=paths)

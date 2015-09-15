@@ -6,7 +6,7 @@ defineModule(sim, list(
   keywords=c("insert key words here"),
   authors=c(person(c("Alex", "M."), "Chubaty", email="achubaty@nrcan.gc.ca", role=c("aut", "cre"))),
   childModules=c("caribouMovementLcc", "cropReprojectLccAge", "fireSpreadLcc", "forestAge", "forestSuccessionBeacons", "LccToBeaconsReclassify"),
-  version=numeric_version("1.0.1"),
+  version=numeric_version("1.0.2"),
   spatialExtent=raster::extent(rep(NA_real_, 4)),
   timeframe=as.POSIXlt(c(NA, NA)),
   timeunit="year",
