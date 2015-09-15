@@ -22,22 +22,22 @@ library(SpaDES)
 inputDir <- file.path(tempdir(), "inputs") %>% checkPath(create=TRUE)
 
 # download data (these are large files!)
-if (!file.exists(file.path(inputPath, "LandCoverOfCanada2005_V1_4", "LCC2005_V1_4a.tif"))) {
-  dir.create(file.path(inputPath, "LandCoverOfCanada2005_V1_4"))
+if (!file.exists(file.path(inputDir, "LandCoverOfCanada2005_V1_4", "LCC2005_V1_4a.tif"))) {
+  dir.create(file.path(inputDir, "LandCoverOfCanada2005_V1_4"))
   url <- "ftp://ftp.ccrs.nrcan.gc.ca/ad/NLCCLandCover/LandcoverCanada2005_250m/LandCoverOfCanada2005_V1_4.zip"
-  download.file(url = url, destfile = file.path(inputPath, "LandCoverOfCanada2005_V1_4.zip"))
-  unzip(file.path(inputPath, "LandCoverOfCanada2005_V1_4.zip"))
+  download.file(url = url, destfile = file.path(inputDir, "LandCoverOfCanada2005_V1_4.zip"))
+  unzip(file.path(inputDir, "LandCoverOfCanada2005_V1_4.zip"))
 }
 
-if (!file.exists(file.path(inputPath, "age", "age.tif"))) {
-  dir.create(file.path(inputPath, "age"))
+if (!file.exists(file.path(inputDir, "age", "age.tif"))) {
+  dir.create(file.path(inputDir, "age"))
   url <- "ftp://ftp.daac.ornl.gov/data/nacp/NA_TreeAge//data/can_age04_1km.tif"
-  download.file(url = url, destfile = file.path(inputPath, "age", "age.tif"))
+  download.file(url = url, destfile = file.path(inputDir, "age", "age.tif"))
 }
 
 # load data
-age <- raster(file.path(inputPath, "age/age.tif"))
-lcc05 <- raster(file.path(inputPath, "LandCoverOfCanada2005_V1_4/LCC2005_V1_4a.tif"))
+age <- raster(file.path(inputDir, "age/age.tif"))
+lcc05 <- raster(file.path(inputDir, "LandCoverOfCanada2005_V1_4/LCC2005_V1_4a.tif"))
 lcc05CRS <- crs(lcc05)
 
 # Random polygon
