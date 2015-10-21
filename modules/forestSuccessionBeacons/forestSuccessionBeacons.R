@@ -1,35 +1,41 @@
 stopifnot(packageVersion("SpaDES") >= "1.0.1")
 
 defineModule(sim, list(
-  name="forestSuccessionBeacons",
-  description="A basic forest succession module based on Canada Land Cover Classes 2005 and Beacons.",
-  keywords=c("forest succession", "LCC05", "land cover classification 2005", "Beacons"),
-  childModules=character(),
-  authors=c(person(c("Eliot", "J", "B"), "McIntire", email="Eliot.McIntire@NRCan.gc.ca", role=c("aut", "cre")),
-            person(c("Alex", "M"), "Chubaty", email="Alexander.Chubaty@NRCan.gc.ca", role=c("aut")),
-            person("Steve", "Cumming", email="Steve.Cumming@sbf.ulaval.ca", role=c("aut"))),
-  version=numeric_version("0.0.4"),
-  spatialExtent=raster::extent(rep(NA_real_, 4)),
-  timeframe=as.POSIXlt(c("2015-01-01", NA)),
-  timeunit="year",
-  citation=list("citation.bib"),
-  documentation=list("README.txt", "forestSuccessionBeacons.Rmd"),
-  reqdPkgs=list("ggplot2", "raster", "RColorBrewer"),
-  parameters=rbind(
+  name = "forestSuccessionBeacons",
+  description = "A basic forest succession module based on Canada Land Cover Classes 2005 and Beacons.",
+  keywords = c("forest succession", "LCC05", "land cover classification 2005", "Beacons"),
+  childModules = character(),
+  authors = c(person(c("Eliot", "J", "B"), "McIntire", email="Eliot.McIntire@NRCan.gc.ca", role=c("aut", "cre")),
+              person(c("Alex", "M"), "Chubaty", email="Alexander.Chubaty@NRCan.gc.ca", role=c("aut")),
+              person("Steve", "Cumming", email="Steve.Cumming@sbf.ulaval.ca", role=c("aut"))),
+  version = numeric_version("0.0.5"),
+  spatialExtent = raster::extent(rep(NA_real_, 4)),
+  timeframe = as.POSIXlt(c("2015-01-01", NA)),
+  timeunit = "year",
+  citation = list("citation.bib"),
+  documentation = list("README.txt", "forestSuccessionBeacons.Rmd"),
+  reqdPkgs = list("ggplot2", "raster", "RColorBrewer"),
+  parameters = rbind(
     defineParameter("returnInterval", "numeric", 1.0, NA, NA, desc="Time interval between succession events"),
     defineParameter("startTime", "numeric", 1.0, NA, NA, desc="Simulation time at which to initiate forest succession"),
     defineParameter(".plotInitialTime", "numeric", NA, NA, 1, desc="Initial time for plotting"),
     defineParameter(".plotInterval", "numeric", 1, NA, NA, desc="Interval between plotting"),
     defineParameter(".saveInitialTime", "numeric", NA_real_, NA, NA, desc="Initial time for saving"),
-    defineParameter(".saveInterval", "numeric", NA_real_, NA, NA, desc="Interval between save events")),
-  inputObjects=data.frame(objectName=c("ageMap", "trajMapBeacons", "vegMapBeacons",
-                                       "vegMap", "trajObj"),
-                          objectClass=c("RasterLayer", "RasterLayer", "RasterLayer",
-                                        "RasterLayer", "matrix"),
-                          other=rep(NA_character_, 5L), stringsAsFactors=FALSE),
-  outputObjects=data.frame(objectName=c("trajMap", "vegMap", "vegTypeDistribution"),
-                           objectClass=c("RasterLayer", "RasterLayer", "gg"),
-                           other=rep(NA_character_, 3L), stringsAsFactors=FALSE)
+    defineParameter(".saveInterval", "numeric", NA_real_, NA, NA, desc="Interval between save events")
+  ),
+  inputObjects = data.frame(
+    objectName = c("ageMap", "trajMapBeacons", "vegMapBeacons", "vegMap", "trajObj"),
+    objectClass = c("RasterLayer", "RasterLayer", "RasterLayer", "RasterLayer", "matrix"),
+    sourceURL = c(NA_character_, NA_character_, NA_character_, NA_character_, NA_character_),
+    other = rep(NA_character_, 5L),
+    stringsAsFactors = FALSE
+  ),
+  outputObjects = data.frame(
+    objectName = c("trajMap", "vegMap", "vegTypeDistribution"),
+    objectClass = c("RasterLayer", "RasterLayer", "gg"),
+    other = rep(NA_character_, 3L),
+    stringsAsFactors = FALSE
+  )
 ))
 
 ### event functions

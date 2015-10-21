@@ -1,35 +1,38 @@
 stopifnot(packageVersion("SpaDES") >= "1.0.3.9001")
 
 defineModule(sim, list(
-  name="cropReprojectLccAge",
-  description="A translator module. Crops and reprojects the Land cover classification from 2005 to
+  name = "cropReprojectLccAge",
+  description = "A translator module. Crops and reprojects the Land cover classification from 2005 to
   a smaller, cropped RasterLayer, defined by ext, and with new projection defined by newCRS",
-  keywords=c("translator", "lcc05", "Land Cover Classification", "vegetation"),
-  childModules=character(),
-  authors=c(person(c("Eliot", "J","B"), "McIntire", email="emcintir@nrcan.gc.ca", role=c("aut", "cre"))),
-  version=numeric_version("0.0.6"),
-  spatialExtent=raster::extent(rep(NA_real_, 4)),
-  timeframe=as.POSIXlt(c(NA, NA)),
-  timeunit=NA_character_,
-  citation=list("citation.bib"),
-  documentation=list("README.txt", "cropReprojectLccAge.Rmd"),
-  reqdPkgs=list("raster","rgeos", "parallel","sp", "archivist"),
-  parameters=rbind(
-    defineParameter("useCache", "logical", TRUE, NA, NA, desc="Should slow raster and sp functions use cached versions to speedup repeated calls"),
-    defineParameter(".plotInitialTime", "numeric", NA_real_, NA, NA, desc="Initial time for plotting"),
-    defineParameter(".plotInterval", "numeric", NA_real_, NA, NA, desc="Interval between plotting"),
-    defineParameter(".saveInitialTime", "numeric", NA_real_, NA, NA, desc="Initial time for saving"),
-    defineParameter(".saveInterval", "numeric", NA_real_, NA, NA, desc="Interval between save events")),
-  inputObjects=data.frame(objectName=c("lcc05", "age", "inputMapPolygon"),
-                          objectClass=c("RasterLayer", "RasterLayer", "SpatialPolygons"),
-                          other=rep(NA_character_, 3L), stringsAsFactors=FALSE),
-  outputObjects=data.frame(objectName=c("vegMapLcc", "ageMapInit"),
-                          objectClass=c("RasterLayer", "RasterLayer"),
-                          other=rep(NA_character_, 2L), stringsAsFactors=FALSE)
+  keywords = c("translator", "lcc05", "Land Cover Classification", "vegetation"),
+  childModules = character(),
+  authors = c(person(c("Eliot", "J","B"), "McIntire", email = "eliot.mcintire@canada.ca", role = c("aut", "cre"))),
+  version = numeric_version("0.0.7"),
+  spatialExtent = raster::extent(rep(NA_real_, 4)),
+  timeframe = as.POSIXlt(c(NA, NA)),
+  timeunit = NA_character_,
+  citation = list("citation.bib"),
+  documentation = list("README.txt", "cropReprojectLccAge.Rmd"),
+  reqdPkgs = list("raster","rgeos", "parallel","sp", "archivist"),
+  parameters = rbind(
+    defineParameter("useCache", "logical", TRUE, NA, NA, desc = "Should slow raster and sp functions use cached versions to speedup repeated calls"),
+    defineParameter(".plotInitialTime", "numeric", NA_real_, NA, NA, desc = "Initial time for plotting"),
+    defineParameter(".plotInterval", "numeric", NA_real_, NA, NA, desc = "Interval between plotting"),
+    defineParameter(".saveInitialTime", "numeric", NA_real_, NA, NA, desc = "Initial time for saving"),
+    defineParameter(".saveInterval", "numeric", NA_real_, NA, NA, desc = "Interval between save events")),
+  inputObjects = data.frame(
+    objectName = c("lcc05", "age", "inputMapPolygon"),
+    objectClass = c("RasterLayer", "RasterLayer", "SpatialPolygons"),
+    sourceURL = c(NA_character_, NA_character_, NA_character_),
+    other = rep(NA_character_, 3L), stringsAsFactors = FALSE),
+  outputObjects = data.frame(
+    objectName = c("vegMapLcc", "ageMapInit"),
+    objectClass = c("RasterLayer", "RasterLayer"),
+    other = rep(NA_character_, 2L), stringsAsFactors = FALSE)
 ))
 
-doEvent.cropReprojectLccAge = function(sim, eventTime, eventType, debug=FALSE) {
-  if (eventType=="init") {
+doEvent.cropReprojectLccAge <- function(sim, eventTime, eventType, debug = FALSE) {
+  if (eventType == "init") {
 
     # do stuff for this event
     sim <- sim$cropReprojectLccCacheFunctions(sim)
@@ -69,10 +72,10 @@ cropReprojectLccInit = function(sim) {
                            mask=sim$spTransform(sim$inputMapPolygon, CRSobj = crs(sim$age)))
     sim$ageMapInit <- sim$projectRaster(age.crsAge, to=sim$vegMapLcc, method="ngb")
 
-    if (sum(!is.na(getValues(sim$ageMapInit)))==0) {
+    if (sum(!is.na(getValues(sim$ageMapInit))) == 0) {
       stop("There are no age data provided with input age map")
     }
-    if (sum(!is.na(getValues(sim$vegMapLcc)))==0) {
+    if (sum(!is.na(getValues(sim$vegMapLcc))) == 0) {
       stop("There are no vegatation data provided with input vegatation map")
     }
     setColors(sim$ageMapInit) <- colorRampPalette(c("light green", "dark green"))(50)

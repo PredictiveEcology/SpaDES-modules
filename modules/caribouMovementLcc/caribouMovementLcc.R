@@ -1,42 +1,44 @@
 stopifnot(packageVersion("SpaDES") >= "1.0.1")
 
 defineModule(sim, list(
-  name="caribouMovementLcc",
-  description="Simulate caribou movement via correlated random walk.",
-  keywords=c("caribou", "individual based movement model", "correlated random walk"),
-  childModules=character(),
-  authors=c(person(c("Eliot", "J", "B"), "McIntire", email="Eliot.McIntire@NRCan.gc.ca", role=c("aut", "cre"))),
-  version=numeric_version("0.0.4"),
-  spatialExtent=raster::extent(rep(NA_real_, 4)),
-  timeframe=as.POSIXlt(c(NA, NA)),
-  timeunit="month",
-  citation=list("citation.bib"),
-  documentation=list("README.txt", "caribouMovementLcc.Rmd"),
-  reqdPkgs=list("grid", "raster", "sp"),
-  parameters=rbind(
-    defineParameter("glmInitialTime", "numeric", 100.0, NA, NA, desc="Simulation time for doing first glm fit
+  name = "caribouMovementLcc",
+  description = "Simulate caribou movement via correlated random walk.",
+  keywords = c("caribou", "individual based movement model", "correlated random walk"),
+  childModules = character(),
+  authors = c(person(c("Eliot", "J", "B"), "McIntire", email = "Eliot.McIntire@NRCan.gc.ca", role = c("aut", "cre"))),
+  version = numeric_version("0.0.5"),
+  spatialExtent = raster::extent(rep(NA_real_, 4)),
+  timeframe = as.POSIXlt(c(NA, NA)),
+  timeunit = "month",
+  citation = list("citation.bib"),
+  documentation = list("README.txt", "caribouMovementLcc.Rmd"),
+  reqdPkgs = list("grid", "raster", "sp"),
+  parameters = rbind(
+    defineParameter("glmInitialTime", "numeric", 100.0, NA, NA, desc = "Simulation time for doing first glm fit
                     between cumulative caribou and cumulative caribou"),
-    defineParameter("glmInterval", "numeric", 10.0, NA, NA, desc="Time interval between glm fitting"),
-    defineParameter("N", "numeric", 100.0, 0.0, 10000.0, desc="Number of caribou to intiate at startTime"),
-    defineParameter("torus", "logical", TRUE, NA, NA, desc="Whether caribou should wrap around map if they go off map sides"),
-    defineParameter("moveInterval", "numeric", 1.0, NA, NA, desc="Time interval between move events"),
-    defineParameter("startTime", "numeric", 1.0, NA, NA, desc="Simulation time at which to initiate caribou movement"),
-    defineParameter(".plotInitialTime", "numeric", 0, NA, NA, desc="Initial time for plotting"),
-    defineParameter(".plotInterval", "numeric", 1, NA, NA, desc="Interval between plotting"),
-    defineParameter(".saveInitialTime", "numeric", NA_real_, NA, NA, desc="Initial time for saving"),
-    defineParameter(".saveInterval", "numeric", NA_real_, NA, NA, desc="Interval between save events")),
-  inputObjects=data.frame(objectName=c("ageMap", "vegMap"),
-                          objectClass=c("RasterLayer", "RasterLayer"),
-                          other=rep(NA_character_, 2L), stringsAsFactors=FALSE),
-  outputObjects=data.frame(objectName=c("caribou", "caribouRas", "glmPlot", "glmPVals"),
-                           objectClass=c("SpatialPointsDataFrame", "RasterLayer",
-                                         "gg", "numeric"),
-                           other=rep(NA_character_, 4L), stringsAsFactors=FALSE)
+    defineParameter("glmInterval", "numeric", 10.0, NA, NA, desc = "Time interval between glm fitting"),
+    defineParameter("N", "numeric", 100.0, 0.0, 10000.0, desc = "Number of caribou to intiate at startTime"),
+    defineParameter("torus", "logical", TRUE, NA, NA, desc = "Whether caribou should wrap around map if they go off map sides"),
+    defineParameter("moveInterval", "numeric", 1.0, NA, NA, desc = "Time interval between move events"),
+    defineParameter("startTime", "numeric", 1.0, NA, NA, desc = "Simulation time at which to initiate caribou movement"),
+    defineParameter(".plotInitialTime", "numeric", 0, NA, NA, desc = "Initial time for plotting"),
+    defineParameter(".plotInterval", "numeric", 1, NA, NA, desc = "Interval between plotting"),
+    defineParameter(".saveInitialTime", "numeric", NA_real_, NA, NA, desc = "Initial time for saving"),
+    defineParameter(".saveInterval", "numeric", NA_real_, NA, NA, desc = "Interval between save events")),
+  inputObjects = data.frame(
+    objectName = c("ageMap", "vegMap"),
+    objectClass = c("RasterLayer", "RasterLayer"),
+    sourceURL  =  c(NA_character_, NA_character_),
+    other = rep(NA_character_, 2L), stringsAsFactors = FALSE),
+  outputObjects = data.frame(
+    objectName = c("caribou", "caribouRas", "glmPlot", "glmPVals"),
+    objectClass = c("SpatialPointsDataFrame", "RasterLayer", "gg", "numeric"),
+    other = rep(NA_character_, 4L), stringsAsFactors = FALSE)
 ))
 
 ### event functions
-doEvent.caribouMovementLcc <- function(sim, eventTime, eventType, debug=FALSE) {
-  if (eventType=="init") {
+doEvent.caribouMovementLcc <- function(sim, eventTime, eventType, debug = FALSE) {
+  if (eventType == "init") {
     ### check for object dependencies:
     ### (use `checkObject` or similar)
     checkObject(sim, "vegMap")
@@ -49,14 +51,14 @@ doEvent.caribouMovementLcc <- function(sim, eventTime, eventType, debug=FALSE) {
     sim <- scheduleEvent(sim, params(sim)$caribouMovementLcc$.plotInitialTime, "caribouMovementLcc", "plot.init")
     sim <- scheduleEvent(sim, params(sim)$caribouMovementLcc$glmInitialTime, "caribouMovementLcc", "glm.init")
 
-  } else if (eventType=="move") {
+  } else if (eventType == "move") {
     # do stuff for this event
     sim <- sim$caribouMovementMove(sim)
 
     # schedule the next event
     sim <- scheduleEvent(sim, time(sim) + params(sim)$caribouMovementLcc$moveInterval,
                          "caribouMovementLcc", "move")
-  } else if (eventType=="plot.init") {
+  } else if (eventType == "plot.init") {
     # do stuff for this event
 
     # This wipes out previous values of the caribou map with a white raster
@@ -66,7 +68,7 @@ doEvent.caribouMovementLcc <- function(sim, eventTime, eventType, debug=FALSE) {
     # schedule the next event
     sim <- scheduleEvent(sim, time(sim) + params(sim)$caribouMovementLcc$.plotInterval,
                          "caribouMovementLcc", "plot")
-  } else if (eventType=="plot") {
+  } else if (eventType == "plot") {
     # do stuff for this event
     Plot(sim$caribouRas, zero.color="white",
          legendRange=c(0, end(sim, "year")-start(sim, "year")))
@@ -74,7 +76,7 @@ doEvent.caribouMovementLcc <- function(sim, eventTime, eventType, debug=FALSE) {
     # schedule the next event
     sim <- scheduleEvent(sim, time(sim) + params(sim)$caribouMovementLcc$.plotInterval,
                          "caribouMovementLcc", "plot")
-  } else if (eventType=="save") {
+  } else if (eventType == "save") {
     # do stuff for this event
     sim <- saveFiles(sim)
 
@@ -82,7 +84,7 @@ doEvent.caribouMovementLcc <- function(sim, eventTime, eventType, debug=FALSE) {
     sim <- scheduleEvent(sim, time(sim) + params(sim)$caribouMovementLcc$.saveInterval,
                          "caribouMovementLcc", "save")
 
-  } else if (eventType=="glm.init") {
+  } else if (eventType == "glm.init") {
     # do stuff for this event
     sim$glmPVals <- rep(NA_real_,end(sim, "month"))
     glmCaribouFire <- glm(getValues(sim$caribouRas)~getValues(sim$FiresCumul))
@@ -106,7 +108,7 @@ doEvent.caribouMovementLcc <- function(sim, eventTime, eventType, debug=FALSE) {
                          "caribouMovementLcc", "glm.plot")
     # schedule the next event
 
-  } else if (eventType=="glm.plot") {
+  } else if (eventType == "glm.plot") {
     # do stuff for this event
     glmCaribouFire <- glm(getValues(sim$caribouRas)~getValues(sim$FiresCumul))
     sim$glmPVals[round(time(sim, "month"))] <-
@@ -172,7 +174,7 @@ caribouMovementInit <- function(sim) {
 caribouMovementMove <- function(sim) {
   # crop any caribou that went off maps
 
-  if(length(sim$caribou)==0) stop("All agents are off map")
+  if(length(sim$caribou) == 0) stop("All agents are off map")
 
   # find out what pixels the individuals are on now
   ex <- sim$ageMap[sim$caribou]

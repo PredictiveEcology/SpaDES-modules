@@ -1,0 +1,2 @@
+"file" "checksum"
+"C:/Users/achubaty/GitHub/McIntire-lab/modules/LccToBeaconsReclassify/data/LandCoverOfCanada2005_V1_4.zip" "60b91274c3b39bf01150281954ce585a"

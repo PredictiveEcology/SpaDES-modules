@@ -1,34 +1,37 @@
 stopifnot(packageVersion("SpaDES") >= "1.0.1")
 
 defineModule(sim, list(
-  name="LccToBeaconsReclassify",
-  description="Takes the LCC05 classification of 39 land cover classes, and reclassifies it to the 11 classes of the Beacons succession model.",
-  keywords=c("forest succession", "LCC05", "land cover classification 2005", "Beacons"),
-  childModules=character(),
-  authors=c(person(c("Eliot", "J", "B"), "McIntire", email="Eliot.McIntire@NRCan.gc.ca", role=c("aut", "cre")),
-            person(c("Alex", "M"), "Chubaty", email="Alexander.Chubaty@NRCan.gc.ca", role=c("aut")),
-            person("Steve", "Cumming", email="Steve.Cumming@sbf.ulaval.ca", role=c("aut"))),
-  version=numeric_version("0.0.4"),
-  spatialExtent=raster::extent(rep(NA_real_, 4)),
-  timeframe=as.POSIXlt(c("2005-01-01", NA)),
-  timeunit="year",
-  citation=list("citation.bib"),
-  documentation=list("README.txt", "LccToBeaconsReclassify.Rmd"),
-  reqdPkgs=list("raster", "RColorBrewer", "fastmatch", "dplyr"),
-  parameters=rbind(
-    defineParameter(".plotInitialTime", "numeric", NA_real_, NA, NA, desc="Initial time for plotting"),
-    defineParameter(".plotInterval", "numeric", NA_real_, NA, NA, desc="Interval between plotting"),
-    defineParameter(".saveInitialTime", "numeric", NA_real_, NA, NA, desc="Initial time for saving"),
-    defineParameter(".saveInterval", "numeric", NA_real_, NA, NA, desc="Interval between save events")),
-  inputObjects=data.frame(objectName="vegMapLcc",
-                          objectClass="RasterLayer",
-                          other=NA_character_, stringsAsFactors=FALSE),
-  outputObjects=data.frame(objectName=c("trajMapBeacons", "vegMapBeacons", "trajObj"),
-                           objectClass=c("RasterLayer", "RasterLayer", "matrix"),
-                           other=rep(NA_character_, 3L), stringsAsFactors=FALSE)
+  name = "LccToBeaconsReclassify",
+  description = "Takes the LCC05 classification of 39 land cover classes, and reclassifies it to the 11 classes of the Beacons succession model.",
+  keywords = c("forest succession", "LCC05", "land cover classification 2005", "Beacons"),
+  childModules = character(),
+  authors = c(person(c("Eliot", "J", "B"), "McIntire", email = "Eliot.McIntire@NRCan.gc.ca", role = c("aut", "cre")),
+              person(c("Alex", "M"), "Chubaty", email = "Alexander.Chubaty@NRCan.gc.ca", role = c("aut")),
+              person("Steve", "Cumming", email = "Steve.Cumming@sbf.ulaval.ca", role = c("aut"))),
+  version = numeric_version("0.0.5"),
+  spatialExtent = raster::extent(rep(NA_real_, 4)),
+  timeframe = as.POSIXlt(c("2005-01-01", NA)),
+  timeunit = "year",
+  citation = list("citation.bib"),
+  documentation = list("README.txt", "LccToBeaconsReclassify.Rmd"),
+  reqdPkgs = list("raster", "RColorBrewer", "fastmatch", "dplyr"),
+  parameters = rbind(
+    defineParameter(".plotInitialTime", "numeric", NA_real_, NA, NA, desc = "Initial time for plotting"),
+    defineParameter(".plotInterval", "numeric", NA_real_, NA, NA, desc = "Interval between plotting"),
+    defineParameter(".saveInitialTime", "numeric", NA_real_, NA, NA, desc = "Initial time for saving"),
+    defineParameter(".saveInterval", "numeric", NA_real_, NA, NA, desc = "Interval between save events")
+  ),
+  inputObjects = data.frame(
+    objectName = "vegMapLcc", objectClass = "RasterLayer",
+    sourceURL = "ftp://ftp.ccrs.nrcan.gc.ca/ad/NLCCLandCover/LandcoverCanada2005_250m/LandCoverOfCanada2005_V1_4.zip",
+    other = NA_character_, stringsAsFactors = FALSE),
+  outputObjects = data.frame(
+    objectName = c("trajMapBeacons", "vegMapBeacons", "trajObj"),
+    objectClass = c("RasterLayer", "RasterLayer", "matrix"),
+    other = rep(NA_character_, 3L), stringsAsFactors = FALSE)
 ))
 
-doEvent.LccToBeaconsReclassify = function(sim, eventTime, eventType, debug=FALSE) {
+doEvent.LccToBeaconsReclassify <- function(sim, eventTime, eventType, debug = FALSE) {
   if (eventType=="init") {
     checkObject(sim, name="vegMapLcc") # Lcc map or a clipped extent version
 

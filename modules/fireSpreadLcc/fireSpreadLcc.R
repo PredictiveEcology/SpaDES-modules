@@ -1,46 +1,45 @@
 stopifnot(packageVersion("SpaDES") >= "1.0.1")
 
 defineModule(sim, list(
-  name="fireSpreadLcc",
-  description="Simulate fire ignition and spread on a landscape, where spread probability varies according to percent pine. Fire size statistics are collected immediately after each burn event. Requires a global simulation parameter `.stackName` be set.",
-  keywords=c("fire", "percolation model", "spread algorithm"),
-  childModules=character(),
-  authors=c(person(c("Alex", "M"), "Chubaty", email="Alexander.Chubaty@NRCan.gc.ca", role=c("aut", "cre")),
-            person(c("Eliot", "J", "B"), "McIntire", email="Eliot.McIntire@NRCan.gc.ca", role=c("aut", "cre")),
-            person("Steve", "Cumming", email="Steve.Cumming@sbf.ulaval.ca", role=c("aut"))),
-  version=numeric_version("0.0.4"),
-  spatialExtent=raster::extent(rep(NA_real_, 4)),
-  timeframe=as.POSIXlt(c("2005-01-01", NA)),
-  timeunit="year",
-  citation=list("citation.bib"),
-  documentation=list("README.txt", "fireSpreadLcc.Rmd"),
-  reqdPkgs=list("ggplot2", "methods", "raster", "RColorBrewer"),
-  parameters=rbind(
-    defineParameter("drought", "numeric", 1.00, 0.8, 1.4, desc="An arbitrary index of drought, where 1 is 'normal', and greater than 1 is more dry"),
-    defineParameter("nFires", "numeric", 10L, 0L, 100L, desc="Number of fires to initiate at each returnInterval"),
-    defineParameter("its", "numeric", 1e6, NA, NA, desc="Maximum number of iterations for the spread algorithm"),
-    defineParameter("persistprob", "numeric", 0.00, 0.00, 1.00, desc="Probability that a burning cell will continue burning for 1 iteration"),
-    defineParameter("returnInterval", "numeric", 1.0, NA, NA, desc="Time interval between fire events"),
-    defineParameter("startTime", "numeric", 1.0, NA, NA, desc="Simulation time at which to initiate fires"),
-    defineParameter(".plotInitialTime", "numeric", 0, NA, NA, desc="Initial time for plotting"),
-    defineParameter(".plotInterval", "numeric", 1, NA, NA, desc="Interval between plotting"),
-    defineParameter(".saveInitialTime", "numeric", NA_real_, NA, NA, desc="Initial time for saving"),
-    defineParameter(".saveInterval", "numeric", NA_real_, NA, NA, desc="Interval between save events")),
-  inputObjects=data.frame(objectName=c("vegMap", globals(sim)$burnStats),
-                          objectClass=c("RasterLayer", "numeric"),
-                          other=rep(NA_character_, 2L), stringsAsFactors=FALSE),
-  outputObjects=data.frame(objectName=c("Fires",
-                                        "FiresCumul",
-                                        "FireSizeDistribution",
-                                        globals(sim)$burnStats),
-                           objectClass=c("RasterLayer", "RasterLayer",
-                                         "gg", "numeric"),
-                           other=rep(NA_character_, 4L), stringsAsFactors=FALSE)
+  name = "fireSpreadLcc",
+  description = "Simulate fire ignition and spread on a landscape, where spread probability varies according to percent pine. Fire size statistics are collected immediately after each burn event. Requires a global simulation parameter `.stackName` be set.",
+  keywords = c("fire", "percolation model", "spread algorithm"),
+  childModules = character(),
+  authors = c(person(c("Alex", "M"), "Chubaty", email = "alexander.chubaty@canada.ca", role = c("aut", "cre")),
+              person(c("Eliot", "J", "B"), "McIntire", email = "eliot.mcintire@canada.ca", role = c("aut", "cre")),
+              person("Steve", "Cumming", email = "Steve.Cumming@sbf.ulaval.ca", role = c("aut"))),
+  version = numeric_version("0.0.5"),
+  spatialExtent = raster::extent(rep(NA_real_, 4)),
+  timeframe = as.POSIXlt(c("2005-01-01", NA)),
+  timeunit = "year",
+  citation = list("citation.bib"),
+  documentation = list("README.txt", "fireSpreadLcc.Rmd"),
+  reqdPkgs = list("ggplot2", "methods", "raster", "RColorBrewer"),
+  parameters = rbind(
+    defineParameter("drought", "numeric", 1.00, 0.8, 1.4, desc = "An arbitrary index of drought, where 1 is 'normal', and greater than 1 is more dry"),
+    defineParameter("nFires", "numeric", 10L, 0L, 100L, desc = "Number of fires to initiate at each returnInterval"),
+    defineParameter("its", "numeric", 1e6, NA, NA, desc = "Maximum number of iterations for the spread algorithm"),
+    defineParameter("persistprob", "numeric", 0.00, 0.00, 1.00, desc = "Probability that a burning cell will continue burning for 1 iteration"),
+    defineParameter("returnInterval", "numeric", 1.0, NA, NA, desc = "Time interval between fire events"),
+    defineParameter("startTime", "numeric", 1.0, NA, NA, desc = "Simulation time at which to initiate fires"),
+    defineParameter(".plotInitialTime", "numeric", 0, NA, NA, desc = "Initial time for plotting"),
+    defineParameter(".plotInterval", "numeric", 1, NA, NA, desc = "Interval between plotting"),
+    defineParameter(".saveInitialTime", "numeric", NA_real_, NA, NA, desc = "Initial time for saving"),
+    defineParameter(".saveInterval", "numeric", NA_real_, NA, NA, desc = "Interval between save events")),
+  inputObjects = data.frame(
+    objectName = c("vegMap", globals(sim)$burnStats),
+    objectClass = c("RasterLayer", "numeric"),
+    sourceURL = c(NA_character_, NA_character_),
+    other = rep(NA_character_, 2L), stringsAsFactors = FALSE),
+  outputObjects = data.frame(
+    objectName = c("Fires", "FiresCumul", "FireSizeDistribution", globals(sim)$burnStats),
+    objectClass = c("RasterLayer", "RasterLayer", "gg", "numeric"),
+    other = rep(NA_character_, 4L), stringsAsFactors = FALSE)
 ))
 
 ### event functions
-doEvent.fireSpreadLcc <- function(sim, eventTime, eventType, debug=FALSE) {
-  if (eventType=="init") {
+doEvent.fireSpreadLcc <- function(sim, eventTime, eventType, debug = FALSE) {
+  if (eventType == "init") {
     ### check for object dependencies:
     ### (use `checkObject` or similar)
     checkObject(sim, name="vegMap")
@@ -55,25 +54,25 @@ doEvent.fireSpreadLcc <- function(sim, eventTime, eventType, debug=FALSE) {
     sim <- scheduleEvent(sim, params(sim)$fireSpreadLcc$startTime, "fireSpreadLcc", "burn")
     sim <- scheduleEvent(sim, params(sim)$fireSpreadLcc$.saveInterval, "fireSpreadLcc", "save")
     sim <- scheduleEvent(sim, params(sim)$fireSpreadLcc$.plotInitialTime, "fireSpreadLcc", "plot.init")
-  } else if (eventType=="burn") {
+  } else if (eventType == "burn") {
     # do stuff for this event
     sim <- sim$fireSpreadLccBurn(sim)
     # schedule the next events
     sim <- scheduleEvent(sim, time(sim), "fireSpreadLcc", "stats") # do stats immediately following burn
     sim <- scheduleEvent(sim, time(sim) + params(sim)$fireSpreadLcc$returnInterval, "fireSpreadLcc", "burn")
-  } else if (eventType=="stats") {
+  } else if (eventType == "stats") {
     # do stuff for this event
     sim <- sim$fireSpreadLccStats(sim)
 
     # schedule the next event
     ## stats scheduling done by burn event
-  } else if (eventType=="plot.init") {
+  } else if (eventType == "plot.init") {
     # do stuff for this event
     Plot(sim$FiresCumul,zero.color = "white", legendRange=0:sim$maxFiresCumul)
 
     # schedule the next event
     sim <- scheduleEvent(sim, time(sim) + params(sim)$fireSpreadLcc$.plotInterval, "fireSpreadLcc", "plot")
-  } else if (eventType=="plot") {
+  } else if (eventType == "plot") {
     # do stuff for this event
     Plot(sim$FiresCumul, zero.color="white", legendRange=0:sim$maxFiresCumul)
 
@@ -94,7 +93,7 @@ doEvent.fireSpreadLcc <- function(sim, eventTime, eventType, debug=FALSE) {
 
     # schedule the next event
     sim <- scheduleEvent(sim, time(sim) + params(sim)$fireSpreadLcc$.plotInterval, "fireSpreadLcc", "plot")
-  } else if (eventType=="save") {
+  } else if (eventType == "save") {
     # do stuff for this event
     sim <- saveFiles(sim)
 
