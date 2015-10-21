@@ -1,2 +1,2 @@
 "file" "checksum"
-"C:/Users/achubaty/GitHub/McIntire-lab/modules/forestAge/data/can_age04_1km.tif" "37e7d0d3e664b81ee82b435b526013dc"
+"can_age04_1km.tif" "37e7d0d3e664b81ee82b435b526013dc"
