@@ -1,7 +1,7 @@
 ---
 title: "LCC2005"
 author: "Alex Chubaty"
-date: "10 August 2015"
+date: "29 October 2015"
 output: pdf_document
 ---
 
@@ -19,14 +19,15 @@ library(igraph)
 library(raster)
 library(SpaDES)
 
-inputDir <- file.path(tempdir(), "inputs") %>% checkPath(create=TRUE)
+inputDir <- file.path(tempdir(), "inputs") %>% checkPath(create = TRUE)
 
 # download data (these are large files!)
 if (!file.exists(file.path(inputDir, "LandCoverOfCanada2005_V1_4", "LCC2005_V1_4a.tif"))) {
-  dir.create(file.path(inputDir, "LandCoverOfCanada2005_V1_4"))
   url <- "ftp://ftp.ccrs.nrcan.gc.ca/ad/NLCCLandCover/LandcoverCanada2005_250m/LandCoverOfCanada2005_V1_4.zip"
-  download.file(url = url, destfile = file.path(inputDir, "LandCoverOfCanada2005_V1_4.zip"))
-  unzip(file.path(inputDir, "LandCoverOfCanada2005_V1_4.zip"))
+  download.file(url = url,
+                destfile = file.path(inputDir, "LandCoverOfCanada2005_V1_4.zip"))
+  unzip(zipfile = file.path(inputDir, "LandCoverOfCanada2005_V1_4.zip"),
+        exdir = file.path(inputDir, "LandCoverOfCanada2005_V1_4"))
 }
 
 if (!file.exists(file.path(inputDir, "age", "age.tif"))) {
@@ -36,8 +37,8 @@ if (!file.exists(file.path(inputDir, "age", "age.tif"))) {
 }
 
 # load data
-age <- raster(file.path(inputDir, "age/age.tif"))
-lcc05 <- raster(file.path(inputDir, "LandCoverOfCanada2005_V1_4/LCC2005_V1_4a.tif"))
+age <- raster::raster(file.path(inputDir, "age", "age.tif"))
+lcc05 <- raster::raster(file.path(inputDir, "LandCoverOfCanada2005_V1_4", "LCC2005_V1_4a.tif"))
 lcc05CRS <- crs(lcc05)
 
 # Random polygon
@@ -54,14 +55,22 @@ xAdd <- round(runif(1, -5e5, 1.5e6))
 yAdd <- round(runif(1, 1e5, 5e5)) - xAdd/2
 nPoints <- 20
 betaPar <- 0.6
-X = c(jitter(sort(rbeta(nPoints, betaPar, betaPar)*(maxX-minX)+minX)),
-      jitter(sort(rbeta(nPoints, betaPar, betaPar)*(maxX-minX)+minX, decreasing = TRUE)))
-Y = c(jitter(sort(rbeta(nPoints/2, betaPar, betaPar)*(maxY-meanY)+meanY)),
-      jitter(sort(rbeta(nPoints, betaPar, betaPar)*(maxY-minY)+minY, decreasing = TRUE)),
-      jitter(sort(rbeta(nPoints/2, betaPar, betaPar)*(meanY-minY)+minY)))
+X = c(
+  jitter(sort(rbeta(nPoints, betaPar, betaPar)*(maxX-minX)+minX)),
+  jitter(sort(rbeta(nPoints, betaPar, betaPar)*(maxX-minX)+minX, decreasing = TRUE))
+)
+Y = c(
+  jitter(sort(rbeta(nPoints/2, betaPar, betaPar)*(maxY-meanY)+meanY)),
+  jitter(sort(rbeta(nPoints, betaPar, betaPar)*(maxY-minY)+minY, decreasing = TRUE)),
+  jitter(sort(rbeta(nPoints/2, betaPar, betaPar)*(meanY-minY)+minY))
+)
 
-inputMapPolygon <- Polygon(cbind(X+xAdd, Y+yAdd)) %>%  list %>% 
-  Polygons("s1") %>%  list %>%  SpatialPolygons(1L)
+inputMapPolygon <- cbind(X+xAdd, Y+yAdd) %>% 
+  Polygon %>%
+  list %>%
+  Polygons("s1") %>%
+  list %>%
+  SpatialPolygons(1L)
 crs(inputMapPolygon) <- lcc05CRS
 ```
 
@@ -70,24 +79,26 @@ Module groups make loading multiple modules easier: only the name of the module 
 ```{r module-group-init, eval=FALSE}
 # setup simulation
 outputDir <- file.path(tempdir(), "simOutputs")
-times <- list(start=2005.0, end=2020.0)
+times <- list(start = 2005.0, end = 2020.0)
 parameters <- list(
-  .globals = list(burnStats="nPixelsBurned", rnorm(1)),
-  .progress = list(type="text", interval=1),
+  .globals = list(burnStats = "nPixelsBurned"),
+  .progress = list(type = "text", interval = 1),
   cropReprojectLccAge = list(useCache=TRUE),
-  forestSuccessionBeacons = list(returnInterval=1, startTime=times$start,
-                                 .plotInitialTime=times$start, .plotInterval=1),
-  forestAge = list(returnInterval=1, startTime=times$start+0.5,
-                   .plotInitialTime=times$start, .plotInterval=1),
-  fireSpreadLcc = list(nFires= 3, its=1e6, drought=1.2,
-                       persistprob=0, returnInterval=1, startTime=times$start+1,
-                       .plotInitialTime=times$start, .plotInterval=1),
-  caribouMovementLcc = list(N=1e3, moveInterval=1, startTime=times$start+1,
-                            torus=TRUE, glmInitialTime = NA_real_,
-                            .plotInitialTime=times$start, .plotInterval=1)
+  forestSuccessionBeacons = list(
+    returnInterval = 1, startTime = times$start,
+    .plotInitialTime = times$start, .plotInterval = 1),
+  forestAge = list(
+    returnInterval = 1, startTime = times$start+0.5,
+    .plotInitialTime = times$start, .plotInterval = 1),
+  fireSpreadLcc = list(
+    nFires = 3, its = 1e6, drought = 1.2, persistprob = 0, returnInterval = 1,
+    startTime = times$start+1, .plotInitialTime = times$start, .plotInterval = 1),
+  caribouMovementLcc = list(
+    N = 1e3, moveInterval = 1, startTime = times$start+1, torus = TRUE,
+    glmInitialTime = NA_real_, .plotInitialTime = times$start, .plotInterval = 1)
 )
 modules <- list("LCC2005")
-objects <- list(age="age", lcc05="lcc05", inputMapPolygon="inputMapPolygon")
+objects <- list(age = "age", lcc05 = "lcc05", inputMapPolygon = "inputMapPolygon")
 paths <- list(
   cachePath = file.path(outputDir, "cache"),
   modulePath = "~/GitHub/McIntire-lab/modules",
@@ -95,8 +106,8 @@ paths <- list(
   outputPath = outputDir
 )
 
-mySim <- simInit(times=times, params=parameters, modules=modules,
-                 objects=objects, paths=paths)
+mySim <- simInit(times = times, params = parameters, modules = modules,
+                 objects = objects, paths = paths)
 
 modules(mySim) # note the child modules are initialized
 ```

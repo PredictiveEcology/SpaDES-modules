@@ -6,7 +6,7 @@ defineModule(sim, list(
   keywords = c("insert key words here"),
   authors = c(person(c("Alex", "M."), "Chubaty", email = "alexander.chubaty@canada.ca", role = c("aut", "cre"))),
   childModules = c("caribouMovementLcc", "cropReprojectLccAge", "fireSpreadLcc", "forestAge", "forestSuccessionBeacons", "LccToBeaconsReclassify"),
-  version = numeric_version("1.0.3"),
+  version = numeric_version("1.0.4"),
   spatialExtent = raster::extent(rep(NA_real_, 4)),
   timeframe = as.POSIXlt(c(NA, NA)),
   timeunit = "year",
@@ -20,9 +20,11 @@ defineModule(sim, list(
     defineParameter(".saveInterval", "numeric", NA, NA, NA, "This describes the simulation time at which the first save event should occur")
   ),
   inputObjects = data.frame(
-    objectName = NA_character_, objectClass = NA_character_, other = NA_character_, stringsAsFactors = FALSE),
+    objectName = NA_character_, objectClass = NA_character_,
+    sourceURL = NA_character_, other = NA_character_, stringsAsFactors = FALSE),
   outputObjects = data.frame(
-    objectName = NA_character_, objectClass = NA_character_, other = NA_character_, stringsAsFactors = FALSE)
+    objectName = NA_character_, objectClass = NA_character_,
+    other = NA_character_, stringsAsFactors = FALSE)
 ))
 
 ### no other code is needed for this module group

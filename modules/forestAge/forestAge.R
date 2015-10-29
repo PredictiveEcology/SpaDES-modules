@@ -5,9 +5,10 @@ defineModule(sim, list(
   description = "A basic forest age module based on Canada Land Cover Classes 2005.",
   keywords = c("forest age", "LCC05", "land cover classification 2005"),
   childModules = character(),
-  authors = c(person(c("Alex", "M"), "Chubaty", email = "Alexander.Chubaty@NRCan.gc.ca", role = c("aut", "cre")),
-            person(c("Eliot", "J", "B"), "McIntire", email = "Eliot.McIntire@NRCan.gc.ca", role = c("aut", "cre")),
-            person("Steve", "Cumming", email = "Steve.Cumming@sbf.ulaval.ca", role = c("aut"))),
+  authors = c(
+    person(c("Alex", "M"), "Chubaty", email = "alexander.chubaty@canada.ca", role = c("aut", "cre")),
+	person(c("Eliot", "J", "B"), "McIntire", email = "eliot.mcintire@canada.ca", role = c("aut", "cre")),
+    person("Steve", "Cumming", email = "Steve.Cumming@sbf.ulaval.ca", role = c("aut"))),
   version = numeric_version("0.0.5"),
   spatialExtent = raster::extent(rep(NA_real_, 4)),
   timeframe = as.POSIXlt(c(NA, NA)),
