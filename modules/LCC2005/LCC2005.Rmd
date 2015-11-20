@@ -13,6 +13,11 @@ This is an example of a 'module group' containing several child modules:
 - `forestAge`
 - `forestSuccessionBeacons`
 - `LccToBeaconsReclassify`
+
+
+This parent module uses these children modules which have 2 different time units (month for caribou, year for others). The code in this file downloads all modules and data required to run the spades call at the end. If this is running on a Windows OS, the visualizations will be quick because a device will be opened that is not within RStudio. On a Linux machine, this will not occur, so visualization will be slow (RStudio Plot window is slow).
+
+
 ```{r download modules if necessary, eval=TRUE}
 library(igraph)
 library(raster)
