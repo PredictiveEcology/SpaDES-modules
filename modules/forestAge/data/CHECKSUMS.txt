@@ -1,2 +1,3 @@
 "file" "checksum"
 "can_age04_1km.tif" "37e7d0d3e664b81ee82b435b526013dc"
+"can_age04_1km.tif" "e1077eec493655568776da7d94d70285"
