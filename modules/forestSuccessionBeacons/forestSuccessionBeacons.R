@@ -19,7 +19,7 @@ defineModule(sim, list(
   parameters = rbind(
     defineParameter("returnInterval", "numeric", 1.0, NA, NA, desc="Time interval between succession events"),
     defineParameter("startTime", "numeric", 1.0, NA, NA, desc="Simulation time at which to initiate forest succession"),
-    defineParameter(".plotInitialTime", "numeric", NA, NA, 1, desc="Initial time for plotting"),
+    defineParameter(".plotInitialTime", "numeric", 1, NA, NA, desc="Initial time for plotting"),
     defineParameter(".plotInterval", "numeric", 1, NA, NA, desc="Interval between plotting"),
     defineParameter(".saveInitialTime", "numeric", NA_real_, NA, NA, desc="Initial time for saving"),
     defineParameter(".saveInterval", "numeric", NA_real_, NA, NA, desc="Interval between save events")

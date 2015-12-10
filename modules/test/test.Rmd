@@ -1,0 +1,10 @@
+---
+title: "Testing module for the `SpaDES` package"
+author: "Alex M Chubaty"
+date: "10 December 2015"
+output: pdf_document
+---
+
+# Overview
+
+This module is a stub (it does not contain any real code), and is only used to test the `downloadModule` and `downloadData` functions.

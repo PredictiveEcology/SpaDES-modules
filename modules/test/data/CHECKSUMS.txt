@@ -1,0 +1,5 @@
+"file" "checksum"
+"DEM.tif" "8bba6f8bbb4c6977b4b282adf47e6494"
+"DEM.tif" "4f7403b7944ae97b8ed00adbd1e31fc9"
+"habitatQuality.tif" "f692866ef6d9687dac892b99fd6244a7"
+"habitatQuality.tif" "f046f918faa6c6cb727d05b8a194f7f8"
