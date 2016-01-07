@@ -1,7 +1,7 @@
 ---
 title: "cropReprojectLccAge"
 author: "Eliot McIntire and Alex Chubaty"
-date: "April 30, 2015"
+date: "05 January 2015"
 output: pdf_document
 ---
 
@@ -10,7 +10,6 @@ This is a translator module that crops and reprojects the data from the [Landcov
 ## Module Info
 
 This is entirely drawn from an unpublished document from the BEACONS team. 
-
 
 ## Literature Cited
 
