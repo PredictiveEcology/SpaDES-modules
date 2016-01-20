@@ -15,4 +15,4 @@ The module plots 2 plots: a cumulative fire map, and a dynamic histogram of fire
 
 ## Saving
 
-There is no default saving. The saving follows the .saveInterval and .save
+There is no default saving. The saving follows the `.saveInterval` and `.save`.

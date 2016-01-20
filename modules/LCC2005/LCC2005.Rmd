@@ -1,8 +1,8 @@
 ---
 title: "LCC2005"
 author: "Alex Chubaty"
-date: "29 October 2015"
-output: pdf_document
+date: "05 January 2015"
+output: html_document
 ---
 
 This is an example of a 'module group' containing several child modules:
@@ -14,56 +14,42 @@ This is an example of a 'module group' containing several child modules:
 - `forestSuccessionBeacons`
 - `LccToBeaconsReclassify`
 
+This parent module uses these children modules which have 2 different time units (month for caribou, year for others).
+The code in this file downloads all modules and data required to run the spades call at the end.
+If this is running on a Windows OS, the visualizations will be quick because a device will be opened that is not within RStudio.
+On a Linux on OS X machine, this will not occur, so visualization will be slow (RStudio graphics device is slow).
 
-This parent module uses these children modules which have 2 different time units (month for caribou, year for others). The code in this file downloads all modules and data required to run the spades call at the end. If this is running on a Windows OS, the visualizations will be quick because a device will be opened that is not within RStudio. On a Linux machine, this will not occur, so visualization will be slow (RStudio Plot window is slow).
-
-
-```{r download modules if necessary, eval=TRUE}
+```{r download-modules, eval=TRUE}
 library(igraph)
 library(raster)
 library(SpaDES)
 
-if(!exists("baseDir")) {
-  if(Sys.info()[["sysname"]]=="Windows") {
-    baseDir <- choose.dir(caption = "Select base directory for modules and data") %>% 
-      checkPath(create=TRUE)
-    } else {
-      baseDir <- file.path(tempdir(), "inputs") %>% checkPath(create = TRUE)
-    }
+if (!exists("baseDir")) {
+  baseDir <- if ( interactive() && (Sys.info()[["sysname"]] == "Windows") ) {
+    choose.dir(caption = "Select base directory for modules and data")
+  } else {
+    file.path(tempdir(), "modules")
+  } %>% checkPath(create = TRUE)
 }
 
-modules <- c("caribouMovementLcc", "cropReprojectLccAge", "fireSpreadLcc", "LCC2005",
-             "forestAge", "forestSuccessionBeacons", "LccToBeaconsReclassify")
-
-lapply(modules, downloadModule, baseDir)
-
+downloadModule("LCC2005", baseDir) # default `data=FALSE` doesn't download data
+downloadData("LCC2005", baseDir) # alternatively, use `data=TRUE` above
+unzip(zipfile = file.path(baseDir, "LccToBeaconsReclassify", "data", "LandCoverOfCanada2005_V1_4.zip"),
+      files = "LCC2005_V1_4a.tif",
+      exdir = file.path(baseDir, "LccToBeaconsReclassify", "data"))
 ```
 
 
 
-```{r model-inputs, eval=FALSE}
-# download data (these are large files!)
-if (!file.exists(file.path(baseDir, "LandCoverOfCanada2005_V1_4", "LCC2005_V1_4a.tif"))) {
-  url <- "ftp://ftp.ccrs.nrcan.gc.ca/ad/NLCCLandCover/LandcoverCanada2005_250m/LandCoverOfCanada2005_V1_4.zip"
-  download.file(url = url,
-                destfile = file.path(baseDir, "LandCoverOfCanada2005_V1_4.zip"))
-  unzip(zipfile = file.path(baseDir, "LandCoverOfCanada2005_V1_4.zip"),
-        exdir = file.path(baseDir, "LandCoverOfCanada2005_V1_4"))
-}
-
-if (!file.exists(file.path(baseDir, "age", "age.tif"))) {
-  dir.create(file.path(baseDir, "age"))
-  url <- "ftp://ftp.daac.ornl.gov/data/nacp/NA_TreeAge//data/can_age04_1km.tif"
-  download.file(url = url, destfile = file.path(baseDir, "age", "age.tif"))
-}
-
+```{r model-inputs, eval=TRUE}
 # load data
-age <- raster::raster(file.path(baseDir, "age", "age.tif"))
-lcc05 <- raster::raster(file.path(baseDir, "LandCoverOfCanada2005_V1_4", "LCC2005_V1_4a.tif"))
+age <- raster::raster(file.path(baseDir, "forestAge", "data", "can_age04_1km.tif"))
+lcc05 <- raster::raster(file.path(baseDir, "LccToBeaconsReclassify", "data",
+                                  "LCC2005_V1_4a.tif"))
 lcc05CRS <- crs(lcc05)
 
 # Random polygon
-areaKm2 <- 10000
+areaKm2 <- 2000
 minX <- -1072250.2
 maxX <- minX + sqrt(areaKm2*1e6)
 minY <- 7438877-1.6e5
@@ -93,17 +79,16 @@ inputMapPolygon <- cbind(X+xAdd, Y+yAdd) %>%
   list %>%
   SpatialPolygons(1L)
 crs(inputMapPolygon) <- lcc05CRS
-
 ```
 
 Module groups make loading multiple modules easier: only the name of the module group needs to be specified in the `simInit` call, which will then initialize the simulation with the child modules.
 
-```{r module-group-init, eval=FALSE}
+```{r module-group-init, eval=TRUE}
 # setup simulation
 outputDir <- file.path(tempdir(), "simOutputs")
-cacheDir <- checkPath(file.path(outputDir, "cache"), create=TRUE)
+cacheDir <- checkPath(file.path(outputDir, "cache"), create = TRUE)
 
-times <- list(start = 2005.0, end = 2010.0, timeunit="year")
+times <- list(start = 2005.0, end = 2020.0, timeunit = "year")
 parameters <- list(
   .globals = list(burnStats = "nPixelsBurned"),
   .progress = list(type = "text", interval = 1),
@@ -122,8 +107,7 @@ parameters <- list(
     glmInitialTime = NA_real_, .plotInitialTime = times$start, .plotInterval = 1)
 )
 modules <- list("LCC2005")
-objects <- list(age = age, lcc05 = lcc05, inputMapPolygon = inputMapPolygon)
-
+objects <- list(age = "age", lcc05 = "lcc05", inputMapPolygon = "inputMapPolygon")
 paths <- list(
   cachePath = cacheDir,
   modulePath = baseDir,
@@ -134,20 +118,21 @@ paths <- list(
 mySim <- simInit(times = times, params = parameters, modules = modules,
                  objects = objects, paths = paths)
 
-modules(mySim) # note the child modules are initialized
+### Simulation overview: note the child modules are initialized
+moduleDiagram(mySim)
+objectDiagram(mySim)
 ```
 
 Now that the `mySim` object has been initialized, we can run the simulation by calling
 `spades`
-```{r Run SpaDES, eval=FALSE}
-if(interactive() & Sys.info()[["sysname"]]=="Windows") dev() # Rstudio server device is bad, but no alternative available (which runs on Linux types) 
-Plot(lcc05, new=T)
-Plot(inputMapPolygon, addTo="lcc05", gp=gpar(col="yellow",lwd=2))
+
+```{r run-SpaDES, eval=FALSE}
+if ( interactive() && Sys.info()[["sysname"]] == "Windows" ) {
+# Rstudio server device is bad, but no alternative available (which runs on Linux types) 
+    dev()
+}
+Plot(lcc05, new = TRUE)
+Plot(inputMapPolygon, addTo = "lcc05", gp = gpar(col = "yellow", lwd = 2))
+
 spades(mySim)
-```
-
-Module groups can also be used to simplify the download of multiple modules:
-
-```{r module-group-dl, eval=FALSE}
-downloadModule("SpaDES_sampleModules") # not yet implemented
 ```

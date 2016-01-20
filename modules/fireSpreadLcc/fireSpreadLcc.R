@@ -1,4 +1,4 @@
-stopifnot(packageVersion("SpaDES") >= "1.0.1")
+stopifnot(packageVersion("SpaDES") >= "1.1.0")
 
 defineModule(sim, list(
   name = "fireSpreadLcc",
@@ -8,7 +8,7 @@ defineModule(sim, list(
   authors = c(person(c("Alex", "M"), "Chubaty", email = "alexander.chubaty@canada.ca", role = c("aut", "cre")),
               person(c("Eliot", "J", "B"), "McIntire", email = "eliot.mcintire@canada.ca", role = c("aut", "cre")),
               person("Steve", "Cumming", email = "Steve.Cumming@sbf.ulaval.ca", role = c("aut"))),
-  version = numeric_version("0.0.5"),
+  version = numeric_version("0.0.6"),
   spatialExtent = raster::extent(rep(NA_real_, 4)),
   timeframe = as.POSIXlt(c("2005-01-01", NA)),
   timeunit = "year",
@@ -42,7 +42,7 @@ doEvent.fireSpreadLcc <- function(sim, eventTime, eventType, debug = FALSE) {
   if (eventType == "init") {
     ### check for object dependencies:
     ### (use `checkObject` or similar)
-    checkObject(sim, name="vegMap")
+    checkObject(sim, name = "vegMap")
 
     # Clear global variable
     sim[[globals(sim)$burnStats]] <- numeric()
@@ -68,26 +68,26 @@ doEvent.fireSpreadLcc <- function(sim, eventTime, eventType, debug = FALSE) {
     ## stats scheduling done by burn event
   } else if (eventType == "plot.init") {
     # do stuff for this event
-    Plot(sim$FiresCumul,zero.color = "white", legendRange=0:sim$maxFiresCumul)
+    Plot(sim$FiresCumul,zero.color = "white", legendRange = 0:sim$maxFiresCumul)
 
     # schedule the next event
     sim <- scheduleEvent(sim, time(sim) + params(sim)$fireSpreadLcc$.plotInterval, "fireSpreadLcc", "plot")
   } else if (eventType == "plot") {
     # do stuff for this event
-    Plot(sim$FiresCumul, zero.color="white", legendRange=0:sim$maxFiresCumul)
+    Plot(sim$FiresCumul, zero.color = "white", legendRange = 0:sim$maxFiresCumul)
 
-    if(length(sim[[globals(sim)$burnStats]])>0) {
+    if (length(sim[[globals(sim)$burnStats]]) > 0) {
 
       nPixelsBurned <- sim[[globals(sim)$burnStats]]
 
       binwidthRange <- pmax(1,diff(range(nPixelsBurned*6.25))/30)
-      sim$FireSizeDistribution <- qplot(main="", nPixelsBurned*6.25, xlab="Hectares",
-                                        binwidth=binwidthRange)
+      sim$FireSizeDistribution <- qplot(main = "", nPixelsBurned*6.25,
+                                        xlab = "Hectares", binwidth = binwidthRange)
       sim$FireSizeDistribution <- sim$FireSizeDistribution +
-        theme(axis.text.x=element_text(size=10, angle = 45, hjust = 1, colour="black"),
-              axis.text.y=element_text(size=10, colour="black"),
-              axis.title.x=element_text(size=12, colour="black"),
-              axis.title.y=element_text(size=12, colour="black"))
+        theme(axis.text.x = element_text(size = 10, angle = 45, hjust = 1, colour = "black"),
+              axis.text.y = element_text(size = 10, colour = "black"),
+              axis.title.x = element_text(size = 12, colour = "black"),
+              axis.title.y = element_text(size = 12, colour = "black"))
       suppressMessages(Plot(sim$FireSizeDistribution))
     }
 
@@ -100,8 +100,10 @@ doEvent.fireSpreadLcc <- function(sim, eventTime, eventType, debug = FALSE) {
     # schedule the next event
     sim <- scheduleEvent(sim, time(sim) + params(sim)$fireSpreadLcc$.saveInterval, "fireSpreadLcc", "save")
   } else {
-    warning(paste("Undefined event type: \'", events(sim)[1, "eventType", with=FALSE],
-                  "\' in module \'", events(sim)[1, "moduleName", with=FALSE],"\'", sep=""))
+    warning(paste("Undefined event type: \'",
+                  events(sim)[1, "eventType", with = FALSE],
+                  "\' in module \'", events(sim)[1, "moduleName", with = FALSE],
+                  "\'", sep = ""))
   }
   return(invisible(sim))
 }
@@ -111,42 +113,39 @@ fireSpreadLccInit <- function(sim) {
 
   sim$maxFiresCumul <- 7 # used in legend scale
 
-  sim$Fires <- raster(extent(sim$vegMap), ncol=ncol(sim$vegMap),
-                  nrow=nrow(sim$vegMap), vals=0) %>%
+  sim$Fires <- raster(extent(sim$vegMap), ncol = ncol(sim$vegMap),
+                      nrow = nrow(sim$vegMap), vals = 0) %>%
     mask(sim$vegMap)
   #sim$Fires <- as(sim$Fires, "RasterLayerSparse")
-  setColors(sim$Fires,n=params(sim)$fireSpreadLcc$nFires+1) <-
+  setColors(sim$Fires, n = params(sim)$fireSpreadLcc$nFires + 1) <-
     c("#FFFFFF", rev(heat.colors(params(sim)$fireSpreadLcc$nFires)))
   sim$FiresCumul <- sim$Fires
   return(invisible(sim))
 }
 
 fireSpreadLccBurn <- function(sim) {
-  #   assignGlobal("fireSpreadProb", reclassify(x=getGlobal("vegMap"),
-  #                                             rcl=cbind(1:11,
-  #                                                       c(0.225,0.225,0.21,0.15,0.15,0.18,0.1,0.1,0,0,0)*
-  #                                                         params(sim)$fireSpreadLcc$drought)))
-  fireSpreadProb <- reclassify(x=sim$vegMap,
-                                  rcl=cbind(1:11,
-                                            c(0.225,0.225,0.21,0.15,0.15,0.18,0.1,0.1,0,0,0)*
-                                            params(sim)$fireSpreadLcc$drought))
-  nFires <- rpois(1,params(sim)$fireSpreadLcc$nFires*params(sim)$fireSpreadLcc$drought)
+  fireSpreadProb <- reclassify(x = sim$vegMap,
+                               rcl = cbind(1:11,
+                                           c(0.225, 0.225, 0.21, 0.15, 0.15,
+                                             0.18, 0.1, 0.1, 0, 0, 0)*
+                                             params(sim)$fireSpreadLcc$drought))
+  nFires <- rpois(1, params(sim)$fireSpreadLcc$nFires*params(sim)$fireSpreadLcc$drought)
   sim$Fires <- SpaDES::spread(fireSpreadProb,
-                   loci=as.integer(sample(1:ncell(fireSpreadProb), nFires)),
-                   spreadProb=fireSpreadProb,
-                   persistance=params(sim)$fireSpreadLcc$persistprob,
-                   mask=NULL,
-                   maxSize=1e8,
-                   directions=8,
-                   iterations=params(sim)$fireSpreadLcc$its,
-                   plot.it=FALSE,
-                   mapID=TRUE)
+                              loci = as.integer(sample(1:ncell(fireSpreadProb), nFires)),
+                              spreadProb = fireSpreadProb,
+                              persistance = params(sim)$fireSpreadLcc$persistprob,
+                              mask = NULL,
+                              maxSize = 1e8,
+                              directions = 8,
+                              iterations = params(sim)$fireSpreadLcc$its,
+                              plot.it = FALSE,
+                              mapID = TRUE)
 
   sim$Fires[is.na(sim$vegMap)] <- NA
   names(sim$Fires) <- "Fires"
-  setColors(sim$Fires,n=nFires + 1) <- c("#FFFFFF", rev(heat.colors(nFires)))
+  setColors(sim$Fires, n = nFires + 1) <- c("#FFFFFF", rev(heat.colors(nFires)))
 
-  sim$FiresCumul[] <- sim$FiresCumul[] + (sim$Fires[]>0)
+  sim$FiresCumul[] <- sim$FiresCumul[] + (sim$Fires[] > 0)
   setColors(sim$FiresCumul) <- c(colorRampPalette(c("orange", "darkred"))(sim$maxFiresCumul))
 
   return(invisible(sim))
@@ -154,9 +153,7 @@ fireSpreadLccBurn <- function(sim) {
 
 fireSpreadLccStats <- function(sim) {
   npix <- sim[[globals(sim)$burnStats]]
-
-  sim[[globals(sim)$burnStats]] <- c(npix, length(which(values(sim$Fires)>0)))
-
+  sim[[globals(sim)$burnStats]] <- c(npix, length(which(values(sim$Fires) > 0)))
   return(invisible(sim))
 }
 
