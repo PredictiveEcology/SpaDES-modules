@@ -16,7 +16,7 @@ defineModule(sim, list(
   timeunit = NA_character_,
   citation = list("citation.bib"),
   documentation = list("README.txt", "cropReprojectLccAge.Rmd"),
-  reqdPkgs = list("raster","rgeos", "parallel", "sp", "archivist"),
+  reqdPkgs = list("raster","rgeos", "parallel", "sp", "SpaDES"),
   parameters = rbind(
     defineParameter("useCache", "logical", TRUE, NA, NA,
                     "Should slow raster and sp functions use cached versions to speedup repeated calls"),
@@ -58,7 +58,6 @@ doEvent.cropReprojectLccAge <- function(sim, eventTime, eventType, debug = FALSE
 
 ### template initilization
 cropReprojectLccInit = function(sim) {
-
   lcc05CRS <- CRS("+proj=lcc +lat_1=49 +lat_2=77 +lat_0=0 +lon_0=-95 +x_0=0 +y_0=0 +ellps=GRS80 +units=m +no_defs")
   inputMapPolygon <- sim$cropReprojectLccAge$spTransform(sim$inputMapPolygon, CRSobj = lcc05CRS)
   totalArea <- rgeos::gArea(inputMapPolygon) / 1e4
@@ -67,7 +66,7 @@ cropReprojectLccInit = function(sim) {
          " (less than 100 million hectares).")
   }
   #inputMapPolygon <- inputMapPolygon
-  vegMapLcc2 <- sim$cropReprojectLccAge$crop(lcc05, inputMapPolygon)
+  vegMapLcc2 <- sim$cropReprojectLccAge$crop(sim$lcc05, inputMapPolygon)
   crs(vegMapLcc2) <- lcc05CRS
 
   sim$vegMapLcc <- sim$cropReprojectLccAge$mask(x = vegMapLcc2, mask = inputMapPolygon)
@@ -99,28 +98,27 @@ cropReprojectLccInit = function(sim) {
 
 cropReprojectLccCacheFunctions <- function(sim) {
   # for slow functions, add cached versions. Then use sim$xxx() throughout module instead of xxx()
-
-
+  
   if(params(sim)$cropReprojectLccAge$useCache) {
     # Step 1 - create a location for the cached data if it doesn't already exist
-    sim$cacheLoc <- file.path(cachePath(sim), "cropReprojectLccAge") %>%
+    sim$cacheLoc <- file.path(cachePath(sim), "cache_cropReprojectLccAge") %>% 
       checkPath(create = TRUE)
-    if (!file.exists(file.path(sim$cacheLoc, "backpack.db"))) {
+    #if (!dir.exists(sim$cacheLoc)) {
       createEmptyRepo(sim$cacheLoc)
-    }
+    #}
 
     # Step 2 - create a version of every function that is slow that includes the caching implicitly
     sim$cropReprojectLccAge$mask <- function(...) {
-      archivist::cache(cacheRepo = sim$cacheLoc, FUN = raster::mask, ...)
+      SpaDES::cache(cacheRepo = sim$cacheLoc, FUN = raster::mask, ...)
     }
     sim$cropReprojectLccAge$crop <- function(...) {
-      archivist::cache(cacheRepo = sim$cacheLoc, FUN = raster::crop, ...)
+      SpaDES::cache(cacheRepo = sim$cacheLoc, FUN = raster::crop, ...)
     }
     sim$cropReprojectLccAge$projectRaster <- function(...) {
-      archivist::cache(cacheRepo = sim$cacheLoc, FUN = raster::projectRaster, ...)
+      SpaDES::cache(cacheRepo = sim$cacheLoc, FUN = raster::projectRaster, ...)
     }
     sim$cropReprojectLccAge$spTransform <- function(...) {
-      archivist::cache(cacheRepo = sim$cacheLoc, FUN = sp::spTransform,  ...)
+      SpaDES::cache(cacheRepo = sim$cacheLoc, FUN = sp::spTransform,  ...)
     }
   } else {
     # Step 3 - create a non-caching version in case caching is not desired
