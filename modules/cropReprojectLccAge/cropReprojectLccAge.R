@@ -66,7 +66,7 @@ cropReprojectLccInit = function(sim) {
          " (less than 100 million hectares).")
   }
   #inputMapPolygon <- inputMapPolygon
-  vegMapLcc2 <- sim$cropReprojectLccAge$crop(sim$lcc05, inputMapPolygon)
+  vegMapLcc2 <- sim$cropReprojectLccAge$crop(lcc05, inputMapPolygon)
   crs(vegMapLcc2) <- lcc05CRS
 
   sim$vegMapLcc <- sim$cropReprojectLccAge$mask(x = vegMapLcc2, mask = inputMapPolygon)
@@ -98,14 +98,14 @@ cropReprojectLccInit = function(sim) {
 
 cropReprojectLccCacheFunctions <- function(sim) {
   # for slow functions, add cached versions. Then use sim$xxx() throughout module instead of xxx()
-  
+
   if(params(sim)$cropReprojectLccAge$useCache) {
     # Step 1 - create a location for the cached data if it doesn't already exist
-    sim$cacheLoc <- file.path(cachePath(sim), "cache_cropReprojectLccAge") %>% 
+    sim$cacheLoc <- file.path(cachePath(sim), "cropReprojectLccAge") %>%
       checkPath(create = TRUE)
-    #if (!dir.exists(sim$cacheLoc)) {
+    if (!file.exists(file.path(sim$cacheLoc, "backpack.db"))) {
       createEmptyRepo(sim$cacheLoc)
-    #}
+    }
 
     # Step 2 - create a version of every function that is slow that includes the caching implicitly
     sim$cropReprojectLccAge$mask <- function(...) {
