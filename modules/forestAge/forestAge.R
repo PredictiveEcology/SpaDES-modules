@@ -1,4 +1,4 @@
-stopifnot(packageVersion("SpaDES") >= "1.0.3.9028")
+stopifnot(packageVersion("SpaDES") >= "1.1.0")
 
 defineModule(sim, list(
   name = "forestAge",
@@ -9,7 +9,7 @@ defineModule(sim, list(
     person(c("Alex", "M"), "Chubaty", email = "alexander.chubaty@canada.ca", role = c("aut", "cre")),
     person(c("Eliot", "J", "B"), "McIntire", email = "eliot.mcintire@canada.ca", role = c("aut", "cre")),
     person("Steve", "Cumming", email = "Steve.Cumming@sbf.ulaval.ca", role = c("aut"))),
-  version = numeric_version("0.0.7"),
+  version = numeric_version("1.1.0"),
   spatialExtent = raster::extent(rep(NA_real_, 4)),
   timeframe = as.POSIXlt(c(NA, NA)),
   timeunit = "year",
@@ -90,7 +90,6 @@ forestAgeInit <- function(sim) {
 }
 
 forestAgeAge <- function(sim) {
-
   sim$ageMap <- setValues(sim$ageMap, pmin(200, getValues(sim$ageMap) +
                                              params(sim)$forestAge$returnInterval))
   if (exists("Fires", envir = envir(sim))) {
@@ -100,4 +99,3 @@ forestAgeAge <- function(sim) {
 
   return(invisible(sim))
 }
-

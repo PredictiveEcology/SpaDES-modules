@@ -1,4 +1,4 @@
-stopifnot(packageVersion("SpaDES") >= "1.0.3.9028")
+stopifnot(packageVersion("SpaDES") >= "1.1.0")
 
 defineModule(sim, list(
   name = "cropReprojectLccAge",
@@ -10,7 +10,7 @@ defineModule(sim, list(
   keywords = c("translator", "lcc05", "Land Cover Classification", "vegetation"),
   childModules = character(),
   authors = c(person(c("Eliot", "J","B"), "McIntire", email = "eliot.mcintire@canada.ca", role = c("aut", "cre"))),
-  version = numeric_version("0.0.9"),
+  version = numeric_version("1.1.0"),
   spatialExtent = raster::extent(rep(NA_real_, 4)),
   timeframe = as.POSIXlt(c(NA, NA)),
   timeunit = NA_character_,
@@ -66,7 +66,7 @@ cropReprojectLccInit = function(sim) {
          " (less than 100 million hectares).")
   }
   #inputMapPolygon <- inputMapPolygon
-  vegMapLcc2 <- sim$cropReprojectLccAge$crop(sim$lcc05, inputMapPolygon)
+  vegMapLcc2 <- sim$cropReprojectLccAge$crop(lcc05, inputMapPolygon)
   crs(vegMapLcc2) <- lcc05CRS
 
   sim$vegMapLcc <- sim$cropReprojectLccAge$mask(x = vegMapLcc2, mask = inputMapPolygon)
@@ -76,12 +76,13 @@ cropReprojectLccInit = function(sim) {
 
     # age will not run with projectRaster directly.
     # Instead, project the vegMap to age, then crop, then project back to vegMap.
-    vegMapLcc.crsAge <- sim$cropReprojectLccAge$projectRaster(sim$vegMapLcc, crs = crs(sim$age))
-    age.crsAge2 <- sim$cropReprojectLccAge$crop(sim$age,
-                        sim$cropReprojectLccAge$spTransform(sim$inputMapPolygon, CRSobj = crs(sim$age)))
-    age.crsAge <- sim$cropReprojectLccAge$mask(x = age.crsAge2,
-                        mask = sim$cropReprojectLccAge$spTransform(sim$inputMapPolygon, CRSobj = crs(sim$age)))
-    sim$ageMapInit <- sim$cropReprojectLccAge$projectRaster(age.crsAge, to = sim$vegMapLcc, method = "ngb")
+    #vegMapLcc.crsAge <- sim$cropReprojectLccAge$projectRaster(sim$vegMapLcc, crs = crs(sim$age))
+    maskLayer <- sim$cropReprojectLccAge$spTransform(sim$inputMapPolygon, CRSobj = crs(sim$age))
+    age.crsAge2 <- sim$cropReprojectLccAge$crop(sim$age, maskLayer)
+    age.crsAge <- sim$cropReprojectLccAge$mask(x = age.crsAge2, mask = maskLayer)
+    sim$ageMapInit <- sim$cropReprojectLccAge$projectRaster(from = age.crsAge,
+                                                            to = sim$vegMapLcc,
+                                                            method = "ngb")
 
     if (sum(!is.na(getValues(sim$ageMapInit))) == 0) {
       stop("There are no age data provided with input age map")
@@ -99,13 +100,13 @@ cropReprojectLccInit = function(sim) {
 cropReprojectLccCacheFunctions <- function(sim) {
   # for slow functions, add cached versions. Then use sim$xxx() throughout module instead of xxx()
 
-  if (params(sim)$cropReprojectLccAge$useCache) {
+  if(params(sim)$cropReprojectLccAge$useCache) {
     # Step 1 - create a location for the cached data if it doesn't already exist
-    sim$cacheLoc <- file.path(cachePath(sim), "cache_cropReprojectLccAge") %>%
+    sim$cacheLoc <- file.path(cachePath(sim), "cropReprojectLccAge") %>%
       checkPath(create = TRUE)
-    #if (!dir.exists(sim$cacheLoc)) {
+    if (!file.exists(file.path(sim$cacheLoc, "backpack.db"))) {
       createEmptyRepo(sim$cacheLoc)
-    #}
+    }
 
     # Step 2 - create a version of every function that is slow that includes the caching implicitly
     sim$cropReprojectLccAge$mask <- function(...) {

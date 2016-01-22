@@ -3,11 +3,10 @@ test_that("test forestAgeAge function", {
   require(SpaDES)
   on.exit({ detach(SpaDES); detach(raster) })
   
-  tmpdir <- tempdir(); on.exit(unlink(tmpdir, recursive = TRUE))
-  moduleDir <- file.path(tmpdir, "modules")
-  outputDir <- file.path(tmpdir, "output")
+  moduleDir <- "." # assume the current directory is the base module directory
   
-  downloadModule("forestAge", moduleDir, data = FALSE) # no data assoc. w/ this module
+  tmpdir <- tempdir(); on.exit(unlink(tmpdir, recursive = TRUE))
+  outputDir <- file.path(tmpdir, "output")
   
   ageMap <- raster(xmn = 50, xmx = 50 + 2*100,
                    ymn = 50, ymx = 50 + 2*100,
