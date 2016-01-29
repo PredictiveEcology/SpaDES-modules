@@ -16,7 +16,7 @@ defineModule(sim, list(
   timeunit = NA_character_,
   citation = list("citation.bib"),
   documentation = list("README.txt", "cropReprojectLccAge.Rmd"),
-  reqdPkgs = list("raster","rgeos", "parallel", "sp", "SpaDES"),
+  reqdPkgs = list("archivist", "raster","rgeos", "parallel", "sp", "SpaDES"),
   parameters = rbind(
     defineParameter("useCache", "logical", TRUE, NA, NA,
                     "Should slow raster and sp functions use cached versions to speedup repeated calls"),
