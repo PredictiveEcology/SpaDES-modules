@@ -5,7 +5,8 @@ date: "05 January 2015"
 output: html_document
 ---
 
-This is an example of a 'module group' containing several child modules:
+This is an example of a 'module group' or parent module called "LCC2005". 
+It is a metamodule that points do the following child modules:
 
 - `caribouMovementLcc`
 - `cropReprojectLccAge`
@@ -14,26 +15,41 @@ This is an example of a 'module group' containing several child modules:
 - `forestSuccessionBeacons`
 - `LccToBeaconsReclassify`
 
-This parent module uses these children modules which have 2 different time units (month for caribou, year for others).
-The code in this file downloads all modules and data required to run the spades call at the end.
-If this is running on a Windows OS, the visualizations will be quick because a device will be opened that is not within RStudio.
-On a Linux on OS X machine, this will not occur, so visualization will be slow (RStudio graphics device is slow).
+These modules can work together because their metadata are mutually compatible. 
+These child modules actually have 2 different time units (month for caribou, year for others): the SpaDES package can fit these modules together in spite of this mismatch, because their time 
+units are declared in their metadata. We will not look into the metadata in this file. That is for more advanced examples.
+
+The code in this file downloads all modules and data required to run a dynamic model. 
+This will be run at the end of this file using a call to the spades function.
+
+(If you are running this on a Windows OS, the visualizations will be quick because a device will be opened that is not within RStudio.
+On a Linux on OS X machine, this will not occur, so visualization will be slow because the RStudio graphics device is slow).
 
 ```{r download-modules, eval=TRUE}
 library(igraph)
 library(raster)
 library(SpaDES)
+library(rgdal)
+library(rgeos)
 
+# Step 1 - download some modules from SpaDES-Modules cloud repository to your computer
+#  A box will pop up for you to select a destination for these modules. It should be
+#  easy
 if (!exists("baseDir")) {
   baseDir <- if ( interactive() && (Sys.info()[["sysname"]] == "Windows") ) {
-    choose.dir(caption = "Select base directory for modules and data")
+    choose.dir(caption = "Select a directory to download some simple modules and data")
   } else {
     file.path(tempdir(), "modules")
   } %>% checkPath(create = TRUE)
 }
 
-downloadModule("LCC2005", baseDir) # default `data=FALSE` doesn't download data
-downloadData("LCC2005", baseDir) # alternatively, use `data=TRUE` above
+downloadModule("LCC2005", baseDir) # default `data=FALSE` doesn't download data, 
+                                   # because data is large
+downloadData("LCC2005", baseDir) # download data as a separate step, solely so user 
+                                 # has more control over process. Alternatively, use 
+                                 # `data=TRUE` above.
+# The downloaded data from one of the modules, LccToBeaconsReclassify is zipped upon 
+#  arrival. Must unzip it.
 unzip(zipfile = file.path(baseDir, "LccToBeaconsReclassify", "data", "LandCoverOfCanada2005_V1_4.zip"),
       files = "LCC2005_V1_4a.tif",
       exdir = file.path(baseDir, "LccToBeaconsReclassify", "data"))
@@ -42,48 +58,66 @@ unzip(zipfile = file.path(baseDir, "LccToBeaconsReclassify", "data", "LandCoverO
 
 
 ```{r model-inputs, eval=TRUE}
-# load data
+# load data into R. These are 2 Canada-wide maps
 age <- raster::raster(file.path(baseDir, "forestAge", "data", "can_age04_1km.tif"))
 lcc05 <- raster::raster(file.path(baseDir, "LccToBeaconsReclassify", "data",
                                   "LCC2005_V1_4a.tif"))
 lcc05CRS <- crs(lcc05)
 
-# Random polygon
-areaKm2 <- 2000
-minX <- -1072250.2
-maxX <- minX + sqrt(areaKm2*1e6)
-minY <- 7438877-1.6e5
-maxY <- minY + sqrt(areaKm2*1e6)
-meanY <- mean(c(minY, maxY))
-
-# Add random noise to polygon
-set.seed(5567913)
-xAdd <- round(runif(1, -5e5, 1.5e6))
-yAdd <- round(runif(1, 1e5, 5e5)) - xAdd/2
-nPoints <- 20
-betaPar <- 0.6
-X = c(
-  jitter(sort(rbeta(nPoints, betaPar, betaPar)*(maxX-minX)+minX)),
-  jitter(sort(rbeta(nPoints, betaPar, betaPar)*(maxX-minX)+minX, decreasing = TRUE))
-)
-Y = c(
-  jitter(sort(rbeta(nPoints/2, betaPar, betaPar)*(maxY-meanY)+meanY)),
-  jitter(sort(rbeta(nPoints, betaPar, betaPar)*(maxY-minY)+minY, decreasing = TRUE)),
-  jitter(sort(rbeta(nPoints/2, betaPar, betaPar)*(meanY-minY)+minY))
-)
-
-inputMapPolygon <- cbind(X+xAdd, Y+yAdd) %>% 
-  Polygon %>%
-  list %>%
-  Polygons("s1") %>%
-  list %>%
-  SpatialPolygons(1L)
-crs(inputMapPolygon) <- lcc05CRS
+# Pick a subset area to run projections on. You can replace this with anything that 
+#  will create a polygon inside the forested parts of Canada.
+# Here we pick a random polygon. Centered here:
+  areaKm2 <- 2000
+  minX <- -1072250.2
+  maxX <- minX + sqrt(areaKm2*1e6)
+  minY <- 7438877-1.6e5
+  maxY <- minY + sqrt(areaKm2*1e6)
+  meanY <- mean(c(minY, maxY))
+  
+  # Add random noise to polygon
+  set.seed(5567913)
+  xAdd <- round(runif(1, -5e5, 1.5e6))
+  yAdd <- round(runif(1, 1e5, 5e5)) - xAdd/2
+  nPoints <- 20
+  betaPar <- 0.6
+  X = c(
+    jitter(sort(rbeta(nPoints, betaPar, betaPar)*(maxX-minX)+minX)),
+    jitter(sort(rbeta(nPoints, betaPar, betaPar)*(maxX-minX)+minX, decreasing = TRUE))
+  )
+  Y = c(
+    jitter(sort(rbeta(nPoints/2, betaPar, betaPar)*(maxY-meanY)+meanY)),
+    jitter(sort(rbeta(nPoints, betaPar, betaPar)*(maxY-minY)+minY, decreasing = TRUE)),
+    jitter(sort(rbeta(nPoints/2, betaPar, betaPar)*(meanY-minY)+minY))
+  )
+  
+  # Create the polygon
+  inputMapPolygon <- cbind(X+xAdd, Y+yAdd) %>% 
+    Polygon %>%
+    list %>%
+    Polygons("s1") %>%
+    list %>%
+    SpatialPolygons(1L)
+  crs(inputMapPolygon) <- lcc05CRS
 ```
 
-Module groups make loading multiple modules easier: only the name of the module group needs to be specified in the `simInit` call, which will then initialize the simulation with the child modules.
+Now that we have downloaded a series of modules, the data on which they depend, and we have created a spatial area on which to run the dynamic simulations, we can start initiating the simList object.  
+The simList object is special class of object. Its structure is defined in the SpaDES package. 
+As users, we need to create a new simList for every model we want to run. 
 
-```{r module-group-init, eval=TRUE}
+We need to put several key things into the simList:
+
+1. The **modules** that we will be running. We can specify a parent module if that exists, or we can list off all the individual child modules. Both will do the same thing.
+2. The **times** (start and end) of our dynamic model. We should also give the time unit that we want to see our model in. In this case, the caribou module is in months and everything else is in years. If we want our model to be in years, we need to specify that.
+3. The **paths** (where input files, output files, modules, and a cache path should be located).
+4. Any **objects** that we want to load from an R environment (including the working, i.e,. the "global"" environment).
+5. Any **parameters** that we want to update. Each module has a set of parameters defined in their metadata, as well as the default values for those parameters. We can accept those defaults (and not write anything here), or we can override them by specifying them here.
+
+Here, we divide this initialization into two steps:
+
+1. create all the necessary objects
+2. pass these objects into the `simInit()` function
+
+```{r create objects for simInit, eval=TRUE}
 # setup simulation
 outputDir <- file.path(tempdir(), "simOutputs")
 cacheDir <- checkPath(file.path(outputDir, "cache"), create = TRUE)
@@ -114,7 +148,11 @@ paths <- list(
   inputPath = baseDir,
   outputPath = outputDir
 )
+```
 
+The SpaDES package runs dynamic modules. We have loaded the modules and input data into R, but now we have to load them into a simList object, which is required to run the dynamic simulations using a call to the spades function (the chunk following this one).
+
+```{r simInit call}
 mySim <- simInit(times = times, params = parameters, modules = modules,
                  objects = objects, paths = paths)
 
@@ -128,9 +166,12 @@ Now that the `mySim` object has been initialized, we can run the simulation by c
 
 ```{r run-SpaDES, eval=FALSE}
 if ( interactive() && Sys.info()[["sysname"]] == "Windows" ) {
-# Rstudio server device is bad, but no alternative available (which runs on Linux types) 
-    dev()
+# Rstudio server plotting device is slow, but no alternative available on Linux types 
+    dev() # This works on Windows
 }
+
+# First plot the Canada wide map, and the random polygon. This were also passed into the
+#   simInit call, but the modules don't by default plot this.
 Plot(lcc05, new = TRUE)
 Plot(inputMapPolygon, addTo = "lcc05", gp = gpar(col = "yellow", lwd = 2))
 
