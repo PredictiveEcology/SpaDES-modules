@@ -5,19 +5,38 @@ date: "05 January 2015"
 output: html_document
 ---
 
-This is an example of a 'module group' or parent module called "LCC2005". 
-It is a metamodule that points do the following child modules:
+This file will run a set of 6 "toy" SpaDES modules (i.e., they do not predict anything real) that simulate:
+1. Caribou movement,
+2. Fire burning,
+3. Forest vegetation succession,
+4. Forest aging,
+5. Several GIS operations,
+6. Some data operations.
 
-- `caribouMovementLcc`
-- `cropReprojectLccAge`
-- `fireSpreadLcc`
-- `forestAge`
-- `forestSuccessionBeacons`
-- `LccToBeaconsReclassify`
+In order to do this, we will walk through 5 steps:
 
-These modules can work together because their metadata are mutually compatible. 
-These child modules actually have 2 different time units (month for caribou, year for others): the SpaDES package can fit these modules together in spite of this mismatch, because their time 
-units are declared in their metadata. We will not look into the metadata in this file. That is for more advanced examples.
+0. Install and load necessary R packages
+1. Download modules and data from the internet. Unzip one zipped data file,
+2. Pick a random polygon somewhere in Canada on which to run the dynamic model,
+3. Initiate a simList object (a simulation object which contains details of the dynamic model),
+4. Run the simualtion.
+
+We have grouped these 6 modules into a single "parent" or group module called "LCC2005". 
+This metamodule is simply a convenience so we don't have to specifically type the names of 
+all six modules. So, when we write LCC2005 as a module name, it is simply a shorthand 
+for selecting the six child modules named:
+
+1. `caribouMovementLcc`
+2. `fireSpreadLcc`
+3. `forestSuccessionBeacons`
+4. `forestAge`
+5. `cropReprojectLccAge`
+6. `LccToBeaconsReclassify`
+
+These modules can work together because their metadata are mutually compatible (we made them that way). 
+These modules actually have 2 different time units (month for caribou, year for others): the SpaDES package can weave these modules together in spite of this mismatch. 
+This is because their time units are declared in their metadata. 
+(We will not look into the metadata in this file. That is for more advanced examples.)
 
 The code in this file downloads all modules and data required to run a dynamic model. 
 This will be run at the end of this file using a call to the spades function.
@@ -25,13 +44,20 @@ This will be run at the end of this file using a call to the spades function.
 (If you are running this on a Windows OS, the visualizations will be quick because a device will be opened that is not within RStudio.
 On a Linux on OS X machine, this will not occur, so visualization will be slow because the RStudio graphics device is slow).
 
-```{r download-modules, eval=TRUE}
+Step 0: Load R packages
+```{r package}
 library(igraph)
 library(raster)
 library(SpaDES)
 library(rgdal)
 library(rgeos)
 
+# Use install.packages("igraph") etc. for each package that you do not have.
+
+```
+
+Step 1: Download modules and data
+```{r download-modules, eval=TRUE}
 # Step 1 - download some modules from SpaDES-Modules cloud repository to your computer
 #  A box will pop up for you to select a destination for these modules. It should be
 #  easy
@@ -53,17 +79,18 @@ downloadData("LCC2005", baseDir) # download data as a separate step, solely so u
 unzip(zipfile = file.path(baseDir, "LccToBeaconsReclassify", "data", "LandCoverOfCanada2005_V1_4.zip"),
       files = "LCC2005_V1_4a.tif",
       exdir = file.path(baseDir, "LccToBeaconsReclassify", "data"))
-```
 
-
-
-```{r model-inputs, eval=TRUE}
 # load data into R. These are 2 Canada-wide maps
 age <- raster::raster(file.path(baseDir, "forestAge", "data", "can_age04_1km.tif"))
 lcc05 <- raster::raster(file.path(baseDir, "LccToBeaconsReclassify", "data",
                                   "LCC2005_V1_4a.tif"))
-lcc05CRS <- crs(lcc05)
+lcc05CRS <- crs(lcc05) # This is just the projection information. It will be used in the next chunk.
 
+```
+
+
+Step 2: Pick a random polygon
+```{r model-inputs, eval=TRUE}
 # Pick a subset area to run projections on. You can replace this with anything that 
 #  will create a polygon inside the forested parts of Canada.
 # Here we pick a random polygon. Centered here:
@@ -112,13 +139,14 @@ We need to put several key things into the simList:
 4. Any **objects** that we want to load from an R environment (including the working, i.e,. the "global"" environment).
 5. Any **parameters** that we want to update. Each module has a set of parameters defined in their metadata, as well as the default values for those parameters. We can accept those defaults (and not write anything here), or we can override them by specifying them here.
 
-Here, we divide this initialization into two steps:
+Here, we divide this initialization into two parts:
 
 1. create all the necessary objects
 2. pass these objects into the `simInit()` function
 
+Step 3: Build simInit objects
 ```{r create objects for simInit, eval=TRUE}
-# setup simulation
+# setup simList details
 outputDir <- file.path(tempdir(), "simOutputs")
 cacheDir <- checkPath(file.path(outputDir, "cache"), create = TRUE)
 
@@ -148,14 +176,15 @@ paths <- list(
   inputPath = baseDir,
   outputPath = outputDir
 )
-```
 
-The SpaDES package runs dynamic modules. We have loaded the modules and input data into R, but now we have to load them into a simList object, which is required to run the dynamic simulations using a call to the spades function (the chunk following this one).
-
-```{r simInit call}
+# Here is the simInit call, using the above objects. 
 mySim <- simInit(times = times, params = parameters, modules = modules,
                  objects = objects, paths = paths)
 
+```
+
+Before we run the simulation, there are several tools in SpaDES that help us look at the simList.
+```{r look at how modules fit together}
 ### Simulation overview: note the child modules are initialized
 moduleDiagram(mySim)
 objectDiagram(mySim)
@@ -164,6 +193,7 @@ objectDiagram(mySim)
 Now that the `mySim` object has been initialized, we can run the simulation by calling
 `spades`
 
+Step 4: Run simulation using `spades()`
 ```{r run-SpaDES, eval=FALSE}
 if ( interactive() && Sys.info()[["sysname"]] == "Windows" ) {
 # Rstudio server plotting device is slow, but no alternative available on Linux types 
