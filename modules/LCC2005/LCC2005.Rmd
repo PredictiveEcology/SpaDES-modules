@@ -169,7 +169,7 @@ parameters <- list(
     glmInitialTime = NA_real_, .plotInitialTime = times$start, .plotInterval = 1)
 )
 modules <- list("LCC2005")
-objects <- list(age = "age", lcc05 = "lcc05", inputMapPolygon = "inputMapPolygon")
+objects <- list(age = age, lcc05 = lcc05, inputMapPolygon = inputMapPolygon)
 paths <- list(
   cachePath = cacheDir,
   modulePath = baseDir,
