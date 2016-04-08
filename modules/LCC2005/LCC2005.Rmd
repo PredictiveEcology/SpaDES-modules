@@ -153,7 +153,7 @@ cacheDir <- checkPath(file.path(outputDir, "cache"), create = TRUE)
 times <- list(start = 2005.0, end = 2020.0, timeunit = "year")
 parameters <- list(
   .globals = list(burnStats = "nPixelsBurned"),
-  .progress = list(type = "text", interval = 1),
+  .progress = list(type = "graphical", interval = 1),
   cropReprojectLccAge = list(useCache=TRUE),
   forestSuccessionBeacons = list(
     returnInterval = 1, startTime = times$start,
