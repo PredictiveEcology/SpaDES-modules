@@ -68,13 +68,15 @@ doEvent.fireSpreadLcc <- function(sim, eventTime, eventType, debug = FALSE) {
     ## stats scheduling done by burn event
   } else if (eventType == "plot.init") {
     # do stuff for this event
-    Plot(sim$FiresCumul,zero.color = "white", legendRange = 0:sim$maxFiresCumul)
+    Plot(sim$FiresCumul,zero.color = "white", legendRange = 0:sim$maxFiresCumul,
+         cols=c("orange", "darkred"))
 
     # schedule the next event
     sim <- scheduleEvent(sim, time(sim) + params(sim)$fireSpreadLcc$.plotInterval, "fireSpreadLcc", "plot")
   } else if (eventType == "plot") {
     # do stuff for this event
-    Plot(sim$FiresCumul, zero.color = "white", legendRange = 0:sim$maxFiresCumul)
+    Plot(sim$FiresCumul,zero.color = "white", legendRange = 0:sim$maxFiresCumul,
+         cols=c("orange", "darkred"))
 
     if (length(sim[[globals(sim)$burnStats]]) > 0) {
 

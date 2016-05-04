@@ -100,7 +100,7 @@ cropReprojectLccInit = function(sim) {
 cropReprojectLccCacheFunctions <- function(sim) {
   # for slow functions, add cached versions. Then use sim$xxx() throughout module instead of xxx()
 
-  if(params(sim)$cropReprojectLccAge$useCache) {
+  if (params(sim)$cropReprojectLccAge$useCache) {
     # Step 1 - create a location for the cached data if it doesn't already exist
     sim$cacheLoc <- file.path(cachePath(sim), "cropReprojectLccAge") %>%
       checkPath(create = TRUE)
