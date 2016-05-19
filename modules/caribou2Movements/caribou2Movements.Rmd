@@ -1,0 +1,154 @@
+---
+title: "caribou2Movements"
+author: "Bauduin Sarah"
+date: "Decembre 2015"
+output: pdf_document
+---
+
+# Overview
+
+The caribou2Movements module reproduces an spatially explicit individual-based model.
+It simulates daily caribou movements according to 2 different movement behaviors.
+The movement behavior changes according to the quality of the landscape given by a raster.
+Landscape quality changes according to the season. There are 2 seasons.
+In habitat (cell) of good quality, individuals follow a random walk. 
+In habitat (cell) of low quality, individuals follow either a biased correlated random walk (BCRW) or a foray loop (FL).
+All movement behaviors are habitat mediated. Movements depend of habitat quality and of paved road presence.
+There is an attraction to the individual's mating area during mating season.
+In the BCRW, individuals are attracted to the closest habitat (cell) of good quality. 
+In the FL, individuals perform loops going away and back to their last visited habitat (cell) of good quality. 
+
+
+# Usage
+
+## Module input objects. These objects need to be loaded first
+
+```{r load inputs, eval=FALSE}
+library(SpaDES)
+
+path_module <- file.path("~","Documents","GitHub","McIntire-lab","modulesPrivate")
+
+downloadData("caribou2Movements", path = path_module)
+load(file.path(path_module, "caribou2Movements/data/inputs_caribou2Movements.RData"))
+```
+
+```{r usage, eval=FALSE}
+ list_object<-list(unique_MA=unique_MA,
+                   rsf_summer=rsf_summer,rsf_winter=rsf_winter,
+                   distance_good_summer=distance_good_summer,distance_good_winter=distance_good_winter,
+                   direction_good_summer=direction_good_summer,direction_good_winter=direction_good_winter,
+                   paved_roads=paved_roads)
+
+## Module parameters                
+list_param <- list(
+  .plotInitialTime = NA,
+   N_subpop = c(20, 20, 20),
+   dates_MA = c(258, 305),
+   dates_season = c(121, 320),
+   scale_world = 75,
+   mean_step_good = 5.97, mean_step_bad = 4.49, sd_step = 1.34, max_step = 20000,
+   pCross_good = 0.17, pCross_bad = 0.17,
+   sd_matingAttract = 85.95,
+   move_model2 = "FL",
+   sd_corr = 113.42, sd_bias = 121.53, max_bias = 20.45,
+   sd_fl = 134.91, maxStep_loop = 5.68
+)
+
+path_output<-tempdir()
+
+## Runing the module
+mySim <- simInit(
+  times = list(start = 0, end = 4, timeunit = "day"),
+  params = list(caribou2Movements = list_param,
+              .progress = list(type = "graphical", interval = 25)),
+  objects = list_object,  
+  modules = list("caribou2Movements"),
+  paths = list(modulePath = path_module, outputPath = path_output),
+  outputs = data.frame(
+    objectName = c("caribou_loc", "raster_visits"),
+    saveTime = 300
+  )
+)
+#p <- profvis::profvis(out<-spades(sim = mySim, debug = FALSE)) # uncomment this to see 
+                                                           #  profile in a web browser
+shine(mySim)
+system.time(out <- spades(sim = mySim, debug = TRUE))
+```
+
+# Events
+
+Events are scheduled in the way:
+
+- initiate the module
+- plot the landscape and the initial caribou locations
+- save the initial caribou locations
+- start the main event: the caribou move
+- plot the caribou locations*
+- save the caribou locations*
+- the caribou move*
+* these 3 events are repeated the number of time steps
+- save the final caribou locations and create the raster of the caribou visits
+- write the 2 outputs files (caribou locations and raster of caribou visits)
+(one more time step of plot-save-move will happen but will not be recorded in the output files)
+
+## Plotting
+
+An empty landscape based on the landscape quality is plotted at the start.
+Caribou locations are added on it at .plotInitialTime and then at each .plotInterval  
+
+## Saving
+
+Caribou locations x and y are recorded with the corresponding year and julian day in a dataframe.
+Locations are recorded at .saveInitialTime, at each .saveInterval  and at the last time step.
+
+
+# Data dependencies
+
+## Input data
+
+As model input, some objects and parameters are required. All rasters must be of the same size and resolution
+
+### Objects:
+
+- "unique_MA" #list of SpatialPolygons with each item is a mating area for a subpopulation
+- "rsf_summer", "rsf_winter" #rasters of habitat quality derived from a rsf, one for the summer and one for the winter
+- "distance_good_summer","distance_good_winter" #rasters of distances to the closest habitat (cell) of good quality for each season
+- "direction_good_summer","direction_good_winter" #rasters of directions to the closest habitat (cell) of good quality for each season
+- "paved_roads" #raster of paved roads barriers
+
+### Parameters:
+
+- ".plotInitialTime" #time to schedule first plot event. Default is 0. If NA, no plotting occurs.
+- ".plotInterval" #time interval between plot events. Default is 1
+- ".saveInitialTime" #time to schedule first save event. Default is 0. If NA, no saving occurs
+- ".saveInterval" #time interval between save events. Default is 1
+- "N_subpop" #vector of number of individuals in each subpopulation in the same order as the unique_MA
+- "dates_MA" #vector with the julian dates for the beginning and the end of the mating season
+- "dates_season" #vector with the julian dates for the seasons which change the movement behavior (1st date =  beginning of summer, 2nd date = beginning of winter)
+- "scale_world" #size of a raster cell side in meters
+- "mean_step_good" #mean step length in good quality habitat (cell) in log(m)
+- "mean_step_bad" #mean step length in low quality habitat (cell) in log(m)
+- "sd_step" #step length standard deviation in log(m)
+- "max_step" #maximum step length in m
+- "pCross_good" #probability to cross a road when in good quality habitat (cell)
+- "pCross_bad" #probability to cross a road when in low quality habitat (cell)
+- "sd_matingAttract" #sd of the wrapped normal distribution for the mating area attraction
+- "move_model2" #movement behavior in low quality habitat (cell) "BCRW" or "FL"
+- "sd_corr" #sd of the wrapped normal distribution for the correlation movement
+- "sd_bias" #sd of the wrapped normal distribution for the bias movement
+- "max_bias" #maximum distance from a good quality habitat (cell) for the bias to occur (in km)
+- "sd_fl" #sd of the wrapped normal distribution for the foray loop movement
+- "maxStep_loop" #maximum number of steps in a loop for the outgoing movement
+
+## Output data
+
+Two outputs are created and can be saved:
+
+- "caribou_loc" #dataframe of all caribou locations saved during the saving process
+- "raster_visits" #raster of the size and resolustion of the landscape quality which compiles the caribou visits after the 1st year of simulation
+
+
+# Links to other modules
+
+This module could be coupled  with a vegetation module transforming the landscape over time.
+An additional module would then be needed to transform the outputs of the vegetation model into inputs for this module.

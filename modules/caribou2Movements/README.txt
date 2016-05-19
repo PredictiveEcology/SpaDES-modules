@@ -1,0 +1,2 @@
+The model was previsouly build outside the SpaDES module and presented in the following article:
+Bauduin, S., McIntire, E.J.B., St-Laurent, M.-H., Cumming, S.G. (in review) Overcoming challenges of sparse telemetry data to estimate caribou movement
