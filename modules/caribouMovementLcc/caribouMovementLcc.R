@@ -63,7 +63,7 @@ doEvent.caribouMovementLcc <- function(sim, eventTime, eventType, debug = FALSE)
 
     # This wipes out previous values of the caribou map with a white raster
     Plot(sim$caribouRas, zero.color="white",
-         legendRange=c(0, end(sim, "year")-start(sim, "year")))
+         legendRange=c(0, 50), cols=c("lightgrey", "black"))
 
     # schedule the next event
     sim <- scheduleEvent(sim, time(sim) + params(sim)$caribouMovementLcc$.plotInterval,
@@ -71,7 +71,7 @@ doEvent.caribouMovementLcc <- function(sim, eventTime, eventType, debug = FALSE)
   } else if (eventType == "plot") {
     # do stuff for this event
     Plot(sim$caribouRas, zero.color="white",
-         legendRange=c(0, end(sim, "year")-start(sim, "year")))
+         legendRange=c(0, 50), cols=c("lightgrey", "black"))
 
     # schedule the next event
     sim <- scheduleEvent(sim, time(sim) + params(sim)$caribouMovementLcc$.plotInterval,
