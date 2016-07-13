@@ -3,3 +3,8 @@
 "HabitatSuitability.asc" "e8f62db2bbac899810cbd96755fcb847"
 "packs2008.asc" "4ebb717a3b34ca4a3e2ccb840e157e25"
 "wolves2008.asc" "5251c30c8feccd7c57a2992107501dfe"
+"file" "checksum"
+"CMR.asc" "ba6d74b69a96963915bb3c4ec642faa3"
+"HabitatSuitability.asc" "566ea38e5d1f9f35a8aa24aaf2b66fcf"
+"packs2008.asc" "e3561b462639d45be6355033fa5373c8"
+"wolves2008.asc" "bd8477a8ec2504eaa64693237cf0f47d"
