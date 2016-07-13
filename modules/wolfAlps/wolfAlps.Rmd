@@ -3,7 +3,7 @@ title: "wolfAlps"
 author: "Sarah Bauduin, Eliot McIntire"
 date: "17 juin 2016"
 output: pdf_document
-bibliography: ~/Databases/zoteroBib/McIntire.bib
+bibliography: McIntire.bib
 ---
 
 
