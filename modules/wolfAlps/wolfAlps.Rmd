@@ -2,20 +2,21 @@
 title: "wolfAlps"
 author: "Sarah Bauduin, Eliot McIntire"
 date: "17 juin 2016"
-output: pdf_document
+output: html_document
+csl: ecology.csl
 bibliography: McIntire.bib
 ---
 
 
 # Overview
 
-Demography and dispersal movement of the wolf in the Italian Alps. This is an R port of the original SELES model that was used in Marucco and McIntire 2010.
+Demography and dispersal movement of the wolf in the Italian Alps. This is an R port of the original SELES model that was used in [@marucco_2010].
 
 # Install SpaDES (R package)
 
 For this and all subsequent code, you will need to be in R.
 
-```{r install necessary R packages, eval = TRUE}
+```{r install necessary R packages, eval = FALSE, echo = TRUE}
 install.packages("devtools")
 library(devtools)
 install_github("PredictiveEcology/SpaDES@development")
@@ -25,7 +26,7 @@ install_github("PredictiveEcology/NetLogoR")
 
 # Download model
 
-```{r download module, eval = TRUE}
+```{r download module, eval = FALSE, echo = TRUE}
 library(SpaDES)
 
 moduleName <- "wolfAlps"
@@ -39,7 +40,7 @@ downloadModule(moduleName, data = TRUE, path = workingDirectory)
 
 Below is the simple interactive section. If all that is desired is interactive work, then you need to go no further. For running non interactively, such as to get many replicates and probabilistic summaries of many runs, then continue on to subsequent sections.
 
-```{r module_usage, eval = TRUE}
+```{r module_usage, eval = FALSE, echo = TRUE}
 
 moduleDir <- file.path(workingDirectory)
 
@@ -87,7 +88,7 @@ wolfAlpsOutput <- spades(wolfModuleStart, progress = 14) # 14 updates to progres
 ## Caching
 
 Caching allows the user to save outputs without manually saving them. This can be rerun at later time and it will just reload results. 
-```{r caching, eval = TRUE}
+```{r caching, eval = FALSE, echo = TRUE}
 # if first time, must create a caching repo
 # archivist::createLocalRepo(paths(wolfModuleStart)$cachePath)
 
@@ -102,7 +103,7 @@ wolfAlpsSim <- spades(sim = wolfModuleStart, cache = TRUE, replicate = 1) # , no
 
 Depending on your machine, this can speed things up substantially. The simulation uses about 600 MB of RAM. If the machine has enough RAM, then all threads can be used, with `makeCluster()`. For help on this, see experiment function help (i.e., `?experiment`). Below, we also use the cache = TRUE argument. This means that when this runs, the results will be cached. So, if the exact same call to `experiment` is made at a later time, then it will just return the previous result. This can be convenient because it doesn't require the the user manually save objects; they are cached. However, for stochastic simulation, this may not always be desired. If no caching is desired, then either use `cache = FALSE` (the default, if cache argument is omitted), or add the argument `notOlderThan = Sys.time()`, will replace the older cached version with current run. Currently, this is set to run 11 replicates.
 
-```{r parallel, eval = TRUE}
+```{r parallel, eval = FALSE, echo = TRUE}
 # for parallel version -- must begin the cache repository, see previous chunk
 library(raster)
 times <- list(start = 2008, end = 2008+14, timeunit = "year")
@@ -119,7 +120,7 @@ endCluster()
 Taking the object created in the previous chunk, we can make summary figures. Here, we show just one such
 figure.
 
-```{r summaries, eval = TRUE}
+```{r summaries, eval = FALSE, echo = TRUE}
 # look at probability of territory map
 terrs <- lapply(wolfAlpsSim2, function(x) lapply(x$out_terr[(start(wolfAlpsSim2[[1]])+1):end(wolfAlpsSim2[[1]])], function(y) world2raster(y)))
 # create mean probability of territory map
@@ -139,7 +140,7 @@ Plot(TerritoryProb, cols = grey(9.9:0/10), legendRange = c(0, 0.3001))
 
 If there is an ssh connection between machines, then PSOCK can be used. This means that the slave machines must be running an ssh server (usually on a linux machine), and there is a stored ssh key on each of those machines, authenticating the connection from the master.
 
-```{r parallel on Linux machines with ssh connection between them, eval = FALSE}
+```{r parallel on Linux machines with ssh connection between them, eval = FALSE, echo = TRUE}
 library(parallel)
 # make a cluster on 3 machines
 machine1 <- PutMachine1Name
@@ -186,7 +187,7 @@ Four raster maps are loaded prior running the model. These maps represent the wo
 
 As with all SpaDES models, you can run a simple shiny app using `shine`.
 
-```{r shiny}
+```{r shiny, eval = FALSE, echo = TRUE}
 shine(wolfModuleStart)
 ```
 
@@ -197,9 +198,9 @@ See ## Saving
 
 ## SELES version
 
-This model is a rewrite of a version originally written in SELES and used in the publication, Marucco and McIntire 2010. This makes use of parallel package. The data files represent 100 replicate simulation outputs from the original SELES code.
+This model is a rewrite of a version originally written in SELES and used in the publication, [@marucco_2010]. This makes use of parallel package. The data files represent 100 replicate simulation outputs from the original SELES code.
 
-```{r SELES, eval = FALSE}
+```{r SELES, eval = FALSE, echo = TRUE}
 selesDir <- file.path(moduleDir, "data")
 outputMapDir <- tempdir()
 unzip(file.path(selesDir, "outputSeles.zip"), exdir = outputMapDir)
@@ -248,6 +249,4 @@ Plot(diffProb, new=TRUE, zero.color = "white", cols = divergentColors("red", "gr
 ```
 
 # Literature
-
-- Marucco, F., and E. J. B. McIntire. 2010. Predicting spatio-temporal recolonization of large carnivore populations and livestock depredation risk: wolves in the Italian Alps. Journal of Applied Ecology 47:789–798.
 
