@@ -197,7 +197,7 @@ See ## Saving
 
 ## SELES version
 
-This model is a rewrite of a version originally written in SELES and used in the publication, @marucco_2010 This makes use of parallel package
+This model is a rewrite of a version originally written in SELES and used in the publication, [@marucco_2010] This makes use of parallel package
 
 ```{r SELES, eval = FALSE}
 selesDir <- file.path(moduleDir, "outputSeles")
