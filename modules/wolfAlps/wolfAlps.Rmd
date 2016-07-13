@@ -15,7 +15,7 @@ Demography and dispersal movement of the wolf in the Italian Alps.
 
 For this and all subsequent code, you will need to be in R.
 
-```{r install necessary R packages, eval = FALSE}
+```{r install necessary R packages, eval = TRUE}
 install.packages("devtools")
 library(devtools)
 install_github("PredictiveEcology/SpaDES@development")
@@ -197,7 +197,7 @@ See ## Saving
 
 ## SELES version
 
-This model is a rewrite of a version originally written in SELES and used in the publication, @Marucco This makes use of parallel package
+This model is a rewrite of a version originally written in SELES and used in the publication, @marucco_2010 This makes use of parallel package
 
 ```{r SELES, eval = FALSE}
 selesDir <- file.path(moduleDir, "outputSeles")
@@ -246,4 +246,8 @@ diffProb[diffProb==0] <- NA
 diffProb <- stack(diffProb)
 Plot(diffProb, new=TRUE, zero.color = "white", cols = divergentColors("red", "green", -5, 5, 0, "white"), legendRange = c(-0.5,0.5))
 ```
+
+# Literature
+
+- Marucco, F., and E. J. B. McIntire. 2010. Predicting spatio-temporal recolonization of large carnivore populations and livestock depredation risk: wolves in the Italian Alps. Journal of Applied Ecology 47:789–798.
 
