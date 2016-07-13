@@ -197,10 +197,10 @@ See ## Saving
 
 ## SELES version
 
-This model is a rewrite of a version originally written in SELES and used in the publication, [@marucco_2010] This makes use of parallel package
+This model is a rewrite of a version originally written in SELES and used in the publication, Marucco and McIntire 2010. This makes use of parallel package. The data files represent 100 replicate simulation outputs from the original SELES code.
 
 ```{r SELES, eval = FALSE}
-selesDir <- file.path(moduleDir, "outputSeles")
+selesDir <- file.path(moduleDir, "data")
 outputMapDir <- tempdir()
 unzip(file.path(selesDir, "outputSeles.zip"), exdir = outputMapDir)
 
