@@ -1,6 +1,6 @@
 ---
 title: "wolfAlps"
-author: "Sarah Bauduin, Eliot McIntire"
+author: "Sarah Bauduin, Eliot McIntire, Francesca Marucco"
 date: "17 juin 2016"
 output: html_document
 csl: ecology.csl
@@ -44,24 +44,22 @@ Below is the simple interactive section. If all that is desired is interactive w
 
 moduleDir <- file.path(workingDirectory)
 
-times <- list(start = 2008, end = 2008+14, timeunit = "year")
+times <- list(start = 0, end = 14, timeunit = "year")
 
 # These are the default parameters, none is being changed at the moment.
-#parameters <- list(
-  #.plotInitialTime = NA, .plotInterval = 1,
-  #.saveInitialTime = 0, .saveInterval = 1
-  # MeanNpups = 3.387, SdNpups = 1.210,
-  # AdultMortalityRate  = 0.18, JuvMortalityRate = 0.449, DispMortRatePerMove = 0.0353,
-  # MeanPackSize = 4.405, SdPackSize = 1.251,
-  # EndDispersal = 0.98, 
-  # CellWidth = 1.25, MoveStep = 10.929,
-  # sigma = 21.802,
-  # MeanPixelQuality = 0.84, MinPixelQuality = 0.376, MinPackQuality = 89.288, 
-  # PackArea = 256, PhaseTransitionLower = 0.198,
-  # run.tests = TRUE,
-  # tImmigration = NA, locImmigrant = cbind(pxcor = NA, pycor = NA),
-  # nGenes = 3, nAlleles = c(4,6,2)
-#)
+# parameters <- list(
+#   .plotInitialTime = NA, .plotInterval = 1,
+#   .saveInitialTime = 0, .saveInterval = 1,
+#   MeanNpups = 3.387, SdNpups = 1.210,
+#   AdultMortalityRate  = 0.18, JuvMortalityRate = 0.449, DispMortRatePerMove = 0.0353,
+#   MeanPackSize = 4.405, SdPackSize = 1.251,
+#   EndDispersal = 0.98,
+#   CellWidth = 1.25, MoveStep = 10.929,
+#   sigma = 21.802,
+#   MeanPixelQuality = 0.84, MinPixelQuality = 0.376, MinPackQuality = 89.288,
+#   PackArea = 256, PhaseTransitionLower = 0.198,
+#   run.tests = TRUE
+# )
 
 modules <- list("wolfAlps")
 
@@ -106,7 +104,7 @@ Depending on your machine, this can speed things up substantially. The simulatio
 ```{r parallel, eval = FALSE, echo = TRUE}
 # for parallel version -- must begin the cache repository, see previous chunk
 library(raster)
-times <- list(start = 2008, end = 2008+14, timeunit = "year")
+times <- list(start = 0, end = 14, timeunit = "year")
 beginCluster()
 # getCluster()
 wolfModuleStart <- simInit(times = times, # params = list(wolfAlps=parameters), 
