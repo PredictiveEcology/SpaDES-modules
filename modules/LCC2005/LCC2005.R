@@ -1,4 +1,4 @@
-stopifnot(packageVersion("SpaDES") >= "1.1.0")
+stopifnot(packageVersion("SpaDES") >= "1.2.0.9006")
 
 defineModule(sim, list(
   name = "LCC2005",

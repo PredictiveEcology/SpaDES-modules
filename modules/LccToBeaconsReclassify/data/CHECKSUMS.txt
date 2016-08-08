@@ -1,2 +1,3 @@
 "file" "checksum"
-"LandCoverOfCanada2005_V1_4.zip" "60b91274c3b39bf01150281954ce585a"
+"LandCoverOfCanada2005_V1_4.zip" "f6c0bc08fd07166e87c6235ad9254157"
+"LCC2005_V1_4a.tif" "d2a7655210375687632cd4c04bf987f2"

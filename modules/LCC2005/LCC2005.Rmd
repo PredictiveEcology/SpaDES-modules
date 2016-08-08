@@ -5,7 +5,9 @@ date: "05 January 2015"
 output: html_document
 ---
 
-This is an example of a 'module group' containing several child modules:
+This is an example model of forest dynamics. It includes simple versions of forest succession in Canada's boreal forest, a simple cellular automaton fire model, some GIS data operations to select subset areas of a larger dataset, a reclassification module from a many-class land cover to a few-class land cover and a simple agent movement model. These are all toy versions of each of these types and so are not useful for real world applications; but they allow highlighting of some of SpaDES's capabilities.
+
+This example uses the notion of a 'module group' or 'parent' module that contains several child modules:
 
 - `caribouMovementLcc`
 - `cropReprojectLccAge`
@@ -14,125 +16,83 @@ This is an example of a 'module group' containing several child modules:
 - `forestSuccessionBeacons`
 - `LccToBeaconsReclassify`
 
-This parent module uses these children modules which have 2 different time units (month for caribou, year for others).
-The code in this file downloads all modules and data required to run the spades call at the end.
-If this is running on a Windows OS, the visualizations will be quick because a device will be opened that is not within RStudio.
-On a Linux on OS X machine, this will not occur, so visualization will be slow (RStudio graphics device is slow).
+This code also shows how modules can have different time units, specifically, the child modules which have 2 different time units (month for caribou, year for others).
+
+The code will download all modules and data required to run the spades call at the end.
+If this is running on a Windows OS or on an OS X machine, the visualizations will be quick because a device will be opened that is not within RStudio.
+On a Linux, this will not occur, so visualization will be slow (RStudio graphics device is slow).
 
 ```{r download-modules, eval=TRUE}
-library(igraph)
-library(raster)
 library(SpaDES)
 
-if (!exists("baseDir")) {
-  baseDir <- if ( interactive() && (Sys.info()[["sysname"]] == "Windows") ) {
-    choose.dir(caption = "Select base directory for modules and data")
-  } else {
-    file.path(tempdir(), "modules")
-  } %>% checkPath(create = TRUE)
-}
+# pick a directory to download modules and data to. Can use a temp directory
+workDirectory <- file.path(dirname(tempdir()), "Lcc2005")
+moduleDir <- file.path(workDirectory, "modules")
+checkPath(moduleDir, create = TRUE)
 
-downloadModule("LCC2005", baseDir) # default `data=FALSE` doesn't download data
-downloadData("LCC2005", baseDir) # alternatively, use `data=TRUE` above
-unzip(zipfile = file.path(baseDir, "LccToBeaconsReclassify", "data", "LandCoverOfCanada2005_V1_4.zip"),
-      files = "LCC2005_V1_4a.tif",
-      exdir = file.path(baseDir, "LccToBeaconsReclassify", "data"))
+downloadModule("LCC2005", moduleDir) # default `data=FALSE` doesn't download data
 ```
 
-
-
-```{r model-inputs, eval=TRUE}
-# load data
-age <- raster::raster(file.path(baseDir, "forestAge", "data", "can_age04_1km.tif"))
-lcc05 <- raster::raster(file.path(baseDir, "LccToBeaconsReclassify", "data",
-                                  "LCC2005_V1_4a.tif"))
-lcc05CRS <- crs(lcc05)
-
-# Random polygon
-areaKm2 <- 2000
-minX <- -1072250.2
-maxX <- minX + sqrt(areaKm2*1e6)
-minY <- 7438877-1.6e5
-maxY <- minY + sqrt(areaKm2*1e6)
-meanY <- mean(c(minY, maxY))
-
-# Add random noise to polygon
-set.seed(5567913)
-xAdd <- round(runif(1, -5e5, 1.5e6))
-yAdd <- round(runif(1, 1e5, 5e5)) - xAdd/2
-nPoints <- 20
-betaPar <- 0.6
-X = c(
-  jitter(sort(rbeta(nPoints, betaPar, betaPar)*(maxX-minX)+minX)),
-  jitter(sort(rbeta(nPoints, betaPar, betaPar)*(maxX-minX)+minX, decreasing = TRUE))
-)
-Y = c(
-  jitter(sort(rbeta(nPoints/2, betaPar, betaPar)*(maxY-meanY)+meanY)),
-  jitter(sort(rbeta(nPoints, betaPar, betaPar)*(maxY-minY)+minY, decreasing = TRUE)),
-  jitter(sort(rbeta(nPoints/2, betaPar, betaPar)*(meanY-minY)+minY))
-)
-
-inputMapPolygon <- cbind(X+xAdd, Y+yAdd) %>% 
-  Polygon %>%
-  list %>%
-  Polygons("s1") %>%
-  list %>%
-  SpatialPolygons(1L)
-crs(inputMapPolygon) <- lcc05CRS
-```
 
 Module groups make loading multiple modules easier: only the name of the module group needs to be specified in the `simInit` call, which will then initialize the simulation with the child modules.
 
 ```{r module-group-init, eval=TRUE}
 # setup simulation
-outputDir <- file.path(tempdir(), "simOutputs")
+outputDir <- file.path(workDirectory, "simOutputs")
 cacheDir <- checkPath(file.path(outputDir, "cache"), create = TRUE)
 
 times <- list(start = 2005.0, end = 2020.0, timeunit = "year")
 parameters <- list(
-  .globals = list(burnStats = "nPixelsBurned"),
-  .progress = list(type = "text", interval = 1),
-  cropReprojectLccAge = list(useCache=TRUE),
-  forestSuccessionBeacons = list(
-    returnInterval = 1, startTime = times$start,
-    .plotInitialTime = times$start, .plotInterval = 1),
-  forestAge = list(
-    returnInterval = 1, startTime = times$start+0.5,
-    .plotInitialTime = times$start, .plotInterval = 1),
-  fireSpreadLcc = list(
-    nFires = 3, its = 1e6, drought = 1.2, persistprob = 0, returnInterval = 1,
-    startTime = times$start+1, .plotInitialTime = times$start, .plotInterval = 1),
-  caribouMovementLcc = list(
-    N = 1e3, moveInterval = 1, startTime = times$start+1, torus = TRUE,
-    glmInitialTime = NA_real_, .plotInitialTime = times$start, .plotInterval = 1)
+  .globals = list(burnStats = "fireStats"),
+  fireSpreadLcc = list(drought = 1.2), # in
+  caribouMovementLcc = list(N = 1e3, startTime = times$start+1, 
+                            glmInitialTime = NA_real_)
 )
 modules <- list("LCC2005")
-objects <- list(age = "age", lcc05 = "lcc05", inputMapPolygon = "inputMapPolygon")
 paths <- list(
   cachePath = cacheDir,
-  modulePath = baseDir,
-  inputPath = baseDir,
+  modulePath = moduleDir,
+  inputPath = moduleDir,
   outputPath = outputDir
 )
 
 mySim <- simInit(times = times, params = parameters, modules = modules,
-                 objects = objects, paths = paths)
+                 paths = paths)
 
-### Simulation overview: note the child modules are initialized
-moduleDiagram(mySim)
-objectDiagram(mySim)
 ```
 
 Now that the `mySim` object has been initialized, we can run the simulation by calling
 `spades`
 
 ```{r run-SpaDES, eval=FALSE}
-if ( interactive() && Sys.info()[["sysname"]] == "Windows" ) {
-# Rstudio server device is bad, but no alternative available (which runs on Linux types) 
-    dev()
-}
-Plot(lcc05, new = TRUE)
-Plot(inputMapPolygon, addTo = "lcc05", gp = gpar(col = "yellow", lwd = 2))
+dev() # on Windows and Mac, this opens external device if using Rstudio, it is faster
+clearPlot()
 
-spades(mySim)
+mySimOut <- spades(mySim)
+Plot(mySimOut$lcc05, title = "Land Cover, with simulated area")
+Plot(mySimOut$inputMapPolygon, addTo = "mySimOut$lcc05", gp = gpar(col = "yellow", lwd = 2))
+
+```
+
+In addition to running a model, there are many things built into SpaDES that allow a user to explore the modules and models.
+
+```{r Exploring model, eval = FALSE}
+openModules(mySim) # this will open the main module scripts in a text editor
+
+### Simulation overview: note the child modules are initialized
+moduleDiagram(mySim)
+objectDiagram(mySim)
+
+# show modules that are included in this simList
+modules(mySim)
+
+# show all objects contained within the final simList
+ls(mySimOut)
+
+# more detail
+ls.str(mySimOut)
+
+# show parameters that can easily be changed in simInit call
+params(mySim)
+
 ```

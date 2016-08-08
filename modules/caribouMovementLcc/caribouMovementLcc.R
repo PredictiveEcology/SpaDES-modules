@@ -1,4 +1,4 @@
-stopifnot(packageVersion("SpaDES") >= "1.1.0")
+stopifnot(packageVersion("SpaDES") >= "1.2.0.9006")
 
 defineModule(sim, list(
   name = "caribouMovementLcc",
@@ -20,8 +20,8 @@ defineModule(sim, list(
     defineParameter("N", "numeric", 100.0, 0.0, 10000.0, desc = "Number of caribou to intiate at startTime"),
     defineParameter("torus", "logical", TRUE, NA, NA, desc = "Whether caribou should wrap around map if they go off map sides"),
     defineParameter("moveInterval", "numeric", 1.0, NA, NA, desc = "Time interval between move events"),
-    defineParameter("startTime", "numeric", 1.0, NA, NA, desc = "Simulation time at which to initiate caribou movement"),
-    defineParameter(".plotInitialTime", "numeric", 0, NA, NA, desc = "Initial time for plotting"),
+    defineParameter("startTime", "numeric", start(sim), NA, NA, desc = "Simulation time at which to initiate caribou movement"),
+    defineParameter(".plotInitialTime", "numeric", start(sim), NA, NA, desc = "Initial time for plotting"),
     defineParameter(".plotInterval", "numeric", 1, NA, NA, desc = "Interval between plotting"),
     defineParameter(".saveInitialTime", "numeric", NA_real_, NA, NA, desc = "Initial time for saving"),
     defineParameter(".saveInterval", "numeric", NA_real_, NA, NA, desc = "Interval between save events")),

@@ -1,4 +1,4 @@
-stopifnot(packageVersion("SpaDES") >= "1.1.0")
+stopifnot(packageVersion("SpaDES") >= "1.2.0.9006")
 
 defineModule(sim, list(
   name = "forestSuccessionBeacons",
@@ -18,8 +18,8 @@ defineModule(sim, list(
   reqdPkgs = list("ggplot2", "raster", "RColorBrewer"),
   parameters = rbind(
     defineParameter("returnInterval", "numeric", 1.0, NA, NA, desc = "Time interval between succession events"),
-    defineParameter("startTime", "numeric", 1.0, NA, NA, desc = "Simulation time at which to initiate forest succession"),
-    defineParameter(".plotInitialTime", "numeric", 1, NA, NA, desc = "Initial time for plotting"),
+    defineParameter("startTime", "numeric", start(sim), NA, NA, desc = "Simulation time at which to initiate forest succession"),
+    defineParameter(".plotInitialTime", "numeric", start(sim), NA, NA, desc = "Initial time for plotting"),
     defineParameter(".plotInterval", "numeric", 1, NA, NA, desc = "Interval between plotting"),
     defineParameter(".saveInitialTime", "numeric", NA_real_, NA, NA, desc = "Initial time for saving"),
     defineParameter(".saveInterval", "numeric", NA_real_, NA, NA, desc = "Interval between save events")

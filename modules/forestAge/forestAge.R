@@ -1,4 +1,4 @@
-stopifnot(packageVersion("SpaDES") >= "1.1.0")
+stopifnot(packageVersion("SpaDES") >= "1.2.0.9006")
 
 defineModule(sim, list(
   name = "forestAge",
@@ -18,8 +18,8 @@ defineModule(sim, list(
   reqdPkgs = list("raster", "RColorBrewer"),
   parameters = rbind(
     defineParameter("returnInterval", "numeric", 1.0, NA, NA, desc = "Time interval between aging events"),
-    defineParameter("startTime", "numeric", 1.0, NA, NA, desc = "Simulation time at which to initiate forest aging"),
-    defineParameter(".plotInitialTime", "numeric", 0, NA, 0, desc = "Initial time for plotting"),
+    defineParameter("startTime", "numeric", start(sim) + 0.5, NA, NA, desc = "Simulation time at which to initiate forest aging"),
+    defineParameter(".plotInitialTime", "numeric", start(sim), NA, 0, desc = "Initial time for plotting"),
     defineParameter(".plotInterval", "numeric", 1, NA, NA, desc = "Interval between plotting"),
     defineParameter(".saveInitialTime", "numeric", NA_real_, NA, NA, desc = "Initial time for saving"),
     defineParameter(".saveInterval", "numeric", NA_real_, NA, NA, desc = "Interval between save events")
