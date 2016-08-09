@@ -7,7 +7,7 @@ defineModule(sim, list(
   authors = c(person("Sarah", "Bauduin", email="sarahbauduin@hotmail.fr", role=c("aut", "cre")),
               person("Eliot", "McIntire", email="eliot.mcintire@canada.ca", role=c("aut", "cre"))),
   childModules = character(),
-  version = numeric_version("1.1.4.9011"),
+  version = numeric_version("1.1.4.9012"),
   spatialExtent = raster::extent(rep(NA_real_, 4)), # raster::extent(raster(paste(inputDir, "/HabitatSuitability.asc", sep = ""))),
   timeframe = as.POSIXlt(c(NA, NA)), # as.POSIXlt(c(0, 14)),
   timeunit = "year", # e.g., "year",
