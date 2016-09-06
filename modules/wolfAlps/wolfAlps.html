@@ -94,7 +94,6 @@ button.code-folding-btn:focus {
 </style>
 
 
-
 <div class="container-fluid main-container">
 
 <!-- tabsets -->
@@ -226,7 +225,6 @@ Plot(TerritoryProb, cols = grey(9.9:0/10), legendRange = c(0, 0.3001))</code></p
 </div>
 <div id="below-here-is-for-advanced-users" class="section level1">
 <h1>Below here is for advanced users</h1>
-<<<<<<< HEAD
 <div id="using-ssh-on-a-group-of-linux-machines-advanced-user" class="section level2">
 <h2>Using ssh on a group of Linux machines – Advanced user</h2>
 <p>If you have a group of Linux machines, you can connect them using ssh and build clusters using all those machines, using PSOCK. To do this, the “slave” machines must be running an ssh server, and there is a stored ssh key on each of those machines, authenticating the connection from the master. If your desktop is a Windows machine, you will have to run these from a Linux machine (e.g., using Rstudio server running on one of the Linux machines, or running R from the command line from the master).</p>
@@ -245,11 +243,6 @@ Plot(TerritoryProb, cols = grey(9.9:0/10), legendRange = c(0, 0.3001))</code></p
 </div>
 <div id="back-to-r-and-wolf-model" class="section level3">
 <h3>Back to R and Wolf model</h3>
-=======
-<div id="using-ssh-advanced-user" class="section level2">
-<h2>Using ssh – Advanced user</h2>
-<p>If there is an ssh connection between machines, then a multi-machine PSOCK cluster can be used for running replicates of the model. The master machine must have key-based authenticated ssh access to the slave machines, which must be running an ssh server (usually on a linux machine).</p>
->>>>>>> master
 <pre class="r"><code>library(parallel)
 # make a cluster on 3 machines
 machine1 &lt;- &quot;PutMachine1Name&quot;
@@ -377,7 +370,6 @@ Plot(diffProb, new = TRUE, zero.color = &quot;white&quot;,
 $(document).ready(function () {
   $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
 });
-
 
 </script>
 
