@@ -227,9 +227,24 @@ Plot(TerritoryProb, cols = grey(9.9:0/10), legendRange = c(0, 0.3001))</code></p
 </div>
 <div id="below-here-is-for-advanced-users" class="section level1">
 <h1>Below here is for advanced users</h1>
-<div id="using-ssh-advanced-user" class="section level2">
-<h2>Using ssh – Advanced user</h2>
-<p>If there is an ssh connection between machines, then PSOCK can be used. This means that the slave machines must be running an ssh server (usually on a linux machine), and there is a stored ssh key on each of those machines, authenticating the connection from the master.</p>
+<div id="using-ssh-on-a-group-of-linux-machines-advanced-user" class="section level2">
+<h2>Using ssh on a group of Linux machines – Advanced user</h2>
+<p>If you have a group of Linux machines, you can connect them using ssh and build clusters using all those machines, using PSOCK. To do this, the “slave” machines must be running an ssh server, and there is a stored ssh key on each of those machines, authenticating the connection from the master. If your desktop is a Windows machine, you will have to run these from a Linux machine (e.g., using Rstudio server running on one of the Linux machines, or running R from the command line from the master).</p>
+<div id="getting-ssh-running-on-windows-only-from-a-windows-desktop" class="section level4">
+<h4>Getting ssh running on Windows (only from a Windows Desktop)</h4>
+<p>Assuming that you have Rstudio server running on a Linux machine or can run R at a command prompt on a Linux machine, you will have to connect to the “master”, create the ssh key pair while connected to that master, then copy the public key to each of the Linux “slaves”.</p>
+<p>‘putty.exe’ can be very useful, but I find using the <strong>git bash</strong> easier. <a href="https://www.codeenigma.com/host/faq/how-do-i-create-ssh-public-key-windows-pc">Download a tool to use ssh</a>. Install it, and run git bash.</p>
+</div>
+<div id="create-ssh-key-pairs" class="section level4">
+<h4>Create ssh key pairs</h4>
+<ul>
+<li>(if Windows) Connect to Linux machine master via ssh, e.g., ‘ssh <a href="mailto:user@machine">user@machine</a>’</li>
+<li>create ssh keys and copy to a slave machine (e.g., try following <a href="http://www.howtogeek.com/168147/add-public-ssh-key-to-remote-server-in-a-single-command/">these instructions</a></li>
+<li>repeat for each slave machine</li>
+</ul>
+</div>
+<div id="back-to-r-and-wolf-model" class="section level3">
+<h3>Back to R and Wolf model</h3>
 <pre class="r"><code>library(parallel)
 # make a cluster on 3 machines
 machine1 &lt;- PutMachine1Name
@@ -246,6 +261,7 @@ wolfAlpsSim2 &lt;- experiment(copy(wolfModuleStart), replicates = 100, cache = T
                            cl = cl) 
 
 endCluster()</code></pre>
+</div>
 </div>
 </div>
 <div id="events" class="section level1">
