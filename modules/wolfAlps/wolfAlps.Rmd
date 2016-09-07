@@ -145,20 +145,19 @@ Plot(TerritoryProb, cols = grey(9.9:0/10), legendRange = c(0, 0.3001))
 
 # Below here is for advanced users
 
-## Using ssh on a group of Linux machines -- Advanced user
+## Advanced user -- Using parallel package with a group of Linux machines
 
-If you have a group of Linux machines, you can connect them using ssh and build clusters using all those machines, using PSOCK. To do this, the "slave" machines must be running an ssh server, and there is a stored ssh key on each of those machines, authenticating the connection from the master. If your desktop is a Windows machine, you will have to run these from a Linux machine (e.g., using Rstudio server running on one of the Linux machines, or running R from the command line from the master). 
-
+If you have a group of Linux machines, you can inter-connect them using ssh and build clusters (e.g., makeCluster in parallel package) using all those machines, using PSOCK. To do this, you must have a machine from which you are running R (the "master") and other linux machines, the "slaves". Each "slave" machine must be running an ssh server, and there must be a stored ssh key on each of those machines, authenticating the connection from the master. If your desktop is a Windows machine, you will have to run these from a Linux machine (e.g., using Rstudio server running on one of the Linux machines, or running R from the command line from the master). 
 
 #### Getting ssh running on Windows (only from a Windows Desktop)
 
-Assuming that you have Rstudio server running on a Linux machine or can run R at a command prompt on a Linux machine, you will have to connect to the "master", create the ssh key pair while connected to that master, then copy the public key to each of the Linux "slaves". 
+Assuming that you have Rstudio server running on a Linux machine or can run R at a command prompt on a Linux machine, you will have to connect to the "master", create the ssh key pair while connected to that master, then copy the public key to each of the Linux "slaves". You need to get to the Linux command line on the "master". You will likely need an ssh program to do this.
 
 'putty.exe' can be very useful, but I find using the **git bash** easier. [Download a tool to use ssh](https://www.codeenigma.com/host/faq/how-do-i-create-ssh-public-key-windows-pc). Install it, and run git bash. 
 
 #### Create ssh key pairs
 
-  - (if Windows) Connect to Linux machine master via ssh, e.g., 'ssh user@machine'
+  - (if Windows) From git bash, connect to the Linux machine master via ssh, e.g., 'ssh user@machine'
   - create ssh keys and copy to a slave machine (e.g., try following [these instructions](http://www.howtogeek.com/168147/add-public-ssh-key-to-remote-server-in-a-single-command/)
   - repeat for each slave machine
   
