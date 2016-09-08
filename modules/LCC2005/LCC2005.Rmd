@@ -1,7 +1,7 @@
 ---
 title: "LCC2005"
-author: "Alex Chubaty"
-date: "05 January 2015"
+author: "Alex Chubaty & Eliot McIntire" 
+date: "07 September 2016"
 output: html_document
 ---
 
