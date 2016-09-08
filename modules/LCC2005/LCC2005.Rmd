@@ -22,7 +22,7 @@ The code will download all modules and data required to run the spades call at t
 If this is running on a Windows OS or on an OS X machine, the visualizations will be quick because a device will be opened that is not within RStudio.
 On a Linux, this will not occur, so visualization will be slow (RStudio graphics device is slow).
 
-```{r download-modules, eval=TRUE}
+```{r download-modules, eval=FALSE}
 library(SpaDES)
 
 # pick a directory to download modules and data to. Can use a temp directory
@@ -36,7 +36,7 @@ downloadModule("LCC2005", moduleDir) # default `data=FALSE` doesn't download dat
 
 Module groups make loading multiple modules easier: only the name of the module group needs to be specified in the `simInit` call, which will then initialize the simulation with the child modules.
 
-```{r module-group-init, eval=TRUE}
+```{r module-group-init, eval=FALSE}
 # setup simulation
 outputDir <- file.path(workDirectory, "simOutputs")
 cacheDir <- checkPath(file.path(outputDir, "cache"), create = TRUE)
@@ -56,6 +56,7 @@ paths <- list(
   outputPath = outputDir
 )
 
+# This next step will download data if they do not yet exist locally
 mySim <- simInit(times = times, params = parameters, modules = modules,
                  paths = paths)
 
@@ -69,7 +70,10 @@ dev() # on Windows and Mac, this opens external device if using Rstudio, it is f
 clearPlot()
 
 mySimOut <- spades(mySim)
+
+# Plot Canada Map
 Plot(mySimOut$lcc05, title = "Land Cover, with simulated area")
+# Plot small Yellow polygon showing area simulated
 Plot(mySimOut$inputMapPolygon, addTo = "mySimOut$lcc05", gp = gpar(col = "yellow", lwd = 2))
 
 ```
@@ -77,7 +81,7 @@ Plot(mySimOut$inputMapPolygon, addTo = "mySimOut$lcc05", gp = gpar(col = "yellow
 In addition to running a model, there are many things built into SpaDES that allow a user to explore the modules and models.
 
 ```{r Exploring model, eval = FALSE}
-openModules(mySim) # this will open the main module scripts in a text editor
+openModules(mySim) # this will try to open the modules in a text editor, or give instructions how to do it manually
 
 ### Simulation overview: note the child modules are initialized
 moduleDiagram(mySim)
