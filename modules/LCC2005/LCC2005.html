@@ -135,25 +135,14 @@ $(document).ready(function () {
 </ul>
 <p>This code also shows how modules can have different time units, specifically, the child modules which have 2 different time units (month for caribou, year for others).</p>
 <p>The code will download all modules and data required to run the spades call at the end. If this is running on a Windows OS or on an OS X machine, the visualizations will be quick because a device will be opened that is not within RStudio. On a Linux, this will not occur, so visualization will be slow (RStudio graphics device is slow).</p>
-<pre class="r"><code>library(SpaDES)</code></pre>
-<pre><code>## 
-## Attaching package: 'SpaDES'</code></pre>
-<pre><code>## The following objects are masked from 'package:stats':
-## 
-##     end, start, time</code></pre>
-<pre class="r"><code># pick a directory to download modules and data to. Can use a temp directory
+<pre class="r"><code>library(SpaDES)
+
+# pick a directory to download modules and data to. Can use a temp directory
 workDirectory &lt;- file.path(dirname(tempdir()), &quot;Lcc2005&quot;)
 moduleDir &lt;- file.path(workDirectory, &quot;modules&quot;)
-checkPath(moduleDir, create = TRUE)</code></pre>
-<pre><code>## [1] &quot;C:/Temp/Lcc2005/modules&quot;</code></pre>
-<pre class="r"><code>downloadModule(&quot;LCC2005&quot;, moduleDir) # default `data=FALSE` doesn't download data</code></pre>
-<pre><code>## Download complete for module caribouMovementLcc.</code></pre>
-<pre><code>## Download complete for module cropReprojectLccAge.</code></pre>
-<pre><code>## Download complete for module fireSpreadLcc.</code></pre>
-<pre><code>## Download complete for module forestAge.</code></pre>
-<pre><code>## Download complete for module forestSuccessionBeacons.</code></pre>
-<pre><code>## Download complete for module LccToBeaconsReclassify.</code></pre>
-<pre><code>## Download complete for module LCC2005.</code></pre>
+checkPath(moduleDir, create = TRUE)
+
+downloadModule(&quot;LCC2005&quot;, moduleDir) # default `data=FALSE` doesn't download data</code></pre>
 <p>Module groups make loading multiple modules easier: only the name of the module group needs to be specified in the <code>simInit</code> call, which will then initialize the simulation with the child modules.</p>
 <pre class="r"><code># setup simulation
 outputDir &lt;- file.path(workDirectory, &quot;simOutputs&quot;)
@@ -176,45 +165,6 @@ paths &lt;- list(
 
 mySim &lt;- simInit(times = times, params = parameters, modules = modules,
                  paths = paths)</code></pre>
-<pre><code>## Loading required package: grid</code></pre>
-<pre><code>## 
-## Attaching package: 'grid'</code></pre>
-<pre><code>## The following object is masked from 'package:SpaDES':
-## 
-##     gpar</code></pre>
-<pre><code>## Loading required package: raster</code></pre>
-<pre><code>## Loading required package: sp</code></pre>
-<pre><code>## Loading required package: archivist</code></pre>
-<pre><code>## Welcome to archivist (version: 2.1).</code></pre>
-<pre><code>## 
-## Attaching package: 'archivist'</code></pre>
-<pre><code>## The following object is masked from 'package:SpaDES':
-## 
-##     cache</code></pre>
-<pre><code>## Loading required package: rgeos</code></pre>
-<pre><code>## rgeos version: 0.3-19, (SVN revision 524)
-##  GEOS runtime version: 3.5.0-CAPI-1.9.0 r4084 
-##  Linking to sp version: 1.2-3 
-##  Polygon checking: TRUE</code></pre>
-<pre><code>## Loading required package: parallel</code></pre>
-<pre><code>## Loading required package: ggplot2</code></pre>
-<pre><code>## Loading required package: RColorBrewer</code></pre>
-<pre><code>## Loading required package: fastmatch</code></pre>
-<pre><code>## Loading required package: dplyr</code></pre>
-<pre><code>## 
-## Attaching package: 'dplyr'</code></pre>
-<pre><code>## The following objects are masked from 'package:rgeos':
-## 
-##     intersect, setdiff, union</code></pre>
-<pre><code>## The following objects are masked from 'package:raster':
-## 
-##     intersect, select, union</code></pre>
-<pre><code>## The following objects are masked from 'package:stats':
-## 
-##     filter, lag</code></pre>
-<pre><code>## The following objects are masked from 'package:base':
-## 
-##     intersect, setdiff, setequal, union</code></pre>
 <p>Now that the <code>mySim</code> object has been initialized, we can run the simulation by calling <code>spades</code></p>
 <pre class="r"><code>dev() # on Windows and Mac, this opens external device if using Rstudio, it is faster
 clearPlot()

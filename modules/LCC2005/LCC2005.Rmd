@@ -22,7 +22,7 @@ The code will download all modules and data required to run the spades call at t
 If this is running on a Windows OS or on an OS X machine, the visualizations will be quick because a device will be opened that is not within RStudio.
 On a Linux, this will not occur, so visualization will be slow (RStudio graphics device is slow).
 
-```{r download-modules, eval=TRUE}
+```{r download-modules, eval=FALSE}
 library(SpaDES)
 
 # pick a directory to download modules and data to. Can use a temp directory
@@ -36,7 +36,7 @@ downloadModule("LCC2005", moduleDir) # default `data=FALSE` doesn't download dat
 
 Module groups make loading multiple modules easier: only the name of the module group needs to be specified in the `simInit` call, which will then initialize the simulation with the child modules.
 
-```{r module-group-init, eval=TRUE}
+```{r module-group-init, eval=FALSE}
 # setup simulation
 outputDir <- file.path(workDirectory, "simOutputs")
 cacheDir <- checkPath(file.path(outputDir, "cache"), create = TRUE)
