@@ -141,7 +141,7 @@ install_github(&quot;PredictiveEcology/NetLogoR&quot;)</code></pre>
 moduleName &lt;- &quot;wolfAlps&quot;
 
 # Change this to a place you would like to put the model, if desired
-workingDirectory &lt;- file.path(tempdir(), &quot;wolfAlps&quot;)
+workingDirectory &lt;- file.path(dirname(tempdir()), &quot;wolfAlps&quot;)
 
 downloadModule(moduleName, data = TRUE, path = workingDirectory)</code></pre>
 </div>

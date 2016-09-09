@@ -2,9 +2,7 @@
 title: "wolfAlps"
 author: "Sarah Bauduin, Eliot McIntire, Francesca Marucco"
 date: "17 juin 2016"
-output:
-  html_document: default
-  pdf_document: default
+output: html_document
 csl: ecology.csl
 bibliography: McIntire.bib
 ---
@@ -34,7 +32,7 @@ library(SpaDES)
 moduleName <- "wolfAlps"
 
 # Change this to a place you would like to put the model, if desired
-workingDirectory <- file.path(tempdir(), "wolfAlps")
+workingDirectory <- file.path(dirname(tempdir()), "wolfAlps")
 
 downloadModule(moduleName, data = TRUE, path = workingDirectory)
 ```
