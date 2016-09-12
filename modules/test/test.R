@@ -1,3 +1,5 @@
+stopifnot(packageVersion("SpaDES") >= "1.2.0.9009")
+
 defineModule(sim, list(
   name = "test",
   description = "used for SpaDES package development testing",
@@ -6,7 +8,7 @@ defineModule(sim, list(
                      email = "alexander.chubaty@canada.ca",
                      role = c("aut", "cre"))),
   childModules = character(),
-  version = numeric_version("1.1.0"),
+  version = numeric_version("1.1.1"),
   spatialExtent = raster::extent(rep(NA_real_, 4)),
   timeframe = as.POSIXlt(c(NA, NA)),
   timeunit = NA_character_, # e.g., "year,",

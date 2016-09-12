@@ -1,4 +1,4 @@
-stopifnot(packageVersion("SpaDES") >= "1.2.0.9006")
+stopifnot(packageVersion("SpaDES") >= "1.2.0.9009")
 
 defineModule(sim, list(
   name = "cropReprojectLccAge",
@@ -10,7 +10,7 @@ defineModule(sim, list(
   keywords = c("translator", "lcc05", "Land Cover Classification", "vegetation"),
   childModules = character(),
   authors = c(person(c("Eliot", "J","B"), "McIntire", email = "eliot.mcintire@canada.ca", role = c("aut", "cre"))),
-  version = numeric_version("1.1.1"),
+  version = numeric_version("1.1.2"),
   spatialExtent = raster::extent(rep(NA_real_, 4)),
   timeframe = as.POSIXlt(c(NA, NA)),
   timeunit = NA_character_,
@@ -57,10 +57,9 @@ doEvent.cropReprojectLccAge <- function(sim, eventTime, eventType, debug = FALSE
 }
 
 ### template initilization
-cropReprojectLccInit = function(sim) {
-
+cropReprojectLccInit <- function(sim) {
   totalArea <- rgeos::gArea(inputMapPolygon) / 1e4
-  if(totalArea > 100e6) {
+  if (totalArea > 100e6) {
     stop("In the current implementation, please select another, smaller polygon",
          " (less than 100 million hectares).")
   }
@@ -133,21 +132,16 @@ cropReprojectLccCacheFunctions <- function(sim) {
 
 ### Inputs
 .inputObjects <- function(sim) {
-
-  if(is.null(sim$age) | is.null(sim$lcc05)) {
-    #if(!file.exists(file.path(modulePath(sim), "LccToBeaconsReclassify", "data", "LCC2005_V1_4a.tif")) |
-  #   !file.exists(file.path(modulePath(sim), "forestAge", "data", "can_age04_1km.tif"))) {
+  if (is.null(sim$age) | is.null(sim$lcc05)) {
     checksums1 <- downloadData("LCC2005", file.path(modulePath(sim))) # alternatively, use `data=TRUE` above
-    if(checksums1[checksums1$expectedFile=="LCC2005_V1_4a.tif",]$result!="OK")
+    if (checksums1[checksums1$expectedFile == "LCC2005_V1_4a.tif",]$result != "OK")
       unzip(zipfile = file.path(modulePath(sim), "LccToBeaconsReclassify", "data", "LandCoverOfCanada2005_V1_4.zip"),
             files = "LCC2005_V1_4a.tif",
             exdir = file.path(modulePath(sim), "LccToBeaconsReclassify", "data"))
-    #}
-    sim$age <- raster::raster(file.path(modulePath(sim), "forestAge", "data", "can_age04_1km.tif"))
-    sim$lcc05 <- raster::raster(file.path(modulePath(sim), "LccToBeaconsReclassify", "data",
-                                          "LCC2005_V1_4a.tif"))
-  }
 
+    sim$age <- raster::raster(file.path(modulePath(sim), "forestAge", "data", "can_age04_1km.tif"))
+    sim$lcc05 <- raster::raster(file.path(modulePath(sim), "LccToBeaconsReclassify", "data", "LCC2005_V1_4a.tif"))
+  }
 
   lcc05CRS <- crs(sim$lcc05)
   #lcc05CRS <- CRS("+proj=lcc +lat_1=49 +lat_2=77 +lat_0=0 +lon_0=-95 +x_0=0 +y_0=0 +ellps=GRS80 +units=m +no_defs")
@@ -156,7 +150,7 @@ cropReprojectLccCacheFunctions <- function(sim) {
   areaKm2 <- 2000
   minX <- -1072250.2
   maxX <- minX + sqrt(areaKm2*1e6)
-  minY <- 7438877-1.6e5
+  minY <- 7438877 - 1.6e5
   maxY <- minY + sqrt(areaKm2*1e6)
   meanY <- mean(c(minY, maxY))
 
@@ -167,20 +161,20 @@ cropReprojectLccCacheFunctions <- function(sim) {
   nPoints <- 20
   betaPar <- 0.6
   X <- c(
-    jitter(sort(rbeta(nPoints, betaPar, betaPar)*(maxX-minX)+minX)),
-    jitter(sort(rbeta(nPoints, betaPar, betaPar)*(maxX-minX)+minX, decreasing = TRUE))
+    jitter(sort(rbeta(nPoints, betaPar, betaPar)*(maxX - minX) + minX)),
+    jitter(sort(rbeta(nPoints, betaPar, betaPar)*(maxX - minX) + minX, decreasing = TRUE))
   )
   Y <- c(
-    jitter(sort(rbeta(nPoints/2, betaPar, betaPar)*(maxY-meanY)+meanY)),
-    jitter(sort(rbeta(nPoints, betaPar, betaPar)*(maxY-minY)+minY, decreasing = TRUE)),
-    jitter(sort(rbeta(nPoints/2, betaPar, betaPar)*(meanY-minY)+minY))
+    jitter(sort(rbeta(nPoints/2, betaPar, betaPar)*(maxY - meanY) + meanY)),
+    jitter(sort(rbeta(nPoints, betaPar, betaPar)*(maxY - minY) + minY, decreasing = TRUE)),
+    jitter(sort(rbeta(nPoints/2, betaPar, betaPar)*(meanY - minY) + minY))
   )
 
-  inputMapPolygon <- cbind(X+xAdd, Y+yAdd) %>%
-    Polygon %>%
-    list %>%
+  inputMapPolygon <- cbind(X + xAdd, Y + yAdd) %>%
+    Polygon() %>%
+    list() %>%
     Polygons("s1") %>%
-    list %>%
+    list() %>%
     SpatialPolygons(1L)
   crs(inputMapPolygon) <- lcc05CRS
 
@@ -192,4 +186,3 @@ cropReprojectLccCacheFunctions <- function(sim) {
 
   return(sim)
 }
-
