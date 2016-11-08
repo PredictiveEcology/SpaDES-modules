@@ -1,4 +1,4 @@
-stopifnot(packageVersion("SpaDES") >= "1.2.0.9009")
+stopifnot(packageVersion("SpaDES") >= "1.3.1.9010")
 
 defineModule(sim, list(
   name = "cropReprojectLccAge",
@@ -10,7 +10,7 @@ defineModule(sim, list(
   keywords = c("translator", "lcc05", "Land Cover Classification", "vegetation"),
   childModules = character(),
   authors = c(person(c("Eliot", "J","B"), "McIntire", email = "eliot.mcintire@canada.ca", role = c("aut", "cre"))),
-  version = numeric_version("1.1.2"),
+  version = numeric_version("1.1.3"),
   spatialExtent = raster::extent(rep(NA_real_, 4)),
   timeframe = as.POSIXlt(c(NA, NA)),
   timeunit = NA_character_,
@@ -133,12 +133,14 @@ cropReprojectLccCacheFunctions <- function(sim) {
 ### Inputs
 .inputObjects <- function(sim) {
   if (is.null(sim$age) | is.null(sim$lcc05)) {
-    checksums1 <- downloadData("LCC2005", file.path(modulePath(sim))) # alternatively, use `data=TRUE` above
-    if (checksums1[checksums1$expectedFile == "LCC2005_V1_4a.tif",]$result != "OK")
+    checksums1 <- downloadData("LCC2005", file.path(modulePath(sim)))
+    result1 <- checksums1[checksums1$expectedFile == "LCC2005_V1_4a.tif",]$result
+    if (result1 != "OK" | is.na(result1)) {
       unzip(zipfile = file.path(modulePath(sim), "LccToBeaconsReclassify", "data", "LandCoverOfCanada2005_V1_4.zip"),
             files = "LCC2005_V1_4a.tif",
             exdir = file.path(modulePath(sim), "LccToBeaconsReclassify", "data"))
-
+    }
+    
     sim$age <- raster::raster(file.path(modulePath(sim), "forestAge", "data", "can_age04_1km.tif"))
     sim$lcc05 <- raster::raster(file.path(modulePath(sim), "LccToBeaconsReclassify", "data", "LCC2005_V1_4a.tif"))
   }
