@@ -1,5 +1,8 @@
-possibleInitialTypes <- c(NA_character_, "beacon", "beehive", "blinker", "block", "boat", "loaf", 
-                          "toad")
+stopifnot(packageVersion('SpaDES') >= '1.3.1.9012')
+
+possibleInitialTypes <- c(NA_character_, "beacon", "beehive", "blinker", "block",
+                          "boat", "loaf", "toad")
+
 # Everything in this file gets sourced during simInit, and all functions and objects
 # are put into the simList. To use objects and functions, use sim$xxx.
 defineModule(sim, list(
@@ -8,7 +11,7 @@ defineModule(sim, list(
   keywords = c("cellular automata", "game of life"),
   authors = c(person(c("Alex", "M"), "Chubaty", email = "alexander.chubaty@canada.ca", role = c("aut", "cre"))),
   childModules = character(0),
-  version = numeric_version("0.0.3"),
+  version = numeric_version("0.0.4"),
   spatialExtent = raster::extent(rep(NA_real_, 4)),
   timeframe = as.POSIXlt(c(NA, NA)),
   timeunit = "year",
