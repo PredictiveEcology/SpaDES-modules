@@ -1,7 +1,7 @@
 ---
 title: "Conway's Game of Life"
 author: "Alex Chubaty"
-date: "16 November 2016"
+date: "17 November 2016"
 output: pdf_document
 ---
 
@@ -41,16 +41,10 @@ modules <- list("gameOfLife")
 parameters <- list(
   gameOfLife = list(X = X, Y = Y, seed = SEED)
 )
-paths <- list(
-  cacheDir = file.path(tempdir(), 'cache'),
-  inputPath = file.path(tempdir(), 'inputs'),
-  modulePath = moduleDir,
-  outputPath = file.path(tempdir(), 'outputs')
-)
 times <- list(start = 1, end = 10)
 
 clearPlot()
-mySim <- simInit(times = times, params = parameters, modules = modules, paths = paths)
+mySim <- simInit(times = times, params = parameters, modules = modules)
 mySim <- spades(mySim)
 ```
 
