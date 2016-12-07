@@ -17,7 +17,7 @@ This is a very simple 'spread and establish' module. It has a contagious compone
 
 # Usage
 
-```{r module_usage, eval=TRUE}
+```{r module_usage, eval=TRUE, echo=FALSE}
 
 library(SpaDES)
 modulePath <- file.path(dirname(tempdir()), "modules")
@@ -43,7 +43,7 @@ The main plot is simply a map of where establishment will occur.
 
 What happens when we vary the number of source locations and the threshold for establishment?
 
-```{r experiment, eval=TRUE, cache=TRUE}
+```{r experiment, eval=TRUE, cache=TRUE, echo=FALSE}
 
 # factorial experiment
 expList <- list(establishThresh=as.list(1:9/10), 
