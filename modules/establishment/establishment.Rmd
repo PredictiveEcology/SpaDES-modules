@@ -1,7 +1,7 @@
 ---
 title: "establishment"
 author: ''
-date: "15 November 2016"
+date: "7 December 2016"
 output:
   html_document: default
   pdf_document: default
@@ -17,13 +17,12 @@ This is a very simple 'spread and establish' module. It has a contagious compone
 
 # Usage
 
-```{r module_usage, eval=TRUE, echo=FALSE}
+```{r module_usage, eval=TRUE, echo=TRUE, message=FALSE}
 
 library(SpaDES)
 modulePath <- file.path(dirname(tempdir()), "modules")
 downloadModule("establishment", path = modulePath)
 setPaths(modulePath=modulePath)
-library(ggplot2)
 
 modules <- list("establishment")
 
@@ -43,7 +42,7 @@ The main plot is simply a map of where establishment will occur.
 
 What happens when we vary the number of source locations and the threshold for establishment?
 
-```{r experiment, eval=TRUE, cache=TRUE, echo=FALSE}
+```{r experiment, eval=FALSE, cache=TRUE, echo=FALSE}
 
 # factorial experiment
 expList <- list(establishThresh=as.list(1:9/10), 
@@ -63,6 +62,7 @@ expDF <- cbind(expand.grid(expList),
 expDF <- data.frame(sapply(expDF, unlist, recursive = FALSE))
 
 
+library(ggplot2)
 g <- ggplot(expDF, aes(establishThresh, Nsource)) +
   geom_raster(aes(fill=numEstablishments)) +
   scale_fill_gradient(high="darkgreen", 

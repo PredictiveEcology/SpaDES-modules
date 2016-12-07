@@ -10,7 +10,6 @@
 
 
 
-<meta name="date" content="2016-11-15" />
 
 <title>establishment</title>
 
@@ -117,7 +116,7 @@ $(document).ready(function () {
 
 
 <h1 class="title toc-ignore">establishment</h1>
-<h4 class="date"><em>15 November 2016</em></h4>
+<h4 class="date"><em>7 December 2016</em></h4>
 
 </div>
 
@@ -129,40 +128,1144 @@ $(document).ready(function () {
 </div>
 <div id="usage" class="section level1">
 <h1>Usage</h1>
-<pre><code>## Default paths for SpaDES directories set to:
-##   cachePath:  C:\Temp\Rtmp6t1AQl/SpaDES/cache
-##   inputPath:  C:\Temp\Rtmp6t1AQl/SpaDES/inputs
-##   modulePath: C:\Temp\Rtmp6t1AQl/SpaDES/modules
-##   outputPath: C:\Temp\Rtmp6t1AQl/SpaDES/outputs
-## These can be changed using 'setPaths()'. See '?setPaths'.</code></pre>
-<pre><code>## 
-## Attaching package: 'SpaDES'</code></pre>
-<pre><code>## The following objects are masked from 'package:stats':
-## 
-##     end, start, time</code></pre>
-<pre><code>## Checking local files</code></pre>
-<pre><code>## Finished checking local files</code></pre>
-<pre><code>## Download complete for module establishment.</code></pre>
+<pre class="r"><code>library(SpaDES)
+modulePath &lt;- file.path(dirname(tempdir()), &quot;modules&quot;)
+downloadModule(&quot;establishment&quot;, path = modulePath)
+setPaths(modulePath=modulePath)</code></pre>
 <pre><code>## $cachePath
-## [1] &quot;C:/Temp/Rtmp6t1AQl/SpaDES/cache&quot;
+## [1] &quot;C:/Temp/RtmpiakBcB/SpaDES/cache&quot;
 ## 
 ## $inputPath
-## [1] &quot;C:/Temp/Rtmp6t1AQl/SpaDES/inputs&quot;
+## [1] &quot;C:/Temp/RtmpiakBcB/SpaDES/inputs&quot;
 ## 
 ## $modulePath
 ## [1] &quot;C:/Temp/modules&quot;
 ## 
 ## $outputPath
-## [1] &quot;C:/Temp/Rtmp6t1AQl/SpaDES/outputs&quot;</code></pre>
-<pre><code>## Loading required package: raster</code></pre>
-<pre><code>## Loading required package: sp</code></pre>
-<pre><code>## Loading required package: grid</code></pre>
-<pre><code>## 
-## Attaching package: 'grid'</code></pre>
-<pre><code>## The following object is masked from 'package:SpaDES':
-## 
-##     gpar</code></pre>
-<p><img src="data:image/png;base64,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" width="672" /></p>
+## [1] &quot;C:/Temp/RtmpiakBcB/SpaDES/outputs&quot;</code></pre>
+<pre class="r"><code>modules &lt;- list(&quot;establishment&quot;)
+
+mySim &lt;- simInit(modules = modules)
+
+# make sure the plotting device is clear
+clearPlot()
+spades(mySim)</code></pre>
+<pre><code>## Called from: get(moduleCall, envir = sim@.envir)(sim, cur[[&quot;eventTime&quot;]], 
+##     cur[[&quot;eventType&quot;]], debugDoEvent)
+## debug: if (eventType == &quot;init&quot;) {
+##     sim &lt;- scheduleEvent(sim, start(sim), &quot;establishment&quot;, &quot;annualEstablish&quot;)
+##     sim &lt;- scheduleEvent(sim, P(sim)$.plotInitialTime, &quot;establishment&quot;, 
+##         &quot;plot&quot;)
+## } else if (eventType == &quot;annualEstablish&quot;) {
+##     sim$sourceLocation &lt;- initiateAgents(sim$quality, P(sim)$Nsource)
+##     dist &lt;- distanceFromPoints(sim$quality, sim$sourceLocation)
+##     sim$establish &lt;- (1/dist * sim$quality) &gt; P(sim)$establishThresh
+##     sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, 
+##         &quot;annualEstablish&quot;)
+## } else if (eventType == &quot;plot&quot;) {
+##     Plot(sim$establish, title = &quot;&quot;, new = TRUE)
+##     Plot(sim$sourceLocation, addTo = &quot;sim$establish&quot;)
+##     grid.rect(x = 0.8, y = 0.9, width = 0.4, height = 0.05, gp = gpar(fill = &quot;white&quot;, 
+##         col = &quot;white&quot;))
+##     grid.text(paste(&quot;Nsource:&quot;, P(sim)$Nsource, &quot;, establishThresh:&quot;, 
+##         P(sim)$establishThresh), x = 0.8, y = 0.9)
+##     sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, 
+##         &quot;plot&quot;)
+## }
+## debug: sim &lt;- scheduleEvent(sim, start(sim), &quot;establishment&quot;, &quot;annualEstablish&quot;)
+## debug: sim &lt;- scheduleEvent(sim, P(sim)$.plotInitialTime, &quot;establishment&quot;, 
+##     &quot;plot&quot;)
+## debug: return(invisible(sim))
+## Called from: get(moduleCall, envir = sim@.envir)(sim, cur[[&quot;eventTime&quot;]], 
+##     cur[[&quot;eventType&quot;]], debugDoEvent)
+## debug: if (eventType == &quot;init&quot;) {
+##     sim &lt;- scheduleEvent(sim, start(sim), &quot;establishment&quot;, &quot;annualEstablish&quot;)
+##     sim &lt;- scheduleEvent(sim, P(sim)$.plotInitialTime, &quot;establishment&quot;, 
+##         &quot;plot&quot;)
+## } else if (eventType == &quot;annualEstablish&quot;) {
+##     sim$sourceLocation &lt;- initiateAgents(sim$quality, P(sim)$Nsource)
+##     dist &lt;- distanceFromPoints(sim$quality, sim$sourceLocation)
+##     sim$establish &lt;- (1/dist * sim$quality) &gt; P(sim)$establishThresh
+##     sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, 
+##         &quot;annualEstablish&quot;)
+## } else if (eventType == &quot;plot&quot;) {
+##     Plot(sim$establish, title = &quot;&quot;, new = TRUE)
+##     Plot(sim$sourceLocation, addTo = &quot;sim$establish&quot;)
+##     grid.rect(x = 0.8, y = 0.9, width = 0.4, height = 0.05, gp = gpar(fill = &quot;white&quot;, 
+##         col = &quot;white&quot;))
+##     grid.text(paste(&quot;Nsource:&quot;, P(sim)$Nsource, &quot;, establishThresh:&quot;, 
+##         P(sim)$establishThresh), x = 0.8, y = 0.9)
+##     sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, 
+##         &quot;plot&quot;)
+## }
+## debug: if (eventType == &quot;annualEstablish&quot;) {
+##     sim$sourceLocation &lt;- initiateAgents(sim$quality, P(sim)$Nsource)
+##     dist &lt;- distanceFromPoints(sim$quality, sim$sourceLocation)
+##     sim$establish &lt;- (1/dist * sim$quality) &gt; P(sim)$establishThresh
+##     sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, 
+##         &quot;annualEstablish&quot;)
+## } else if (eventType == &quot;plot&quot;) {
+##     Plot(sim$establish, title = &quot;&quot;, new = TRUE)
+##     Plot(sim$sourceLocation, addTo = &quot;sim$establish&quot;)
+##     grid.rect(x = 0.8, y = 0.9, width = 0.4, height = 0.05, gp = gpar(fill = &quot;white&quot;, 
+##         col = &quot;white&quot;))
+##     grid.text(paste(&quot;Nsource:&quot;, P(sim)$Nsource, &quot;, establishThresh:&quot;, 
+##         P(sim)$establishThresh), x = 0.8, y = 0.9)
+##     sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, 
+##         &quot;plot&quot;)
+## }
+## debug: sim$sourceLocation &lt;- initiateAgents(sim$quality, P(sim)$Nsource)
+## debug: dist &lt;- distanceFromPoints(sim$quality, sim$sourceLocation)
+## debug: sim$establish &lt;- (1/dist * sim$quality) &gt; P(sim)$establishThresh
+## debug: sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, &quot;annualEstablish&quot;)
+## debug: return(invisible(sim))
+## Called from: get(moduleCall, envir = sim@.envir)(sim, cur[[&quot;eventTime&quot;]], 
+##     cur[[&quot;eventType&quot;]], debugDoEvent)
+## debug: if (eventType == &quot;init&quot;) {
+##     sim &lt;- scheduleEvent(sim, start(sim), &quot;establishment&quot;, &quot;annualEstablish&quot;)
+##     sim &lt;- scheduleEvent(sim, P(sim)$.plotInitialTime, &quot;establishment&quot;, 
+##         &quot;plot&quot;)
+## } else if (eventType == &quot;annualEstablish&quot;) {
+##     sim$sourceLocation &lt;- initiateAgents(sim$quality, P(sim)$Nsource)
+##     dist &lt;- distanceFromPoints(sim$quality, sim$sourceLocation)
+##     sim$establish &lt;- (1/dist * sim$quality) &gt; P(sim)$establishThresh
+##     sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, 
+##         &quot;annualEstablish&quot;)
+## } else if (eventType == &quot;plot&quot;) {
+##     Plot(sim$establish, title = &quot;&quot;, new = TRUE)
+##     Plot(sim$sourceLocation, addTo = &quot;sim$establish&quot;)
+##     grid.rect(x = 0.8, y = 0.9, width = 0.4, height = 0.05, gp = gpar(fill = &quot;white&quot;, 
+##         col = &quot;white&quot;))
+##     grid.text(paste(&quot;Nsource:&quot;, P(sim)$Nsource, &quot;, establishThresh:&quot;, 
+##         P(sim)$establishThresh), x = 0.8, y = 0.9)
+##     sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, 
+##         &quot;plot&quot;)
+## }
+## debug: if (eventType == &quot;annualEstablish&quot;) {
+##     sim$sourceLocation &lt;- initiateAgents(sim$quality, P(sim)$Nsource)
+##     dist &lt;- distanceFromPoints(sim$quality, sim$sourceLocation)
+##     sim$establish &lt;- (1/dist * sim$quality) &gt; P(sim)$establishThresh
+##     sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, 
+##         &quot;annualEstablish&quot;)
+## } else if (eventType == &quot;plot&quot;) {
+##     Plot(sim$establish, title = &quot;&quot;, new = TRUE)
+##     Plot(sim$sourceLocation, addTo = &quot;sim$establish&quot;)
+##     grid.rect(x = 0.8, y = 0.9, width = 0.4, height = 0.05, gp = gpar(fill = &quot;white&quot;, 
+##         col = &quot;white&quot;))
+##     grid.text(paste(&quot;Nsource:&quot;, P(sim)$Nsource, &quot;, establishThresh:&quot;, 
+##         P(sim)$establishThresh), x = 0.8, y = 0.9)
+##     sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, 
+##         &quot;plot&quot;)
+## }
+## debug: if (eventType == &quot;plot&quot;) {
+##     Plot(sim$establish, title = &quot;&quot;, new = TRUE)
+##     Plot(sim$sourceLocation, addTo = &quot;sim$establish&quot;)
+##     grid.rect(x = 0.8, y = 0.9, width = 0.4, height = 0.05, gp = gpar(fill = &quot;white&quot;, 
+##         col = &quot;white&quot;))
+##     grid.text(paste(&quot;Nsource:&quot;, P(sim)$Nsource, &quot;, establishThresh:&quot;, 
+##         P(sim)$establishThresh), x = 0.8, y = 0.9)
+##     sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, 
+##         &quot;plot&quot;)
+## }
+## debug: Plot(sim$establish, title = &quot;&quot;, new = TRUE)</code></pre>
+<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAABUAAAAPACAMAAADDuCPrAAAABlBMVEUAAAD///+l2Z/dAAAACXBIWXMAAB2HAAAdhwGP5fFlAAAWI0lEQVR4nO3d7XrbtraFUfr+b/o82SdxJYpfmiQIgBjjRxtblkSCWG9l17GnHwAiU+0DAOiVgAKEBBQgJKAAIQEFCAkoQEhAAUICChASUICQgAKEBBQgJKAAIQEFCAkoQEhAAUICChASUICQgAKEBBQgJKAAIQEFCAkoQEhAAUICChASUICQgAKEBBQgJKAAIQEFCAkoQEhAAUICChASUICQgAKEBBQgJKAAIQEFCAkoQEhAAUICChASUICQgAKEBBQgJKAAIQEFCAkoQEhAAUICChASUICQgAKEBBQgJKAAIQEFCAkoQEhAAUICChASUICQgAKEBBQgJKAAIQEFCAkoQEhAAUICChASUICQgAKEBBQgJKAAIQEFCAkoQEhAAUICChASUICQgAKEBBQgJKAAIQEFCAkoQEhAAUICChASUICQgAKEBBQgJKAAIQGFc6ZpWn2ritcjmP7nosddfb5p8R0rTzx/9/Tp7DIevffG6hxcuOoXGzr3Pmj1A/pyBK9JuuBx95/w7R2tB3RjdQ4vXO2LDb17n7PqAX05mvcmnX/co7f0EdCN1Tm+cAIK57QV0Jej+f1jpYB++UAXvpA/cu+N1fl9j4BCae8vVNoK6Mt7L3jgo7f0EtCVD//mcgoonNNUQCcBPXjvzYAefiQBhXP+zNjb1x3/+9PsU8C10r5+zfD9M/CftXuvTPbrsXwfpNnxvp7A+1cE30/t97hna7D14fPnWj7exWfZPdbFpzjwbCtLsnLL39s3bwX2/Jvsl7f+/uHjten268O/9fvvK3Mb916e7OlMQBee4b+3l/78+kRLp/Zy+/zWj8VZOt6VZ9k91sWnmC/AsdWZVm/59wGbtwJ7psWAziuzmJ2ft/ssR2r53qsBfTuC2S17pzE/vpe3F/649JFvz/xxKp8fvhXQlbvtH+viU8wX4NDqTGs3/PcR2zcDO36z8vLWz9ssr73j/RF+3sd92rz38SP5+Xxj5b5vz7B6vMsHOT/at8P5XImlk/kM6MrdDh3r3nrtrs5bflcJKJyzFtC3m7fe8RHdzxe0C7esHUge0MXz2XrYj+NeCej+aS69ceRuXz7F4vmufJCAwh2WqvHxyud9pN+nfrOS0+tn5bPbNg/ku4B+PMNHPBYeYS1Xy69AFx5oM6Arp/XlsZ4N6N5/d7ZvBna8B+v1k8iV7H0V0JV77x7HFQHdfoTf2z/O5COgO23cfuNYQA89xcoJb67pzrpt3grsWQzo7wuY909uFz7wZycRbw+28aLo46m+DejsGebPNjuDlxu3A7r1QHFAjx/ruYDuFlRA4Zz3cr2+tRyZMgH9vPPJgM5OYCVgs8deCuj6A10W0KNP8X7Ch1ZHQKGolYD+vH0Z7XRADxzFLCvfBnTjQeen+f4MewFde6ArPoXfOVYBhca9T/ZC+xa6+vNdImoF9OUE3l5Prh33akCXHmj+EScDeuQp3j905Y2Nj1u4eetGYNfHC63Pd86z80VA5/feOIpZQI9k5O3uG2f18o6d4/4I6OoDzQ/rm4AePNb5o27eafdAFh9l60Zg11pA32u48bptLbovt33ZwqUD++osNk5g8bjfn3Ee0LWVCAN6/Fi3znwzoIcXTkDhnNcZ+w3oz/wPHze8vWMhEdP83/Mw7x7P9HHv7Xt9PuXsBD4ObeXgPv61+EA/szx9FdBjxzp/1NUT/nhFO83/tEJA4Zz1gP4zf8fP+zsWEvHx0UsPt3s8H3daPujlD15+e3bD4kcuBHT24YtHsfbG9uocfYr9E57/p2d54eYPsn0zsGM++B9D+DN7x8fbC4lY/+jPz8/Xj2c9A8vvmj/D69u/f1w87qVje7/n6wOtLd3aSayvzuqxzh/owAkv/qdnfqf5Y+zcDmx7n7KPfL3ftvj2UiJW7n3gi3MLpdk76JUP/njGhZb+++dCiOY9+nzqOKA7x3osoB8PMvvzfj4FFMZ0IA7ss4owIgG9hFWEEQnoJawijMjkX8IywoC8AL2GZQQICShASEABQgIKEBJQgJCAAoQElEYc/vkN0AyblUYIKP2xWWmEgNIfm5VW6CfdsVtphYDSHbuVZsgnvbFfAUICChASUICQgAKEBBQgJKAAIQEFCAkoQEhAAUICChASUICQgAKEBBQgJKAAIQEFCAkoQEhAAUICChASUICQgAKEBBQgJKAAIQEFCAkoQEhAAUICChASUICQgAKEBBQgJKAAIQEFCAkoQEhAAUICChASUICQgAKEBBQgJKAAIQEFCAkoQEhAAUICChASUICQgAKEBBQgJKAAIQEFCAkoQEhAAUICChASUICQgAKEBBQgJKAAIQG9y/RH7YMArmSkbzL9Vfs4gOsY6JsIKEtsir65dveYJgXlk13ROVfuHgLKEruic67cPQSUBbZF71y4e5gUFtgWvXPhbmJQulbo2glo71y4mxiUnpW6egLaOxfuLsakY8Uyp5+dc+VgT7kXigLaOVcO9hT8TFs+++bawR5fqmSFHQF7BJQVdgTs0k+W2RKwS0BZZkvAPvlkkU0BEBJQgJCAAoQEFCAkoAAhAQUICShASEABQgIKEBJQgJCAAoQEFCAkoNzPj+bgIWxjbueHw/EUNjG3E1Cewibmbn5BBo9hD3M3AeUx7GHuJqA8hj3M3QSUx7CHuZ1+8hQ2MbcTUJ7CJuZ+8slD2MYAIQEFCAkoQEhAAUICChASUICQgAKEBBQgJKAAIQEFCAkoQEhAAUICChASUICQgAKEBBQgJKAAIQEFCAkoQEhAAUICChASUICQgAKEBBQgJKAAIQGFBkx/1D4IvuaaQX3TX7WPgy+5YlCfgHbKFSvFPHDYNClon1ywQgwExwlor1ywQgwExwlor1ywMkwEX7hku9huFVjwMgSUb1zVTxvuZpa7DAHlGwLaKctdhoDyldN7xY6rwmoXYjdzKwGtwmoXYjePqtJlF9AqrHYp9vKYamVMQKuw2nClahnTzxosN1yo3gtBAa3BcsOFKn4mLZ8VWHC4kC9FjsVlhgsJ6FhcZriSfg7FdYYrCehQXGe4lHyOxJUGCAkoQEhAAUICChASUICQgAKEBBQgJKAAIQEFCAkoQEhAAUICChASUICQgAKEBBRq8tPvuubSQUV+/nLfXDioSED75sJBPX4HXedcN6hHQDvnukE9Ato51w3qEdDOuW5QkX72zYWDigS0by4c1CSfXXPpAEICChASUICQgAKEBBQgJKAAIQEFCAkoQEhAAUICChASUICQgAKEBBQgJKAAIQEFCAkoQEhAAUICygF+bDosMRXs84t7YJGZYJ+AwiIzwS6/vByWGQl2CSgsMxLsElBYZiTYJaCwzEiwTz9hkZlgn4DCIjPBAfIJS0wFQEhAAUICChASUBiQr2pfwxrCeHxfxUWsIIxHQC9iBWE4/m7ZVSwgDEdAr2IBYTgCehULCMMR0KtYQBiPfl7ECsJ4BPQiVhAGJJ/XsIYAIQEFCAkoQEhAAUICSjH+RwVPZ39Tim+V4fHsbkr5IqBCS5/sWgr54q8Leq1Kp+xZChFQns+epZDjAfWjLeiVLUshAsrz2bKU8vVn8AJKb2xZShFQHs+WpZjDTdRPOmXPUp+A0il7lgbIJ32yawFCAgoQElAG5EsGXMMuoqQ2S+V/WnERe4iCGi1Vo4dFf+whCmqzVL5xn6vYQpTTaKkaPSw6ZAtRTqOlavSw6JAtRDmNlqrRw6JDthDltFqqNo+KDtlDFNRoqRo9LPpjD1FQq6Vq8qDokF1ESUrFo9ncACEBBQgJKEBIQAFCAgoQElCAkIAChAQUICSgACEBBQgJKEBIQAFCAgoQElCAkIAChAQUICSgACEBBQgJKEBIQAFCAgoQElCAkIAChAQUICSgACEBBU6bBi3JoKcNXElAATKTgAIkpklAARJ/6imgAIE/8RRQgJCAAoQEFCAkoAAhAQUICShASEABQgIKEBJQgJCAAoQEFCAkoAB8RUABQgJ60sA/ChGGZ/bPmf6qfRxABSb/HAGFgZn8U6ZJQWFcBv8UAYWRGfxTBBRGZvBPEVAYmcE/Rz9hYCb/HAGFgZn8k+QTxmX2H0DEoQ5z1z9fRoBKTF3/BBQqMXXd861UUIuh696JgMounGJ8upcH1CtXOMfwdE9AoRbD07+z/VRQCJmd/gkoVGJ2HiCMoIDCSWZnXAIKJ5mdgeknnGN4BiagcI7hGZl8winGByAkoNzF610ex4bmJr7iyvPYztxEQHke25l7+K5THshu5h4CygPZzdxDQHkgu5l7CCgPZDdzE/3keWxnbiKgPI/tzF3kk8exoQFCAgoQElCAkIAChAQUICSgACEBBQgJKEBIQAFCAgoQElCAkIAChAQUICSgACEBBQgJKEBIQAFCAgoQElAozS8zeSyXFQrz6/Sey0WFwgT0uVxUKGuaFPSxXFMoS0AfzDWFsgT0wVxTKEtAH8w1hcL087lcVChMQJ/LRYXS5POxXFaAkIAChAQUICSgACEBBQgJKEBIQAFCAgoQElCAkIAChAQUICSgDfNXqKFt5rNdfogPNM50tktAoXGms1l+kDm0znA2S0ChdYazWQIKrTOczRJQaJ3hbJd+QuNMZ7sEFBpnOhsmn9A28wkQElCAkIAChAQUICSgACEBBQgJKEBIQAFCAgoQElCAkIAChAQUICSgACEBBQgJKEBIQAFCAgoQElCAkIAChAQUICSgBfhlcDAGc349v44YBmHKryegMAhTfrlpUlAYgyG/nIDCKAz55QQURmHILyegMApDfj39hEGY8usJKAzClBcgnzAGcw4QElCAkIAChAQUICSgACEBBQgJKEBIQAFCAgoQElCAkIAChAQUICSgACEBBQgJKEBIQAFCAgoQElCAkIAChAQUICSgACEBBQgJKEBIQAFCAtqC6Y/aBwF8y9g2YPqr9nEA3zG0DRBQ6JOhrW+aFBS6ZGbrE1DolJmtT0ChU2a2PgGFTpnZBugn9MnQNkBAoU+GtgXyCV0ytgAhAQUICShASEABQgIKEBJQgJCAAoQEFCAkoAAhAQUICShASEABQgIKN/EzY57H9YR7PPenFj70tI4Y9LThdo8N6FPP64gxzxpu99jf3PL/Z/S88zpkyJOG+z04oK//GsyQJw33e2pAf8/naSd2yIjnDBUI6BONeM5QwzP7KaDADQT0gUY8Z6jiifkUUICYgAKEBBQgJKAAIQEFSPmbSAAhfxceIPTQ7289ZsyzBq4zbj8FFCAloAAhAQUICShASEABQgIKEBJQgJCAAoQEtAMDf58yNM1ctm/ovyoHLTOV7RNQaJSpbN5Tfx0u9M9QNk9AoVWGsnkCCq0ylM0TUGiVoWyffkKjTGX7BBQaZSo7IJ/QJnMJEBJQgJCAAoQEFCAkoAAhAQUICShASEABQgIKEBJQgJCAAoQEFFrhhx50x+WCRvixW/1xsaARAtofFwva4FcPdMi1gjYIaIdcK2iDgHbItYI2CGiHXCtohH72x8WCRghof1wsaIV8dsflAggJKEBIQAFCAgoQElCAkIAChAQUICSgACEBBQgJKEBIQAFCAgoj8Pfsi7CkMAA/6akMCwoDENAyLCg8n592X4j1hOcT0EKsJzyfgBZiPeH5BLQQ6wkD0M8yLOiTGBFWCGgZFvRBDAmr7IwiLOmDCCjcy7A9h/9RADcza88hoHAzs/YcAgo3M2vPIaDdcbV65+o9iH52xgXrnmv3IOaxMy5Y91y7JzGNXfE1l/65dFCJgPbPpYNKBLR/Lh1UIqD9c+mgFv3snmsHtQho91w7qEY+e+fqAYQEFCAkoAAhAQUICShASEABQgIKEBJQgJCAAoQEFCAkoAAhAQUICShASEABQgIKEBJQgJCAAoQEFCAkoAAhAQUICShASEABQgIKEBJQgJCAAoQEFCAkoAAhAQUICShASEABQgIKEBJQgJCAAoQEFCAkoAAhAQUICShASEABQgIKEBJQgJCAAoQEFCAkoAAhAQUICShASEABQgIKEBJQgJCAAoQEFCAkoAAhAQUICShASEABQgIKEBJQgJCAAoQEFCAkoAAhAQUICShASEABQgIKEBJQgJCAAoQEFCAkoAAhAQUICShASEABQgIKEBJQgJCAAoQEFCAkoAAhAQUICShASEABQgIKEBJQgJCAAoQEFCAkoAAhAQUICShASEABQgIKEBJQgJCAnjH9UfsggFqM/wnTX7WPA6jD8J8goDA2w5+bJgWFoZn9nIDC4Mx+TkBhcGY/J6AwOLN/gn7C2Az/CQIKYzP8Z8gnDM34n6CfMDbzn/MZPAzO9OcEFAZn+mO+iwlGZ/hjAgqjM/wxAYXRGf6YgMLoDH9OP2Fwpj8noDA403+CfPbi9Uq5alzHTuL5Xj9X8HkDF7KPeD4BpRD7iMd7/X4J3zvBlWwjHk9AKcU24vEElFJsI+q6IWYDB3ScM63E4lLVLTkb9n8iDXWyVVhaqhLQkoY62SosLTXd9Bn16zMMVJTBvl5Rg5WlJiNektUtzspSkxEvyeoWZ2WpyYiXZHWLs7JtGW63m/CSrG5plrYp42348c74Tla3NEvblAE3/Gjney+rW5jFbYmvWUFXTGpLBBS6YlJbIqDQFZPaEgGFrpjUpugn9MSoNkVAoSdGtS3yCR0xrAAhAQUICShASEABQgIKEBJQgJCAAoQEFCAkoCX4dngYgjEvwF/IhDEY8gIEFMZgyK/nh9LBIMz49QQUBmHGryegMAgzfj0BhUGY8QL0E8ZgyAsQUBiDIS9BPmEIxhwgJKAAIQEFCAkoQEhAAUICChASUICQgAKEBBQgJKAAIQEFCAkoQEhAAUICChASUICQgAKEBBQgJKAAIQEFCAkoQEhAAUICChASUICQgAKEBBQgJKAAIQEFCAkoQEhAxzX9UfsgoGcGaFjTX7WPA/plfIYloHCW8RnVNCkonGR6RiWgcJrpCXWfHgGF00xPqPv4CCicZnpC/cdHP+Es4xPqPz/9nwHUZnxCD8hP78cP1Rmg0AMCCpwkAAAhAQUICShASEABQgIKEBJQgJCAAoQEFCAkoAAhAQUICShASEABQgIKEBJQgJCAAoQEFCAkoAAhAQUICShASEABQgIKEBJQgJCAAoQEFCAkoAAhAQUICShASEABQgIKEBJQgJCAAoQEFCAkoAAhAQUICShASEABQgIKEBJQgJCAAoQEFCAkoAAhAQUICShASEABQgIKEBJQgJCAAoQEFCAkoAAhAQUICShASEABQgIKEBJQgJCAAoQEFCAkoAAhAQUICShASEABQgIKEBJQgJCAAoQEFCAkoAAhAQUICShASEABQgIKEBJQgJCAAoQEFCAkoAAhAQUICShASEABQgIKEBJQgJCAAoQEFCAkoAAhAQUICShASEABQgIKEBJQgJCAAoQEFCAkoAAhAQUICShASEABQgIKEBJQgJCAAoQEFCAkoAAhAQUICShASEABQgIKEBJQgJCAAoQEFCAkoAAhAQUICShASEABQgIKEBJQgJCAAoQEFCAkoAAhAQUICShASEABQgIKEBJQgJCAAoQEFCD0fwZAlwJ9Hx+XAAAAAElFTkSuQmCC" width="672" /></p>
+<pre><code>## debug: Plot(sim$sourceLocation, addTo = &quot;sim$establish&quot;)
+## debug: grid.rect(x = 0.8, y = 0.9, width = 0.4, height = 0.05, gp = gpar(fill = &quot;white&quot;, 
+##     col = &quot;white&quot;))
+## debug: grid.text(paste(&quot;Nsource:&quot;, P(sim)$Nsource, &quot;, establishThresh:&quot;, 
+##     P(sim)$establishThresh), x = 0.8, y = 0.9)
+## debug: sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, &quot;plot&quot;)
+## debug: return(invisible(sim))
+## Called from: get(moduleCall, envir = sim@.envir)(sim, cur[[&quot;eventTime&quot;]], 
+##     cur[[&quot;eventType&quot;]], debugDoEvent)
+## debug: if (eventType == &quot;init&quot;) {
+##     sim &lt;- scheduleEvent(sim, start(sim), &quot;establishment&quot;, &quot;annualEstablish&quot;)
+##     sim &lt;- scheduleEvent(sim, P(sim)$.plotInitialTime, &quot;establishment&quot;, 
+##         &quot;plot&quot;)
+## } else if (eventType == &quot;annualEstablish&quot;) {
+##     sim$sourceLocation &lt;- initiateAgents(sim$quality, P(sim)$Nsource)
+##     dist &lt;- distanceFromPoints(sim$quality, sim$sourceLocation)
+##     sim$establish &lt;- (1/dist * sim$quality) &gt; P(sim)$establishThresh
+##     sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, 
+##         &quot;annualEstablish&quot;)
+## } else if (eventType == &quot;plot&quot;) {
+##     Plot(sim$establish, title = &quot;&quot;, new = TRUE)
+##     Plot(sim$sourceLocation, addTo = &quot;sim$establish&quot;)
+##     grid.rect(x = 0.8, y = 0.9, width = 0.4, height = 0.05, gp = gpar(fill = &quot;white&quot;, 
+##         col = &quot;white&quot;))
+##     grid.text(paste(&quot;Nsource:&quot;, P(sim)$Nsource, &quot;, establishThresh:&quot;, 
+##         P(sim)$establishThresh), x = 0.8, y = 0.9)
+##     sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, 
+##         &quot;plot&quot;)
+## }
+## debug: if (eventType == &quot;annualEstablish&quot;) {
+##     sim$sourceLocation &lt;- initiateAgents(sim$quality, P(sim)$Nsource)
+##     dist &lt;- distanceFromPoints(sim$quality, sim$sourceLocation)
+##     sim$establish &lt;- (1/dist * sim$quality) &gt; P(sim)$establishThresh
+##     sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, 
+##         &quot;annualEstablish&quot;)
+## } else if (eventType == &quot;plot&quot;) {
+##     Plot(sim$establish, title = &quot;&quot;, new = TRUE)
+##     Plot(sim$sourceLocation, addTo = &quot;sim$establish&quot;)
+##     grid.rect(x = 0.8, y = 0.9, width = 0.4, height = 0.05, gp = gpar(fill = &quot;white&quot;, 
+##         col = &quot;white&quot;))
+##     grid.text(paste(&quot;Nsource:&quot;, P(sim)$Nsource, &quot;, establishThresh:&quot;, 
+##         P(sim)$establishThresh), x = 0.8, y = 0.9)
+##     sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, 
+##         &quot;plot&quot;)
+## }
+## debug: sim$sourceLocation &lt;- initiateAgents(sim$quality, P(sim)$Nsource)
+## debug: dist &lt;- distanceFromPoints(sim$quality, sim$sourceLocation)
+## debug: sim$establish &lt;- (1/dist * sim$quality) &gt; P(sim)$establishThresh
+## debug: sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, &quot;annualEstablish&quot;)
+## debug: return(invisible(sim))
+## Called from: get(moduleCall, envir = sim@.envir)(sim, cur[[&quot;eventTime&quot;]], 
+##     cur[[&quot;eventType&quot;]], debugDoEvent)
+## debug: if (eventType == &quot;init&quot;) {
+##     sim &lt;- scheduleEvent(sim, start(sim), &quot;establishment&quot;, &quot;annualEstablish&quot;)
+##     sim &lt;- scheduleEvent(sim, P(sim)$.plotInitialTime, &quot;establishment&quot;, 
+##         &quot;plot&quot;)
+## } else if (eventType == &quot;annualEstablish&quot;) {
+##     sim$sourceLocation &lt;- initiateAgents(sim$quality, P(sim)$Nsource)
+##     dist &lt;- distanceFromPoints(sim$quality, sim$sourceLocation)
+##     sim$establish &lt;- (1/dist * sim$quality) &gt; P(sim)$establishThresh
+##     sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, 
+##         &quot;annualEstablish&quot;)
+## } else if (eventType == &quot;plot&quot;) {
+##     Plot(sim$establish, title = &quot;&quot;, new = TRUE)
+##     Plot(sim$sourceLocation, addTo = &quot;sim$establish&quot;)
+##     grid.rect(x = 0.8, y = 0.9, width = 0.4, height = 0.05, gp = gpar(fill = &quot;white&quot;, 
+##         col = &quot;white&quot;))
+##     grid.text(paste(&quot;Nsource:&quot;, P(sim)$Nsource, &quot;, establishThresh:&quot;, 
+##         P(sim)$establishThresh), x = 0.8, y = 0.9)
+##     sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, 
+##         &quot;plot&quot;)
+## }
+## debug: if (eventType == &quot;annualEstablish&quot;) {
+##     sim$sourceLocation &lt;- initiateAgents(sim$quality, P(sim)$Nsource)
+##     dist &lt;- distanceFromPoints(sim$quality, sim$sourceLocation)
+##     sim$establish &lt;- (1/dist * sim$quality) &gt; P(sim)$establishThresh
+##     sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, 
+##         &quot;annualEstablish&quot;)
+## } else if (eventType == &quot;plot&quot;) {
+##     Plot(sim$establish, title = &quot;&quot;, new = TRUE)
+##     Plot(sim$sourceLocation, addTo = &quot;sim$establish&quot;)
+##     grid.rect(x = 0.8, y = 0.9, width = 0.4, height = 0.05, gp = gpar(fill = &quot;white&quot;, 
+##         col = &quot;white&quot;))
+##     grid.text(paste(&quot;Nsource:&quot;, P(sim)$Nsource, &quot;, establishThresh:&quot;, 
+##         P(sim)$establishThresh), x = 0.8, y = 0.9)
+##     sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, 
+##         &quot;plot&quot;)
+## }
+## debug: if (eventType == &quot;plot&quot;) {
+##     Plot(sim$establish, title = &quot;&quot;, new = TRUE)
+##     Plot(sim$sourceLocation, addTo = &quot;sim$establish&quot;)
+##     grid.rect(x = 0.8, y = 0.9, width = 0.4, height = 0.05, gp = gpar(fill = &quot;white&quot;, 
+##         col = &quot;white&quot;))
+##     grid.text(paste(&quot;Nsource:&quot;, P(sim)$Nsource, &quot;, establishThresh:&quot;, 
+##         P(sim)$establishThresh), x = 0.8, y = 0.9)
+##     sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, 
+##         &quot;plot&quot;)
+## }
+## debug: Plot(sim$establish, title = &quot;&quot;, new = TRUE)
+## debug: Plot(sim$sourceLocation, addTo = &quot;sim$establish&quot;)
+## debug: grid.rect(x = 0.8, y = 0.9, width = 0.4, height = 0.05, gp = gpar(fill = &quot;white&quot;, 
+##     col = &quot;white&quot;))
+## debug: grid.text(paste(&quot;Nsource:&quot;, P(sim)$Nsource, &quot;, establishThresh:&quot;, 
+##     P(sim)$establishThresh), x = 0.8, y = 0.9)
+## debug: sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, &quot;plot&quot;)
+## debug: return(invisible(sim))
+## Called from: get(moduleCall, envir = sim@.envir)(sim, cur[[&quot;eventTime&quot;]], 
+##     cur[[&quot;eventType&quot;]], debugDoEvent)
+## debug: if (eventType == &quot;init&quot;) {
+##     sim &lt;- scheduleEvent(sim, start(sim), &quot;establishment&quot;, &quot;annualEstablish&quot;)
+##     sim &lt;- scheduleEvent(sim, P(sim)$.plotInitialTime, &quot;establishment&quot;, 
+##         &quot;plot&quot;)
+## } else if (eventType == &quot;annualEstablish&quot;) {
+##     sim$sourceLocation &lt;- initiateAgents(sim$quality, P(sim)$Nsource)
+##     dist &lt;- distanceFromPoints(sim$quality, sim$sourceLocation)
+##     sim$establish &lt;- (1/dist * sim$quality) &gt; P(sim)$establishThresh
+##     sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, 
+##         &quot;annualEstablish&quot;)
+## } else if (eventType == &quot;plot&quot;) {
+##     Plot(sim$establish, title = &quot;&quot;, new = TRUE)
+##     Plot(sim$sourceLocation, addTo = &quot;sim$establish&quot;)
+##     grid.rect(x = 0.8, y = 0.9, width = 0.4, height = 0.05, gp = gpar(fill = &quot;white&quot;, 
+##         col = &quot;white&quot;))
+##     grid.text(paste(&quot;Nsource:&quot;, P(sim)$Nsource, &quot;, establishThresh:&quot;, 
+##         P(sim)$establishThresh), x = 0.8, y = 0.9)
+##     sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, 
+##         &quot;plot&quot;)
+## }
+## debug: if (eventType == &quot;annualEstablish&quot;) {
+##     sim$sourceLocation &lt;- initiateAgents(sim$quality, P(sim)$Nsource)
+##     dist &lt;- distanceFromPoints(sim$quality, sim$sourceLocation)
+##     sim$establish &lt;- (1/dist * sim$quality) &gt; P(sim)$establishThresh
+##     sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, 
+##         &quot;annualEstablish&quot;)
+## } else if (eventType == &quot;plot&quot;) {
+##     Plot(sim$establish, title = &quot;&quot;, new = TRUE)
+##     Plot(sim$sourceLocation, addTo = &quot;sim$establish&quot;)
+##     grid.rect(x = 0.8, y = 0.9, width = 0.4, height = 0.05, gp = gpar(fill = &quot;white&quot;, 
+##         col = &quot;white&quot;))
+##     grid.text(paste(&quot;Nsource:&quot;, P(sim)$Nsource, &quot;, establishThresh:&quot;, 
+##         P(sim)$establishThresh), x = 0.8, y = 0.9)
+##     sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, 
+##         &quot;plot&quot;)
+## }
+## debug: sim$sourceLocation &lt;- initiateAgents(sim$quality, P(sim)$Nsource)
+## debug: dist &lt;- distanceFromPoints(sim$quality, sim$sourceLocation)
+## debug: sim$establish &lt;- (1/dist * sim$quality) &gt; P(sim)$establishThresh
+## debug: sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, &quot;annualEstablish&quot;)
+## debug: return(invisible(sim))
+## Called from: get(moduleCall, envir = sim@.envir)(sim, cur[[&quot;eventTime&quot;]], 
+##     cur[[&quot;eventType&quot;]], debugDoEvent)
+## debug: if (eventType == &quot;init&quot;) {
+##     sim &lt;- scheduleEvent(sim, start(sim), &quot;establishment&quot;, &quot;annualEstablish&quot;)
+##     sim &lt;- scheduleEvent(sim, P(sim)$.plotInitialTime, &quot;establishment&quot;, 
+##         &quot;plot&quot;)
+## } else if (eventType == &quot;annualEstablish&quot;) {
+##     sim$sourceLocation &lt;- initiateAgents(sim$quality, P(sim)$Nsource)
+##     dist &lt;- distanceFromPoints(sim$quality, sim$sourceLocation)
+##     sim$establish &lt;- (1/dist * sim$quality) &gt; P(sim)$establishThresh
+##     sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, 
+##         &quot;annualEstablish&quot;)
+## } else if (eventType == &quot;plot&quot;) {
+##     Plot(sim$establish, title = &quot;&quot;, new = TRUE)
+##     Plot(sim$sourceLocation, addTo = &quot;sim$establish&quot;)
+##     grid.rect(x = 0.8, y = 0.9, width = 0.4, height = 0.05, gp = gpar(fill = &quot;white&quot;, 
+##         col = &quot;white&quot;))
+##     grid.text(paste(&quot;Nsource:&quot;, P(sim)$Nsource, &quot;, establishThresh:&quot;, 
+##         P(sim)$establishThresh), x = 0.8, y = 0.9)
+##     sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, 
+##         &quot;plot&quot;)
+## }
+## debug: if (eventType == &quot;annualEstablish&quot;) {
+##     sim$sourceLocation &lt;- initiateAgents(sim$quality, P(sim)$Nsource)
+##     dist &lt;- distanceFromPoints(sim$quality, sim$sourceLocation)
+##     sim$establish &lt;- (1/dist * sim$quality) &gt; P(sim)$establishThresh
+##     sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, 
+##         &quot;annualEstablish&quot;)
+## } else if (eventType == &quot;plot&quot;) {
+##     Plot(sim$establish, title = &quot;&quot;, new = TRUE)
+##     Plot(sim$sourceLocation, addTo = &quot;sim$establish&quot;)
+##     grid.rect(x = 0.8, y = 0.9, width = 0.4, height = 0.05, gp = gpar(fill = &quot;white&quot;, 
+##         col = &quot;white&quot;))
+##     grid.text(paste(&quot;Nsource:&quot;, P(sim)$Nsource, &quot;, establishThresh:&quot;, 
+##         P(sim)$establishThresh), x = 0.8, y = 0.9)
+##     sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, 
+##         &quot;plot&quot;)
+## }
+## debug: if (eventType == &quot;plot&quot;) {
+##     Plot(sim$establish, title = &quot;&quot;, new = TRUE)
+##     Plot(sim$sourceLocation, addTo = &quot;sim$establish&quot;)
+##     grid.rect(x = 0.8, y = 0.9, width = 0.4, height = 0.05, gp = gpar(fill = &quot;white&quot;, 
+##         col = &quot;white&quot;))
+##     grid.text(paste(&quot;Nsource:&quot;, P(sim)$Nsource, &quot;, establishThresh:&quot;, 
+##         P(sim)$establishThresh), x = 0.8, y = 0.9)
+##     sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, 
+##         &quot;plot&quot;)
+## }
+## debug: Plot(sim$establish, title = &quot;&quot;, new = TRUE)
+## debug: Plot(sim$sourceLocation, addTo = &quot;sim$establish&quot;)
+## debug: grid.rect(x = 0.8, y = 0.9, width = 0.4, height = 0.05, gp = gpar(fill = &quot;white&quot;, 
+##     col = &quot;white&quot;))
+## debug: grid.text(paste(&quot;Nsource:&quot;, P(sim)$Nsource, &quot;, establishThresh:&quot;, 
+##     P(sim)$establishThresh), x = 0.8, y = 0.9)
+## debug: sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, &quot;plot&quot;)
+## debug: return(invisible(sim))
+## Called from: get(moduleCall, envir = sim@.envir)(sim, cur[[&quot;eventTime&quot;]], 
+##     cur[[&quot;eventType&quot;]], debugDoEvent)
+## debug: if (eventType == &quot;init&quot;) {
+##     sim &lt;- scheduleEvent(sim, start(sim), &quot;establishment&quot;, &quot;annualEstablish&quot;)
+##     sim &lt;- scheduleEvent(sim, P(sim)$.plotInitialTime, &quot;establishment&quot;, 
+##         &quot;plot&quot;)
+## } else if (eventType == &quot;annualEstablish&quot;) {
+##     sim$sourceLocation &lt;- initiateAgents(sim$quality, P(sim)$Nsource)
+##     dist &lt;- distanceFromPoints(sim$quality, sim$sourceLocation)
+##     sim$establish &lt;- (1/dist * sim$quality) &gt; P(sim)$establishThresh
+##     sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, 
+##         &quot;annualEstablish&quot;)
+## } else if (eventType == &quot;plot&quot;) {
+##     Plot(sim$establish, title = &quot;&quot;, new = TRUE)
+##     Plot(sim$sourceLocation, addTo = &quot;sim$establish&quot;)
+##     grid.rect(x = 0.8, y = 0.9, width = 0.4, height = 0.05, gp = gpar(fill = &quot;white&quot;, 
+##         col = &quot;white&quot;))
+##     grid.text(paste(&quot;Nsource:&quot;, P(sim)$Nsource, &quot;, establishThresh:&quot;, 
+##         P(sim)$establishThresh), x = 0.8, y = 0.9)
+##     sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, 
+##         &quot;plot&quot;)
+## }
+## debug: if (eventType == &quot;annualEstablish&quot;) {
+##     sim$sourceLocation &lt;- initiateAgents(sim$quality, P(sim)$Nsource)
+##     dist &lt;- distanceFromPoints(sim$quality, sim$sourceLocation)
+##     sim$establish &lt;- (1/dist * sim$quality) &gt; P(sim)$establishThresh
+##     sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, 
+##         &quot;annualEstablish&quot;)
+## } else if (eventType == &quot;plot&quot;) {
+##     Plot(sim$establish, title = &quot;&quot;, new = TRUE)
+##     Plot(sim$sourceLocation, addTo = &quot;sim$establish&quot;)
+##     grid.rect(x = 0.8, y = 0.9, width = 0.4, height = 0.05, gp = gpar(fill = &quot;white&quot;, 
+##         col = &quot;white&quot;))
+##     grid.text(paste(&quot;Nsource:&quot;, P(sim)$Nsource, &quot;, establishThresh:&quot;, 
+##         P(sim)$establishThresh), x = 0.8, y = 0.9)
+##     sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, 
+##         &quot;plot&quot;)
+## }
+## debug: sim$sourceLocation &lt;- initiateAgents(sim$quality, P(sim)$Nsource)
+## debug: dist &lt;- distanceFromPoints(sim$quality, sim$sourceLocation)
+## debug: sim$establish &lt;- (1/dist * sim$quality) &gt; P(sim)$establishThresh
+## debug: sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, &quot;annualEstablish&quot;)
+## debug: return(invisible(sim))
+## Called from: get(moduleCall, envir = sim@.envir)(sim, cur[[&quot;eventTime&quot;]], 
+##     cur[[&quot;eventType&quot;]], debugDoEvent)
+## debug: if (eventType == &quot;init&quot;) {
+##     sim &lt;- scheduleEvent(sim, start(sim), &quot;establishment&quot;, &quot;annualEstablish&quot;)
+##     sim &lt;- scheduleEvent(sim, P(sim)$.plotInitialTime, &quot;establishment&quot;, 
+##         &quot;plot&quot;)
+## } else if (eventType == &quot;annualEstablish&quot;) {
+##     sim$sourceLocation &lt;- initiateAgents(sim$quality, P(sim)$Nsource)
+##     dist &lt;- distanceFromPoints(sim$quality, sim$sourceLocation)
+##     sim$establish &lt;- (1/dist * sim$quality) &gt; P(sim)$establishThresh
+##     sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, 
+##         &quot;annualEstablish&quot;)
+## } else if (eventType == &quot;plot&quot;) {
+##     Plot(sim$establish, title = &quot;&quot;, new = TRUE)
+##     Plot(sim$sourceLocation, addTo = &quot;sim$establish&quot;)
+##     grid.rect(x = 0.8, y = 0.9, width = 0.4, height = 0.05, gp = gpar(fill = &quot;white&quot;, 
+##         col = &quot;white&quot;))
+##     grid.text(paste(&quot;Nsource:&quot;, P(sim)$Nsource, &quot;, establishThresh:&quot;, 
+##         P(sim)$establishThresh), x = 0.8, y = 0.9)
+##     sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, 
+##         &quot;plot&quot;)
+## }
+## debug: if (eventType == &quot;annualEstablish&quot;) {
+##     sim$sourceLocation &lt;- initiateAgents(sim$quality, P(sim)$Nsource)
+##     dist &lt;- distanceFromPoints(sim$quality, sim$sourceLocation)
+##     sim$establish &lt;- (1/dist * sim$quality) &gt; P(sim)$establishThresh
+##     sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, 
+##         &quot;annualEstablish&quot;)
+## } else if (eventType == &quot;plot&quot;) {
+##     Plot(sim$establish, title = &quot;&quot;, new = TRUE)
+##     Plot(sim$sourceLocation, addTo = &quot;sim$establish&quot;)
+##     grid.rect(x = 0.8, y = 0.9, width = 0.4, height = 0.05, gp = gpar(fill = &quot;white&quot;, 
+##         col = &quot;white&quot;))
+##     grid.text(paste(&quot;Nsource:&quot;, P(sim)$Nsource, &quot;, establishThresh:&quot;, 
+##         P(sim)$establishThresh), x = 0.8, y = 0.9)
+##     sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, 
+##         &quot;plot&quot;)
+## }
+## debug: if (eventType == &quot;plot&quot;) {
+##     Plot(sim$establish, title = &quot;&quot;, new = TRUE)
+##     Plot(sim$sourceLocation, addTo = &quot;sim$establish&quot;)
+##     grid.rect(x = 0.8, y = 0.9, width = 0.4, height = 0.05, gp = gpar(fill = &quot;white&quot;, 
+##         col = &quot;white&quot;))
+##     grid.text(paste(&quot;Nsource:&quot;, P(sim)$Nsource, &quot;, establishThresh:&quot;, 
+##         P(sim)$establishThresh), x = 0.8, y = 0.9)
+##     sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, 
+##         &quot;plot&quot;)
+## }
+## debug: Plot(sim$establish, title = &quot;&quot;, new = TRUE)
+## debug: Plot(sim$sourceLocation, addTo = &quot;sim$establish&quot;)
+## debug: grid.rect(x = 0.8, y = 0.9, width = 0.4, height = 0.05, gp = gpar(fill = &quot;white&quot;, 
+##     col = &quot;white&quot;))
+## debug: grid.text(paste(&quot;Nsource:&quot;, P(sim)$Nsource, &quot;, establishThresh:&quot;, 
+##     P(sim)$establishThresh), x = 0.8, y = 0.9)
+## debug: sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, &quot;plot&quot;)
+## debug: return(invisible(sim))
+## Called from: get(moduleCall, envir = sim@.envir)(sim, cur[[&quot;eventTime&quot;]], 
+##     cur[[&quot;eventType&quot;]], debugDoEvent)
+## debug: if (eventType == &quot;init&quot;) {
+##     sim &lt;- scheduleEvent(sim, start(sim), &quot;establishment&quot;, &quot;annualEstablish&quot;)
+##     sim &lt;- scheduleEvent(sim, P(sim)$.plotInitialTime, &quot;establishment&quot;, 
+##         &quot;plot&quot;)
+## } else if (eventType == &quot;annualEstablish&quot;) {
+##     sim$sourceLocation &lt;- initiateAgents(sim$quality, P(sim)$Nsource)
+##     dist &lt;- distanceFromPoints(sim$quality, sim$sourceLocation)
+##     sim$establish &lt;- (1/dist * sim$quality) &gt; P(sim)$establishThresh
+##     sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, 
+##         &quot;annualEstablish&quot;)
+## } else if (eventType == &quot;plot&quot;) {
+##     Plot(sim$establish, title = &quot;&quot;, new = TRUE)
+##     Plot(sim$sourceLocation, addTo = &quot;sim$establish&quot;)
+##     grid.rect(x = 0.8, y = 0.9, width = 0.4, height = 0.05, gp = gpar(fill = &quot;white&quot;, 
+##         col = &quot;white&quot;))
+##     grid.text(paste(&quot;Nsource:&quot;, P(sim)$Nsource, &quot;, establishThresh:&quot;, 
+##         P(sim)$establishThresh), x = 0.8, y = 0.9)
+##     sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, 
+##         &quot;plot&quot;)
+## }
+## debug: if (eventType == &quot;annualEstablish&quot;) {
+##     sim$sourceLocation &lt;- initiateAgents(sim$quality, P(sim)$Nsource)
+##     dist &lt;- distanceFromPoints(sim$quality, sim$sourceLocation)
+##     sim$establish &lt;- (1/dist * sim$quality) &gt; P(sim)$establishThresh
+##     sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, 
+##         &quot;annualEstablish&quot;)
+## } else if (eventType == &quot;plot&quot;) {
+##     Plot(sim$establish, title = &quot;&quot;, new = TRUE)
+##     Plot(sim$sourceLocation, addTo = &quot;sim$establish&quot;)
+##     grid.rect(x = 0.8, y = 0.9, width = 0.4, height = 0.05, gp = gpar(fill = &quot;white&quot;, 
+##         col = &quot;white&quot;))
+##     grid.text(paste(&quot;Nsource:&quot;, P(sim)$Nsource, &quot;, establishThresh:&quot;, 
+##         P(sim)$establishThresh), x = 0.8, y = 0.9)
+##     sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, 
+##         &quot;plot&quot;)
+## }
+## debug: sim$sourceLocation &lt;- initiateAgents(sim$quality, P(sim)$Nsource)
+## debug: dist &lt;- distanceFromPoints(sim$quality, sim$sourceLocation)
+## debug: sim$establish &lt;- (1/dist * sim$quality) &gt; P(sim)$establishThresh
+## debug: sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, &quot;annualEstablish&quot;)
+## debug: return(invisible(sim))
+## Called from: get(moduleCall, envir = sim@.envir)(sim, cur[[&quot;eventTime&quot;]], 
+##     cur[[&quot;eventType&quot;]], debugDoEvent)
+## debug: if (eventType == &quot;init&quot;) {
+##     sim &lt;- scheduleEvent(sim, start(sim), &quot;establishment&quot;, &quot;annualEstablish&quot;)
+##     sim &lt;- scheduleEvent(sim, P(sim)$.plotInitialTime, &quot;establishment&quot;, 
+##         &quot;plot&quot;)
+## } else if (eventType == &quot;annualEstablish&quot;) {
+##     sim$sourceLocation &lt;- initiateAgents(sim$quality, P(sim)$Nsource)
+##     dist &lt;- distanceFromPoints(sim$quality, sim$sourceLocation)
+##     sim$establish &lt;- (1/dist * sim$quality) &gt; P(sim)$establishThresh
+##     sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, 
+##         &quot;annualEstablish&quot;)
+## } else if (eventType == &quot;plot&quot;) {
+##     Plot(sim$establish, title = &quot;&quot;, new = TRUE)
+##     Plot(sim$sourceLocation, addTo = &quot;sim$establish&quot;)
+##     grid.rect(x = 0.8, y = 0.9, width = 0.4, height = 0.05, gp = gpar(fill = &quot;white&quot;, 
+##         col = &quot;white&quot;))
+##     grid.text(paste(&quot;Nsource:&quot;, P(sim)$Nsource, &quot;, establishThresh:&quot;, 
+##         P(sim)$establishThresh), x = 0.8, y = 0.9)
+##     sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, 
+##         &quot;plot&quot;)
+## }
+## debug: if (eventType == &quot;annualEstablish&quot;) {
+##     sim$sourceLocation &lt;- initiateAgents(sim$quality, P(sim)$Nsource)
+##     dist &lt;- distanceFromPoints(sim$quality, sim$sourceLocation)
+##     sim$establish &lt;- (1/dist * sim$quality) &gt; P(sim)$establishThresh
+##     sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, 
+##         &quot;annualEstablish&quot;)
+## } else if (eventType == &quot;plot&quot;) {
+##     Plot(sim$establish, title = &quot;&quot;, new = TRUE)
+##     Plot(sim$sourceLocation, addTo = &quot;sim$establish&quot;)
+##     grid.rect(x = 0.8, y = 0.9, width = 0.4, height = 0.05, gp = gpar(fill = &quot;white&quot;, 
+##         col = &quot;white&quot;))
+##     grid.text(paste(&quot;Nsource:&quot;, P(sim)$Nsource, &quot;, establishThresh:&quot;, 
+##         P(sim)$establishThresh), x = 0.8, y = 0.9)
+##     sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, 
+##         &quot;plot&quot;)
+## }
+## debug: if (eventType == &quot;plot&quot;) {
+##     Plot(sim$establish, title = &quot;&quot;, new = TRUE)
+##     Plot(sim$sourceLocation, addTo = &quot;sim$establish&quot;)
+##     grid.rect(x = 0.8, y = 0.9, width = 0.4, height = 0.05, gp = gpar(fill = &quot;white&quot;, 
+##         col = &quot;white&quot;))
+##     grid.text(paste(&quot;Nsource:&quot;, P(sim)$Nsource, &quot;, establishThresh:&quot;, 
+##         P(sim)$establishThresh), x = 0.8, y = 0.9)
+##     sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, 
+##         &quot;plot&quot;)
+## }
+## debug: Plot(sim$establish, title = &quot;&quot;, new = TRUE)
+## debug: Plot(sim$sourceLocation, addTo = &quot;sim$establish&quot;)
+## debug: grid.rect(x = 0.8, y = 0.9, width = 0.4, height = 0.05, gp = gpar(fill = &quot;white&quot;, 
+##     col = &quot;white&quot;))
+## debug: grid.text(paste(&quot;Nsource:&quot;, P(sim)$Nsource, &quot;, establishThresh:&quot;, 
+##     P(sim)$establishThresh), x = 0.8, y = 0.9)
+## debug: sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, &quot;plot&quot;)
+## debug: return(invisible(sim))
+## Called from: get(moduleCall, envir = sim@.envir)(sim, cur[[&quot;eventTime&quot;]], 
+##     cur[[&quot;eventType&quot;]], debugDoEvent)
+## debug: if (eventType == &quot;init&quot;) {
+##     sim &lt;- scheduleEvent(sim, start(sim), &quot;establishment&quot;, &quot;annualEstablish&quot;)
+##     sim &lt;- scheduleEvent(sim, P(sim)$.plotInitialTime, &quot;establishment&quot;, 
+##         &quot;plot&quot;)
+## } else if (eventType == &quot;annualEstablish&quot;) {
+##     sim$sourceLocation &lt;- initiateAgents(sim$quality, P(sim)$Nsource)
+##     dist &lt;- distanceFromPoints(sim$quality, sim$sourceLocation)
+##     sim$establish &lt;- (1/dist * sim$quality) &gt; P(sim)$establishThresh
+##     sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, 
+##         &quot;annualEstablish&quot;)
+## } else if (eventType == &quot;plot&quot;) {
+##     Plot(sim$establish, title = &quot;&quot;, new = TRUE)
+##     Plot(sim$sourceLocation, addTo = &quot;sim$establish&quot;)
+##     grid.rect(x = 0.8, y = 0.9, width = 0.4, height = 0.05, gp = gpar(fill = &quot;white&quot;, 
+##         col = &quot;white&quot;))
+##     grid.text(paste(&quot;Nsource:&quot;, P(sim)$Nsource, &quot;, establishThresh:&quot;, 
+##         P(sim)$establishThresh), x = 0.8, y = 0.9)
+##     sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, 
+##         &quot;plot&quot;)
+## }
+## debug: if (eventType == &quot;annualEstablish&quot;) {
+##     sim$sourceLocation &lt;- initiateAgents(sim$quality, P(sim)$Nsource)
+##     dist &lt;- distanceFromPoints(sim$quality, sim$sourceLocation)
+##     sim$establish &lt;- (1/dist * sim$quality) &gt; P(sim)$establishThresh
+##     sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, 
+##         &quot;annualEstablish&quot;)
+## } else if (eventType == &quot;plot&quot;) {
+##     Plot(sim$establish, title = &quot;&quot;, new = TRUE)
+##     Plot(sim$sourceLocation, addTo = &quot;sim$establish&quot;)
+##     grid.rect(x = 0.8, y = 0.9, width = 0.4, height = 0.05, gp = gpar(fill = &quot;white&quot;, 
+##         col = &quot;white&quot;))
+##     grid.text(paste(&quot;Nsource:&quot;, P(sim)$Nsource, &quot;, establishThresh:&quot;, 
+##         P(sim)$establishThresh), x = 0.8, y = 0.9)
+##     sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, 
+##         &quot;plot&quot;)
+## }
+## debug: sim$sourceLocation &lt;- initiateAgents(sim$quality, P(sim)$Nsource)
+## debug: dist &lt;- distanceFromPoints(sim$quality, sim$sourceLocation)
+## debug: sim$establish &lt;- (1/dist * sim$quality) &gt; P(sim)$establishThresh
+## debug: sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, &quot;annualEstablish&quot;)
+## debug: return(invisible(sim))
+## Called from: get(moduleCall, envir = sim@.envir)(sim, cur[[&quot;eventTime&quot;]], 
+##     cur[[&quot;eventType&quot;]], debugDoEvent)
+## debug: if (eventType == &quot;init&quot;) {
+##     sim &lt;- scheduleEvent(sim, start(sim), &quot;establishment&quot;, &quot;annualEstablish&quot;)
+##     sim &lt;- scheduleEvent(sim, P(sim)$.plotInitialTime, &quot;establishment&quot;, 
+##         &quot;plot&quot;)
+## } else if (eventType == &quot;annualEstablish&quot;) {
+##     sim$sourceLocation &lt;- initiateAgents(sim$quality, P(sim)$Nsource)
+##     dist &lt;- distanceFromPoints(sim$quality, sim$sourceLocation)
+##     sim$establish &lt;- (1/dist * sim$quality) &gt; P(sim)$establishThresh
+##     sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, 
+##         &quot;annualEstablish&quot;)
+## } else if (eventType == &quot;plot&quot;) {
+##     Plot(sim$establish, title = &quot;&quot;, new = TRUE)
+##     Plot(sim$sourceLocation, addTo = &quot;sim$establish&quot;)
+##     grid.rect(x = 0.8, y = 0.9, width = 0.4, height = 0.05, gp = gpar(fill = &quot;white&quot;, 
+##         col = &quot;white&quot;))
+##     grid.text(paste(&quot;Nsource:&quot;, P(sim)$Nsource, &quot;, establishThresh:&quot;, 
+##         P(sim)$establishThresh), x = 0.8, y = 0.9)
+##     sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, 
+##         &quot;plot&quot;)
+## }
+## debug: if (eventType == &quot;annualEstablish&quot;) {
+##     sim$sourceLocation &lt;- initiateAgents(sim$quality, P(sim)$Nsource)
+##     dist &lt;- distanceFromPoints(sim$quality, sim$sourceLocation)
+##     sim$establish &lt;- (1/dist * sim$quality) &gt; P(sim)$establishThresh
+##     sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, 
+##         &quot;annualEstablish&quot;)
+## } else if (eventType == &quot;plot&quot;) {
+##     Plot(sim$establish, title = &quot;&quot;, new = TRUE)
+##     Plot(sim$sourceLocation, addTo = &quot;sim$establish&quot;)
+##     grid.rect(x = 0.8, y = 0.9, width = 0.4, height = 0.05, gp = gpar(fill = &quot;white&quot;, 
+##         col = &quot;white&quot;))
+##     grid.text(paste(&quot;Nsource:&quot;, P(sim)$Nsource, &quot;, establishThresh:&quot;, 
+##         P(sim)$establishThresh), x = 0.8, y = 0.9)
+##     sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, 
+##         &quot;plot&quot;)
+## }
+## debug: if (eventType == &quot;plot&quot;) {
+##     Plot(sim$establish, title = &quot;&quot;, new = TRUE)
+##     Plot(sim$sourceLocation, addTo = &quot;sim$establish&quot;)
+##     grid.rect(x = 0.8, y = 0.9, width = 0.4, height = 0.05, gp = gpar(fill = &quot;white&quot;, 
+##         col = &quot;white&quot;))
+##     grid.text(paste(&quot;Nsource:&quot;, P(sim)$Nsource, &quot;, establishThresh:&quot;, 
+##         P(sim)$establishThresh), x = 0.8, y = 0.9)
+##     sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, 
+##         &quot;plot&quot;)
+## }
+## debug: Plot(sim$establish, title = &quot;&quot;, new = TRUE)
+## debug: Plot(sim$sourceLocation, addTo = &quot;sim$establish&quot;)
+## debug: grid.rect(x = 0.8, y = 0.9, width = 0.4, height = 0.05, gp = gpar(fill = &quot;white&quot;, 
+##     col = &quot;white&quot;))
+## debug: grid.text(paste(&quot;Nsource:&quot;, P(sim)$Nsource, &quot;, establishThresh:&quot;, 
+##     P(sim)$establishThresh), x = 0.8, y = 0.9)
+## debug: sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, &quot;plot&quot;)
+## debug: return(invisible(sim))
+## Called from: get(moduleCall, envir = sim@.envir)(sim, cur[[&quot;eventTime&quot;]], 
+##     cur[[&quot;eventType&quot;]], debugDoEvent)
+## debug: if (eventType == &quot;init&quot;) {
+##     sim &lt;- scheduleEvent(sim, start(sim), &quot;establishment&quot;, &quot;annualEstablish&quot;)
+##     sim &lt;- scheduleEvent(sim, P(sim)$.plotInitialTime, &quot;establishment&quot;, 
+##         &quot;plot&quot;)
+## } else if (eventType == &quot;annualEstablish&quot;) {
+##     sim$sourceLocation &lt;- initiateAgents(sim$quality, P(sim)$Nsource)
+##     dist &lt;- distanceFromPoints(sim$quality, sim$sourceLocation)
+##     sim$establish &lt;- (1/dist * sim$quality) &gt; P(sim)$establishThresh
+##     sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, 
+##         &quot;annualEstablish&quot;)
+## } else if (eventType == &quot;plot&quot;) {
+##     Plot(sim$establish, title = &quot;&quot;, new = TRUE)
+##     Plot(sim$sourceLocation, addTo = &quot;sim$establish&quot;)
+##     grid.rect(x = 0.8, y = 0.9, width = 0.4, height = 0.05, gp = gpar(fill = &quot;white&quot;, 
+##         col = &quot;white&quot;))
+##     grid.text(paste(&quot;Nsource:&quot;, P(sim)$Nsource, &quot;, establishThresh:&quot;, 
+##         P(sim)$establishThresh), x = 0.8, y = 0.9)
+##     sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, 
+##         &quot;plot&quot;)
+## }
+## debug: if (eventType == &quot;annualEstablish&quot;) {
+##     sim$sourceLocation &lt;- initiateAgents(sim$quality, P(sim)$Nsource)
+##     dist &lt;- distanceFromPoints(sim$quality, sim$sourceLocation)
+##     sim$establish &lt;- (1/dist * sim$quality) &gt; P(sim)$establishThresh
+##     sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, 
+##         &quot;annualEstablish&quot;)
+## } else if (eventType == &quot;plot&quot;) {
+##     Plot(sim$establish, title = &quot;&quot;, new = TRUE)
+##     Plot(sim$sourceLocation, addTo = &quot;sim$establish&quot;)
+##     grid.rect(x = 0.8, y = 0.9, width = 0.4, height = 0.05, gp = gpar(fill = &quot;white&quot;, 
+##         col = &quot;white&quot;))
+##     grid.text(paste(&quot;Nsource:&quot;, P(sim)$Nsource, &quot;, establishThresh:&quot;, 
+##         P(sim)$establishThresh), x = 0.8, y = 0.9)
+##     sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, 
+##         &quot;plot&quot;)
+## }
+## debug: sim$sourceLocation &lt;- initiateAgents(sim$quality, P(sim)$Nsource)
+## debug: dist &lt;- distanceFromPoints(sim$quality, sim$sourceLocation)
+## debug: sim$establish &lt;- (1/dist * sim$quality) &gt; P(sim)$establishThresh
+## debug: sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, &quot;annualEstablish&quot;)
+## debug: return(invisible(sim))
+## Called from: get(moduleCall, envir = sim@.envir)(sim, cur[[&quot;eventTime&quot;]], 
+##     cur[[&quot;eventType&quot;]], debugDoEvent)
+## debug: if (eventType == &quot;init&quot;) {
+##     sim &lt;- scheduleEvent(sim, start(sim), &quot;establishment&quot;, &quot;annualEstablish&quot;)
+##     sim &lt;- scheduleEvent(sim, P(sim)$.plotInitialTime, &quot;establishment&quot;, 
+##         &quot;plot&quot;)
+## } else if (eventType == &quot;annualEstablish&quot;) {
+##     sim$sourceLocation &lt;- initiateAgents(sim$quality, P(sim)$Nsource)
+##     dist &lt;- distanceFromPoints(sim$quality, sim$sourceLocation)
+##     sim$establish &lt;- (1/dist * sim$quality) &gt; P(sim)$establishThresh
+##     sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, 
+##         &quot;annualEstablish&quot;)
+## } else if (eventType == &quot;plot&quot;) {
+##     Plot(sim$establish, title = &quot;&quot;, new = TRUE)
+##     Plot(sim$sourceLocation, addTo = &quot;sim$establish&quot;)
+##     grid.rect(x = 0.8, y = 0.9, width = 0.4, height = 0.05, gp = gpar(fill = &quot;white&quot;, 
+##         col = &quot;white&quot;))
+##     grid.text(paste(&quot;Nsource:&quot;, P(sim)$Nsource, &quot;, establishThresh:&quot;, 
+##         P(sim)$establishThresh), x = 0.8, y = 0.9)
+##     sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, 
+##         &quot;plot&quot;)
+## }
+## debug: if (eventType == &quot;annualEstablish&quot;) {
+##     sim$sourceLocation &lt;- initiateAgents(sim$quality, P(sim)$Nsource)
+##     dist &lt;- distanceFromPoints(sim$quality, sim$sourceLocation)
+##     sim$establish &lt;- (1/dist * sim$quality) &gt; P(sim)$establishThresh
+##     sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, 
+##         &quot;annualEstablish&quot;)
+## } else if (eventType == &quot;plot&quot;) {
+##     Plot(sim$establish, title = &quot;&quot;, new = TRUE)
+##     Plot(sim$sourceLocation, addTo = &quot;sim$establish&quot;)
+##     grid.rect(x = 0.8, y = 0.9, width = 0.4, height = 0.05, gp = gpar(fill = &quot;white&quot;, 
+##         col = &quot;white&quot;))
+##     grid.text(paste(&quot;Nsource:&quot;, P(sim)$Nsource, &quot;, establishThresh:&quot;, 
+##         P(sim)$establishThresh), x = 0.8, y = 0.9)
+##     sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, 
+##         &quot;plot&quot;)
+## }
+## debug: if (eventType == &quot;plot&quot;) {
+##     Plot(sim$establish, title = &quot;&quot;, new = TRUE)
+##     Plot(sim$sourceLocation, addTo = &quot;sim$establish&quot;)
+##     grid.rect(x = 0.8, y = 0.9, width = 0.4, height = 0.05, gp = gpar(fill = &quot;white&quot;, 
+##         col = &quot;white&quot;))
+##     grid.text(paste(&quot;Nsource:&quot;, P(sim)$Nsource, &quot;, establishThresh:&quot;, 
+##         P(sim)$establishThresh), x = 0.8, y = 0.9)
+##     sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, 
+##         &quot;plot&quot;)
+## }
+## debug: Plot(sim$establish, title = &quot;&quot;, new = TRUE)
+## debug: Plot(sim$sourceLocation, addTo = &quot;sim$establish&quot;)
+## debug: grid.rect(x = 0.8, y = 0.9, width = 0.4, height = 0.05, gp = gpar(fill = &quot;white&quot;, 
+##     col = &quot;white&quot;))
+## debug: grid.text(paste(&quot;Nsource:&quot;, P(sim)$Nsource, &quot;, establishThresh:&quot;, 
+##     P(sim)$establishThresh), x = 0.8, y = 0.9)
+## debug: sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, &quot;plot&quot;)
+## debug: return(invisible(sim))
+## Called from: get(moduleCall, envir = sim@.envir)(sim, cur[[&quot;eventTime&quot;]], 
+##     cur[[&quot;eventType&quot;]], debugDoEvent)
+## debug: if (eventType == &quot;init&quot;) {
+##     sim &lt;- scheduleEvent(sim, start(sim), &quot;establishment&quot;, &quot;annualEstablish&quot;)
+##     sim &lt;- scheduleEvent(sim, P(sim)$.plotInitialTime, &quot;establishment&quot;, 
+##         &quot;plot&quot;)
+## } else if (eventType == &quot;annualEstablish&quot;) {
+##     sim$sourceLocation &lt;- initiateAgents(sim$quality, P(sim)$Nsource)
+##     dist &lt;- distanceFromPoints(sim$quality, sim$sourceLocation)
+##     sim$establish &lt;- (1/dist * sim$quality) &gt; P(sim)$establishThresh
+##     sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, 
+##         &quot;annualEstablish&quot;)
+## } else if (eventType == &quot;plot&quot;) {
+##     Plot(sim$establish, title = &quot;&quot;, new = TRUE)
+##     Plot(sim$sourceLocation, addTo = &quot;sim$establish&quot;)
+##     grid.rect(x = 0.8, y = 0.9, width = 0.4, height = 0.05, gp = gpar(fill = &quot;white&quot;, 
+##         col = &quot;white&quot;))
+##     grid.text(paste(&quot;Nsource:&quot;, P(sim)$Nsource, &quot;, establishThresh:&quot;, 
+##         P(sim)$establishThresh), x = 0.8, y = 0.9)
+##     sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, 
+##         &quot;plot&quot;)
+## }
+## debug: if (eventType == &quot;annualEstablish&quot;) {
+##     sim$sourceLocation &lt;- initiateAgents(sim$quality, P(sim)$Nsource)
+##     dist &lt;- distanceFromPoints(sim$quality, sim$sourceLocation)
+##     sim$establish &lt;- (1/dist * sim$quality) &gt; P(sim)$establishThresh
+##     sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, 
+##         &quot;annualEstablish&quot;)
+## } else if (eventType == &quot;plot&quot;) {
+##     Plot(sim$establish, title = &quot;&quot;, new = TRUE)
+##     Plot(sim$sourceLocation, addTo = &quot;sim$establish&quot;)
+##     grid.rect(x = 0.8, y = 0.9, width = 0.4, height = 0.05, gp = gpar(fill = &quot;white&quot;, 
+##         col = &quot;white&quot;))
+##     grid.text(paste(&quot;Nsource:&quot;, P(sim)$Nsource, &quot;, establishThresh:&quot;, 
+##         P(sim)$establishThresh), x = 0.8, y = 0.9)
+##     sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, 
+##         &quot;plot&quot;)
+## }
+## debug: sim$sourceLocation &lt;- initiateAgents(sim$quality, P(sim)$Nsource)
+## debug: dist &lt;- distanceFromPoints(sim$quality, sim$sourceLocation)
+## debug: sim$establish &lt;- (1/dist * sim$quality) &gt; P(sim)$establishThresh
+## debug: sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, &quot;annualEstablish&quot;)
+## debug: return(invisible(sim))
+## Called from: get(moduleCall, envir = sim@.envir)(sim, cur[[&quot;eventTime&quot;]], 
+##     cur[[&quot;eventType&quot;]], debugDoEvent)
+## debug: if (eventType == &quot;init&quot;) {
+##     sim &lt;- scheduleEvent(sim, start(sim), &quot;establishment&quot;, &quot;annualEstablish&quot;)
+##     sim &lt;- scheduleEvent(sim, P(sim)$.plotInitialTime, &quot;establishment&quot;, 
+##         &quot;plot&quot;)
+## } else if (eventType == &quot;annualEstablish&quot;) {
+##     sim$sourceLocation &lt;- initiateAgents(sim$quality, P(sim)$Nsource)
+##     dist &lt;- distanceFromPoints(sim$quality, sim$sourceLocation)
+##     sim$establish &lt;- (1/dist * sim$quality) &gt; P(sim)$establishThresh
+##     sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, 
+##         &quot;annualEstablish&quot;)
+## } else if (eventType == &quot;plot&quot;) {
+##     Plot(sim$establish, title = &quot;&quot;, new = TRUE)
+##     Plot(sim$sourceLocation, addTo = &quot;sim$establish&quot;)
+##     grid.rect(x = 0.8, y = 0.9, width = 0.4, height = 0.05, gp = gpar(fill = &quot;white&quot;, 
+##         col = &quot;white&quot;))
+##     grid.text(paste(&quot;Nsource:&quot;, P(sim)$Nsource, &quot;, establishThresh:&quot;, 
+##         P(sim)$establishThresh), x = 0.8, y = 0.9)
+##     sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, 
+##         &quot;plot&quot;)
+## }
+## debug: if (eventType == &quot;annualEstablish&quot;) {
+##     sim$sourceLocation &lt;- initiateAgents(sim$quality, P(sim)$Nsource)
+##     dist &lt;- distanceFromPoints(sim$quality, sim$sourceLocation)
+##     sim$establish &lt;- (1/dist * sim$quality) &gt; P(sim)$establishThresh
+##     sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, 
+##         &quot;annualEstablish&quot;)
+## } else if (eventType == &quot;plot&quot;) {
+##     Plot(sim$establish, title = &quot;&quot;, new = TRUE)
+##     Plot(sim$sourceLocation, addTo = &quot;sim$establish&quot;)
+##     grid.rect(x = 0.8, y = 0.9, width = 0.4, height = 0.05, gp = gpar(fill = &quot;white&quot;, 
+##         col = &quot;white&quot;))
+##     grid.text(paste(&quot;Nsource:&quot;, P(sim)$Nsource, &quot;, establishThresh:&quot;, 
+##         P(sim)$establishThresh), x = 0.8, y = 0.9)
+##     sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, 
+##         &quot;plot&quot;)
+## }
+## debug: if (eventType == &quot;plot&quot;) {
+##     Plot(sim$establish, title = &quot;&quot;, new = TRUE)
+##     Plot(sim$sourceLocation, addTo = &quot;sim$establish&quot;)
+##     grid.rect(x = 0.8, y = 0.9, width = 0.4, height = 0.05, gp = gpar(fill = &quot;white&quot;, 
+##         col = &quot;white&quot;))
+##     grid.text(paste(&quot;Nsource:&quot;, P(sim)$Nsource, &quot;, establishThresh:&quot;, 
+##         P(sim)$establishThresh), x = 0.8, y = 0.9)
+##     sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, 
+##         &quot;plot&quot;)
+## }
+## debug: Plot(sim$establish, title = &quot;&quot;, new = TRUE)
+## debug: Plot(sim$sourceLocation, addTo = &quot;sim$establish&quot;)
+## debug: grid.rect(x = 0.8, y = 0.9, width = 0.4, height = 0.05, gp = gpar(fill = &quot;white&quot;, 
+##     col = &quot;white&quot;))
+## debug: grid.text(paste(&quot;Nsource:&quot;, P(sim)$Nsource, &quot;, establishThresh:&quot;, 
+##     P(sim)$establishThresh), x = 0.8, y = 0.9)
+## debug: sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, &quot;plot&quot;)
+## debug: return(invisible(sim))
+## Called from: get(moduleCall, envir = sim@.envir)(sim, cur[[&quot;eventTime&quot;]], 
+##     cur[[&quot;eventType&quot;]], debugDoEvent)
+## debug: if (eventType == &quot;init&quot;) {
+##     sim &lt;- scheduleEvent(sim, start(sim), &quot;establishment&quot;, &quot;annualEstablish&quot;)
+##     sim &lt;- scheduleEvent(sim, P(sim)$.plotInitialTime, &quot;establishment&quot;, 
+##         &quot;plot&quot;)
+## } else if (eventType == &quot;annualEstablish&quot;) {
+##     sim$sourceLocation &lt;- initiateAgents(sim$quality, P(sim)$Nsource)
+##     dist &lt;- distanceFromPoints(sim$quality, sim$sourceLocation)
+##     sim$establish &lt;- (1/dist * sim$quality) &gt; P(sim)$establishThresh
+##     sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, 
+##         &quot;annualEstablish&quot;)
+## } else if (eventType == &quot;plot&quot;) {
+##     Plot(sim$establish, title = &quot;&quot;, new = TRUE)
+##     Plot(sim$sourceLocation, addTo = &quot;sim$establish&quot;)
+##     grid.rect(x = 0.8, y = 0.9, width = 0.4, height = 0.05, gp = gpar(fill = &quot;white&quot;, 
+##         col = &quot;white&quot;))
+##     grid.text(paste(&quot;Nsource:&quot;, P(sim)$Nsource, &quot;, establishThresh:&quot;, 
+##         P(sim)$establishThresh), x = 0.8, y = 0.9)
+##     sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, 
+##         &quot;plot&quot;)
+## }
+## debug: if (eventType == &quot;annualEstablish&quot;) {
+##     sim$sourceLocation &lt;- initiateAgents(sim$quality, P(sim)$Nsource)
+##     dist &lt;- distanceFromPoints(sim$quality, sim$sourceLocation)
+##     sim$establish &lt;- (1/dist * sim$quality) &gt; P(sim)$establishThresh
+##     sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, 
+##         &quot;annualEstablish&quot;)
+## } else if (eventType == &quot;plot&quot;) {
+##     Plot(sim$establish, title = &quot;&quot;, new = TRUE)
+##     Plot(sim$sourceLocation, addTo = &quot;sim$establish&quot;)
+##     grid.rect(x = 0.8, y = 0.9, width = 0.4, height = 0.05, gp = gpar(fill = &quot;white&quot;, 
+##         col = &quot;white&quot;))
+##     grid.text(paste(&quot;Nsource:&quot;, P(sim)$Nsource, &quot;, establishThresh:&quot;, 
+##         P(sim)$establishThresh), x = 0.8, y = 0.9)
+##     sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, 
+##         &quot;plot&quot;)
+## }
+## debug: sim$sourceLocation &lt;- initiateAgents(sim$quality, P(sim)$Nsource)
+## debug: dist &lt;- distanceFromPoints(sim$quality, sim$sourceLocation)
+## debug: sim$establish &lt;- (1/dist * sim$quality) &gt; P(sim)$establishThresh
+## debug: sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, &quot;annualEstablish&quot;)
+## debug: return(invisible(sim))
+## Called from: get(moduleCall, envir = sim@.envir)(sim, cur[[&quot;eventTime&quot;]], 
+##     cur[[&quot;eventType&quot;]], debugDoEvent)
+## debug: if (eventType == &quot;init&quot;) {
+##     sim &lt;- scheduleEvent(sim, start(sim), &quot;establishment&quot;, &quot;annualEstablish&quot;)
+##     sim &lt;- scheduleEvent(sim, P(sim)$.plotInitialTime, &quot;establishment&quot;, 
+##         &quot;plot&quot;)
+## } else if (eventType == &quot;annualEstablish&quot;) {
+##     sim$sourceLocation &lt;- initiateAgents(sim$quality, P(sim)$Nsource)
+##     dist &lt;- distanceFromPoints(sim$quality, sim$sourceLocation)
+##     sim$establish &lt;- (1/dist * sim$quality) &gt; P(sim)$establishThresh
+##     sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, 
+##         &quot;annualEstablish&quot;)
+## } else if (eventType == &quot;plot&quot;) {
+##     Plot(sim$establish, title = &quot;&quot;, new = TRUE)
+##     Plot(sim$sourceLocation, addTo = &quot;sim$establish&quot;)
+##     grid.rect(x = 0.8, y = 0.9, width = 0.4, height = 0.05, gp = gpar(fill = &quot;white&quot;, 
+##         col = &quot;white&quot;))
+##     grid.text(paste(&quot;Nsource:&quot;, P(sim)$Nsource, &quot;, establishThresh:&quot;, 
+##         P(sim)$establishThresh), x = 0.8, y = 0.9)
+##     sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, 
+##         &quot;plot&quot;)
+## }
+## debug: if (eventType == &quot;annualEstablish&quot;) {
+##     sim$sourceLocation &lt;- initiateAgents(sim$quality, P(sim)$Nsource)
+##     dist &lt;- distanceFromPoints(sim$quality, sim$sourceLocation)
+##     sim$establish &lt;- (1/dist * sim$quality) &gt; P(sim)$establishThresh
+##     sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, 
+##         &quot;annualEstablish&quot;)
+## } else if (eventType == &quot;plot&quot;) {
+##     Plot(sim$establish, title = &quot;&quot;, new = TRUE)
+##     Plot(sim$sourceLocation, addTo = &quot;sim$establish&quot;)
+##     grid.rect(x = 0.8, y = 0.9, width = 0.4, height = 0.05, gp = gpar(fill = &quot;white&quot;, 
+##         col = &quot;white&quot;))
+##     grid.text(paste(&quot;Nsource:&quot;, P(sim)$Nsource, &quot;, establishThresh:&quot;, 
+##         P(sim)$establishThresh), x = 0.8, y = 0.9)
+##     sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, 
+##         &quot;plot&quot;)
+## }
+## debug: if (eventType == &quot;plot&quot;) {
+##     Plot(sim$establish, title = &quot;&quot;, new = TRUE)
+##     Plot(sim$sourceLocation, addTo = &quot;sim$establish&quot;)
+##     grid.rect(x = 0.8, y = 0.9, width = 0.4, height = 0.05, gp = gpar(fill = &quot;white&quot;, 
+##         col = &quot;white&quot;))
+##     grid.text(paste(&quot;Nsource:&quot;, P(sim)$Nsource, &quot;, establishThresh:&quot;, 
+##         P(sim)$establishThresh), x = 0.8, y = 0.9)
+##     sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, 
+##         &quot;plot&quot;)
+## }
+## debug: Plot(sim$establish, title = &quot;&quot;, new = TRUE)
+## debug: Plot(sim$sourceLocation, addTo = &quot;sim$establish&quot;)
+## debug: grid.rect(x = 0.8, y = 0.9, width = 0.4, height = 0.05, gp = gpar(fill = &quot;white&quot;, 
+##     col = &quot;white&quot;))
+## debug: grid.text(paste(&quot;Nsource:&quot;, P(sim)$Nsource, &quot;, establishThresh:&quot;, 
+##     P(sim)$establishThresh), x = 0.8, y = 0.9)
+## debug: sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, &quot;plot&quot;)
+## debug: return(invisible(sim))
+## Called from: get(moduleCall, envir = sim@.envir)(sim, cur[[&quot;eventTime&quot;]], 
+##     cur[[&quot;eventType&quot;]], debugDoEvent)
+## debug: if (eventType == &quot;init&quot;) {
+##     sim &lt;- scheduleEvent(sim, start(sim), &quot;establishment&quot;, &quot;annualEstablish&quot;)
+##     sim &lt;- scheduleEvent(sim, P(sim)$.plotInitialTime, &quot;establishment&quot;, 
+##         &quot;plot&quot;)
+## } else if (eventType == &quot;annualEstablish&quot;) {
+##     sim$sourceLocation &lt;- initiateAgents(sim$quality, P(sim)$Nsource)
+##     dist &lt;- distanceFromPoints(sim$quality, sim$sourceLocation)
+##     sim$establish &lt;- (1/dist * sim$quality) &gt; P(sim)$establishThresh
+##     sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, 
+##         &quot;annualEstablish&quot;)
+## } else if (eventType == &quot;plot&quot;) {
+##     Plot(sim$establish, title = &quot;&quot;, new = TRUE)
+##     Plot(sim$sourceLocation, addTo = &quot;sim$establish&quot;)
+##     grid.rect(x = 0.8, y = 0.9, width = 0.4, height = 0.05, gp = gpar(fill = &quot;white&quot;, 
+##         col = &quot;white&quot;))
+##     grid.text(paste(&quot;Nsource:&quot;, P(sim)$Nsource, &quot;, establishThresh:&quot;, 
+##         P(sim)$establishThresh), x = 0.8, y = 0.9)
+##     sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, 
+##         &quot;plot&quot;)
+## }
+## debug: if (eventType == &quot;annualEstablish&quot;) {
+##     sim$sourceLocation &lt;- initiateAgents(sim$quality, P(sim)$Nsource)
+##     dist &lt;- distanceFromPoints(sim$quality, sim$sourceLocation)
+##     sim$establish &lt;- (1/dist * sim$quality) &gt; P(sim)$establishThresh
+##     sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, 
+##         &quot;annualEstablish&quot;)
+## } else if (eventType == &quot;plot&quot;) {
+##     Plot(sim$establish, title = &quot;&quot;, new = TRUE)
+##     Plot(sim$sourceLocation, addTo = &quot;sim$establish&quot;)
+##     grid.rect(x = 0.8, y = 0.9, width = 0.4, height = 0.05, gp = gpar(fill = &quot;white&quot;, 
+##         col = &quot;white&quot;))
+##     grid.text(paste(&quot;Nsource:&quot;, P(sim)$Nsource, &quot;, establishThresh:&quot;, 
+##         P(sim)$establishThresh), x = 0.8, y = 0.9)
+##     sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, 
+##         &quot;plot&quot;)
+## }
+## debug: sim$sourceLocation &lt;- initiateAgents(sim$quality, P(sim)$Nsource)
+## debug: dist &lt;- distanceFromPoints(sim$quality, sim$sourceLocation)
+## debug: sim$establish &lt;- (1/dist * sim$quality) &gt; P(sim)$establishThresh
+## debug: sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, &quot;annualEstablish&quot;)
+## debug: return(invisible(sim))
+## Called from: get(moduleCall, envir = sim@.envir)(sim, cur[[&quot;eventTime&quot;]], 
+##     cur[[&quot;eventType&quot;]], debugDoEvent)
+## debug: if (eventType == &quot;init&quot;) {
+##     sim &lt;- scheduleEvent(sim, start(sim), &quot;establishment&quot;, &quot;annualEstablish&quot;)
+##     sim &lt;- scheduleEvent(sim, P(sim)$.plotInitialTime, &quot;establishment&quot;, 
+##         &quot;plot&quot;)
+## } else if (eventType == &quot;annualEstablish&quot;) {
+##     sim$sourceLocation &lt;- initiateAgents(sim$quality, P(sim)$Nsource)
+##     dist &lt;- distanceFromPoints(sim$quality, sim$sourceLocation)
+##     sim$establish &lt;- (1/dist * sim$quality) &gt; P(sim)$establishThresh
+##     sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, 
+##         &quot;annualEstablish&quot;)
+## } else if (eventType == &quot;plot&quot;) {
+##     Plot(sim$establish, title = &quot;&quot;, new = TRUE)
+##     Plot(sim$sourceLocation, addTo = &quot;sim$establish&quot;)
+##     grid.rect(x = 0.8, y = 0.9, width = 0.4, height = 0.05, gp = gpar(fill = &quot;white&quot;, 
+##         col = &quot;white&quot;))
+##     grid.text(paste(&quot;Nsource:&quot;, P(sim)$Nsource, &quot;, establishThresh:&quot;, 
+##         P(sim)$establishThresh), x = 0.8, y = 0.9)
+##     sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, 
+##         &quot;plot&quot;)
+## }
+## debug: if (eventType == &quot;annualEstablish&quot;) {
+##     sim$sourceLocation &lt;- initiateAgents(sim$quality, P(sim)$Nsource)
+##     dist &lt;- distanceFromPoints(sim$quality, sim$sourceLocation)
+##     sim$establish &lt;- (1/dist * sim$quality) &gt; P(sim)$establishThresh
+##     sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, 
+##         &quot;annualEstablish&quot;)
+## } else if (eventType == &quot;plot&quot;) {
+##     Plot(sim$establish, title = &quot;&quot;, new = TRUE)
+##     Plot(sim$sourceLocation, addTo = &quot;sim$establish&quot;)
+##     grid.rect(x = 0.8, y = 0.9, width = 0.4, height = 0.05, gp = gpar(fill = &quot;white&quot;, 
+##         col = &quot;white&quot;))
+##     grid.text(paste(&quot;Nsource:&quot;, P(sim)$Nsource, &quot;, establishThresh:&quot;, 
+##         P(sim)$establishThresh), x = 0.8, y = 0.9)
+##     sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, 
+##         &quot;plot&quot;)
+## }
+## debug: if (eventType == &quot;plot&quot;) {
+##     Plot(sim$establish, title = &quot;&quot;, new = TRUE)
+##     Plot(sim$sourceLocation, addTo = &quot;sim$establish&quot;)
+##     grid.rect(x = 0.8, y = 0.9, width = 0.4, height = 0.05, gp = gpar(fill = &quot;white&quot;, 
+##         col = &quot;white&quot;))
+##     grid.text(paste(&quot;Nsource:&quot;, P(sim)$Nsource, &quot;, establishThresh:&quot;, 
+##         P(sim)$establishThresh), x = 0.8, y = 0.9)
+##     sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, 
+##         &quot;plot&quot;)
+## }
+## debug: Plot(sim$establish, title = &quot;&quot;, new = TRUE)
+## debug: Plot(sim$sourceLocation, addTo = &quot;sim$establish&quot;)
+## debug: grid.rect(x = 0.8, y = 0.9, width = 0.4, height = 0.05, gp = gpar(fill = &quot;white&quot;, 
+##     col = &quot;white&quot;))
+## debug: grid.text(paste(&quot;Nsource:&quot;, P(sim)$Nsource, &quot;, establishThresh:&quot;, 
+##     P(sim)$establishThresh), x = 0.8, y = 0.9)
+## debug: sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, &quot;plot&quot;)
+## debug: return(invisible(sim))
+## Called from: get(moduleCall, envir = sim@.envir)(sim, cur[[&quot;eventTime&quot;]], 
+##     cur[[&quot;eventType&quot;]], debugDoEvent)
+## debug: if (eventType == &quot;init&quot;) {
+##     sim &lt;- scheduleEvent(sim, start(sim), &quot;establishment&quot;, &quot;annualEstablish&quot;)
+##     sim &lt;- scheduleEvent(sim, P(sim)$.plotInitialTime, &quot;establishment&quot;, 
+##         &quot;plot&quot;)
+## } else if (eventType == &quot;annualEstablish&quot;) {
+##     sim$sourceLocation &lt;- initiateAgents(sim$quality, P(sim)$Nsource)
+##     dist &lt;- distanceFromPoints(sim$quality, sim$sourceLocation)
+##     sim$establish &lt;- (1/dist * sim$quality) &gt; P(sim)$establishThresh
+##     sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, 
+##         &quot;annualEstablish&quot;)
+## } else if (eventType == &quot;plot&quot;) {
+##     Plot(sim$establish, title = &quot;&quot;, new = TRUE)
+##     Plot(sim$sourceLocation, addTo = &quot;sim$establish&quot;)
+##     grid.rect(x = 0.8, y = 0.9, width = 0.4, height = 0.05, gp = gpar(fill = &quot;white&quot;, 
+##         col = &quot;white&quot;))
+##     grid.text(paste(&quot;Nsource:&quot;, P(sim)$Nsource, &quot;, establishThresh:&quot;, 
+##         P(sim)$establishThresh), x = 0.8, y = 0.9)
+##     sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, 
+##         &quot;plot&quot;)
+## }
+## debug: if (eventType == &quot;annualEstablish&quot;) {
+##     sim$sourceLocation &lt;- initiateAgents(sim$quality, P(sim)$Nsource)
+##     dist &lt;- distanceFromPoints(sim$quality, sim$sourceLocation)
+##     sim$establish &lt;- (1/dist * sim$quality) &gt; P(sim)$establishThresh
+##     sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, 
+##         &quot;annualEstablish&quot;)
+## } else if (eventType == &quot;plot&quot;) {
+##     Plot(sim$establish, title = &quot;&quot;, new = TRUE)
+##     Plot(sim$sourceLocation, addTo = &quot;sim$establish&quot;)
+##     grid.rect(x = 0.8, y = 0.9, width = 0.4, height = 0.05, gp = gpar(fill = &quot;white&quot;, 
+##         col = &quot;white&quot;))
+##     grid.text(paste(&quot;Nsource:&quot;, P(sim)$Nsource, &quot;, establishThresh:&quot;, 
+##         P(sim)$establishThresh), x = 0.8, y = 0.9)
+##     sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, 
+##         &quot;plot&quot;)
+## }
+## debug: sim$sourceLocation &lt;- initiateAgents(sim$quality, P(sim)$Nsource)
+## debug: dist &lt;- distanceFromPoints(sim$quality, sim$sourceLocation)
+## debug: sim$establish &lt;- (1/dist * sim$quality) &gt; P(sim)$establishThresh
+## debug: sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, &quot;annualEstablish&quot;)
+## debug: return(invisible(sim))
+## Called from: get(moduleCall, envir = sim@.envir)(sim, cur[[&quot;eventTime&quot;]], 
+##     cur[[&quot;eventType&quot;]], debugDoEvent)
+## debug: if (eventType == &quot;init&quot;) {
+##     sim &lt;- scheduleEvent(sim, start(sim), &quot;establishment&quot;, &quot;annualEstablish&quot;)
+##     sim &lt;- scheduleEvent(sim, P(sim)$.plotInitialTime, &quot;establishment&quot;, 
+##         &quot;plot&quot;)
+## } else if (eventType == &quot;annualEstablish&quot;) {
+##     sim$sourceLocation &lt;- initiateAgents(sim$quality, P(sim)$Nsource)
+##     dist &lt;- distanceFromPoints(sim$quality, sim$sourceLocation)
+##     sim$establish &lt;- (1/dist * sim$quality) &gt; P(sim)$establishThresh
+##     sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, 
+##         &quot;annualEstablish&quot;)
+## } else if (eventType == &quot;plot&quot;) {
+##     Plot(sim$establish, title = &quot;&quot;, new = TRUE)
+##     Plot(sim$sourceLocation, addTo = &quot;sim$establish&quot;)
+##     grid.rect(x = 0.8, y = 0.9, width = 0.4, height = 0.05, gp = gpar(fill = &quot;white&quot;, 
+##         col = &quot;white&quot;))
+##     grid.text(paste(&quot;Nsource:&quot;, P(sim)$Nsource, &quot;, establishThresh:&quot;, 
+##         P(sim)$establishThresh), x = 0.8, y = 0.9)
+##     sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, 
+##         &quot;plot&quot;)
+## }
+## debug: if (eventType == &quot;annualEstablish&quot;) {
+##     sim$sourceLocation &lt;- initiateAgents(sim$quality, P(sim)$Nsource)
+##     dist &lt;- distanceFromPoints(sim$quality, sim$sourceLocation)
+##     sim$establish &lt;- (1/dist * sim$quality) &gt; P(sim)$establishThresh
+##     sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, 
+##         &quot;annualEstablish&quot;)
+## } else if (eventType == &quot;plot&quot;) {
+##     Plot(sim$establish, title = &quot;&quot;, new = TRUE)
+##     Plot(sim$sourceLocation, addTo = &quot;sim$establish&quot;)
+##     grid.rect(x = 0.8, y = 0.9, width = 0.4, height = 0.05, gp = gpar(fill = &quot;white&quot;, 
+##         col = &quot;white&quot;))
+##     grid.text(paste(&quot;Nsource:&quot;, P(sim)$Nsource, &quot;, establishThresh:&quot;, 
+##         P(sim)$establishThresh), x = 0.8, y = 0.9)
+##     sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, 
+##         &quot;plot&quot;)
+## }
+## debug: if (eventType == &quot;plot&quot;) {
+##     Plot(sim$establish, title = &quot;&quot;, new = TRUE)
+##     Plot(sim$sourceLocation, addTo = &quot;sim$establish&quot;)
+##     grid.rect(x = 0.8, y = 0.9, width = 0.4, height = 0.05, gp = gpar(fill = &quot;white&quot;, 
+##         col = &quot;white&quot;))
+##     grid.text(paste(&quot;Nsource:&quot;, P(sim)$Nsource, &quot;, establishThresh:&quot;, 
+##         P(sim)$establishThresh), x = 0.8, y = 0.9)
+##     sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, 
+##         &quot;plot&quot;)
+## }
+## debug: Plot(sim$establish, title = &quot;&quot;, new = TRUE)
+## debug: Plot(sim$sourceLocation, addTo = &quot;sim$establish&quot;)
+## debug: grid.rect(x = 0.8, y = 0.9, width = 0.4, height = 0.05, gp = gpar(fill = &quot;white&quot;, 
+##     col = &quot;white&quot;))
+## debug: grid.text(paste(&quot;Nsource:&quot;, P(sim)$Nsource, &quot;, establishThresh:&quot;, 
+##     P(sim)$establishThresh), x = 0.8, y = 0.9)
+## debug: sim &lt;- scheduleEvent(sim, time(sim) + 1, &quot;establishment&quot;, &quot;plot&quot;)
+## debug: return(invisible(sim))</code></pre>
 <div id="plotting" class="section level2">
 <h2>Plotting</h2>
 <p>The main plot is simply a map of where establishment will occur.</p>
@@ -171,7 +1274,6 @@ $(document).ready(function () {
 <div id="experiment" class="section level1">
 <h1>Experiment</h1>
 <p>What happens when we vary the number of source locations and the threshold for establishment?</p>
-<p><img src="data:image/png;base64,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" width="672" /><img src="data:image/png;base64,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" width="672" /></p>
 </div>
 <div id="data-dependencies" class="section level1">
 <h1>Data dependencies</h1>
