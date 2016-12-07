@@ -1,8 +1,10 @@
 ---
 title: "establishment"
-author: ""
+author: ''
 date: "15 November 2016"
-output: pdf_document
+output:
+  html_document: default
+  pdf_document: default
 ---
 
 # Overview
@@ -10,9 +12,8 @@ output: pdf_document
 This is a very simple 'spread and establish' module. It has a contagious component, it evaluates conditions in a set of "starting" locations on a raster and a set of "potential arriving locations". This could emulate dispersal of many types of species, where the abundance of a set of locations determines how many "things" (e.g., seeds or insects) leave, and the "quality" of a set of locations which determines how many "things" land and establish.
 
 
-## Teaching
 
-This is currently used in teaching.
+**This is currently used in teaching.**
 
 # Usage
 
@@ -33,11 +34,16 @@ clearPlot()
 spades(mySim)
 ```
 
+## Plotting
+
+The main plot is simply a map of where establishment will occur.
+
+
 # Experiment
 
 What happens when we vary the number of source locations and the threshold for establishment?
 
-```{r, eval=TRUE}
+```{r experiment, eval=TRUE, cache=TRUE}
 
 # factorial experiment
 expList <- list(establishThresh=as.list(1:9/10), 
@@ -57,9 +63,10 @@ expDF <- cbind(expand.grid(expList),
 expDF <- data.frame(sapply(expDF, unlist, recursive = FALSE))
 
 
-g <- ggplot(expDF, aes(establishThresh, N)) +
+g <- ggplot(expDF, aes(establishThresh, Nsource)) +
   geom_raster(aes(fill=numEstablishments)) +
-  scale_fill_gradient(high="darkgreen", low="lightgreen", trans = "log",
+  scale_fill_gradient(high="darkgreen", 
+                      low="lightgreen", trans = "log",
                       breaks=c(1,10,100,500, 1000)) 
   
 
@@ -68,10 +75,6 @@ g
 
 ```
 
-
-## Plotting
-
-The plot is simply a map of where establishment will occur.
 
 
 # Data dependencies
@@ -82,9 +85,5 @@ None required. This is a teaching module that creates its own inputs.
 
 ## Output data
 
-Description of the module outputs.
-
-# Links to other modules
-
-Describe any anticipated linkages to other modules.
+A binary raster layer indicating places that were both "close" to a source, and of high enough quality to pass the establishment threshold parameter.
 
