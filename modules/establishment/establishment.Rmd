@@ -16,7 +16,7 @@ This is currently used in teaching.
 
 # Usage
 
-```{r module_usage}
+```{r module_usage, eval=TRUE}
 
 library(SpaDES)
 modulePath <- file.path(dirname(tempdir()), "modules")
@@ -37,7 +37,7 @@ spades(mySim)
 
 What happens when we vary the number of source locations and the threshold for establishment?
 
-```{r}
+```{r, eval=TRUE}
 
 # factorial experiment
 expList <- list(establishThresh=as.list(1:9/10), 
@@ -45,7 +45,7 @@ expList <- list(establishThresh=as.list(1:9/10),
 
 # Run the experiment
 set.seed(234)
-dev()
+if(interactive()) dev()
 clearPlot()
 out <- experiment(mySim, params = list(establishment = expList),
                   .plotInitialTime=NA) # turn off plotting
