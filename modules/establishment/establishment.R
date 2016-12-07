@@ -45,7 +45,7 @@ defineModule(sim, list(
   keywords = c("insert key words here"),
   authors = c(person(c("First", "Middle"), "Last", email="email@example.com", role=c("aut", "cre"))),
   childModules = character(0),
-  version = numeric_version("1.3.1.9012"),
+  version = numeric_version("0.1.0"),
   spatialExtent = raster::extent(rep(NA_real_, 4)),
   timeunit = "year",
   reqdPkgs = list("SpaDES", "raster", "grid", "sp"),

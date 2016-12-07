@@ -18,9 +18,10 @@ This is currently used in teaching.
 
 ```{r module_usage}
 
-library(igraph)
 library(SpaDES)
-setPaths(modulePath="~/GitHub/McIntire-lab/modules")
+modulePath <- file.path(dirname(tempdir()), "modules")
+downloadModule("establishment", path = modulePath)
+setPaths(modulePath=modulePath)
 library(ggplot2)
 
 modules <- list("establishment")
@@ -39,7 +40,8 @@ What happens when we vary the number of source locations and the threshold for e
 ```{r}
 
 # factorial experiment
-expList <- list(establishThresh=as.list(1:9/10), N = as.list(1:10*2))
+expList <- list(establishThresh=as.list(1:9/10), 
+                Nsource = as.list(1:10*2))
 
 # Run the experiment
 set.seed(234)
@@ -48,7 +50,7 @@ clearPlot()
 out <- experiment(mySim, params = list(establishment = expList),
                   .plotInitialTime=NA) # turn off plotting
 
-# plot the experiment
+# plot the experiment -- how many establish by parameter combo
 expDF <- cbind(expand.grid(expList), 
                numEstablishments=
                  (sapply(out, function(sim) sum(sim$establish[]))))
