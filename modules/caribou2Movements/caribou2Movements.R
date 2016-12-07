@@ -1,4 +1,4 @@
-stopifnot(packageVersion("SpaDES") >= "1.0.3.9028")
+stopifnot(packageVersion("SpaDES") >= "1.2.0.9009")
 
 ## Module metadata
 defineModule(sim, list(
@@ -11,14 +11,14 @@ defineModule(sim, list(
               person(c("Eliot", "J", "B"), "McIntire",
                      email = "Eliot.McIntire@NRCan.gc.ca", role = c("cre"))),
   childModules = character(),
-  version = numeric_version("1.0.1"),
+  version = numeric_version("1.0.2"),
   spatialExtent = raster::extent(rep(NA_real_, 4)),
   timeframe = as.POSIXlt(c(NA, NA)),
   timeunit = "day",
   citation = list(),
   documentation = list("README.txt", "caribou2Movements.Rmd"),
   reqdPkgs = list("sp", "maptools", "raster", "CircStats", "data.table", "rgeos"),
-  parameters=rbind(
+  parameters = rbind(
     defineParameter(".plotInitialTime", "numeric", 0, NA, NA, "time to schedule first plot event"),
     defineParameter(".plotInterval", "numeric", 1, NA, NA, "time interval between plot events"),
     defineParameter(".saveInitialTime", "numeric", NA, NA, NA, "time to schedule first save event"),
@@ -50,7 +50,7 @@ defineModule(sim, list(
                    "direction_good_winter", ##raster direction to the closest cell of good quality (winter)
                    "paved_roads"), ##raster paved roads barriers
     objectClass = c("list", "raster", "raster", "raster", "raster", "raster", "raster", "raster"),
-    sourceURL = c("https://www.dropbox.com/s/iraohbky8eifaov/inputs_caribou2Movements.RData?dl=1",
+    sourceURL = c("https://www.dropbox.com/s/iraohbky8eifaov/inputs_caribou2Movements.RData",
                   "", "", "", "", "", "", ""),
     other = rep(NA_character_, 8),
     stringsAsFactors = FALSE),
