@@ -1,0 +1,88 @@
+---
+title: "establishment"
+author: ""
+date: "15 November 2016"
+output: pdf_document
+---
+
+# Overview
+
+This is a very simple 'spread and establish' module. It has a contagious component, it evaluates conditions in a set of "starting" locations on a raster and a set of "potential arriving locations". This could emulate dispersal of many types of species, where the abundance of a set of locations determines how many "things" (e.g., seeds or insects) leave, and the "quality" of a set of locations which determines how many "things" land and establish.
+
+
+## Teaching
+
+This is currently used in teaching.
+
+# Usage
+
+```{r module_usage}
+
+library(igraph)
+library(SpaDES)
+setPaths(modulePath="~/GitHub/McIntire-lab/modules")
+library(ggplot2)
+
+modules <- list("establishment")
+
+mySim <- simInit(modules = modules)
+
+# make sure the plotting device is clear
+clearPlot()
+spades(mySim)
+```
+
+# Experiment
+
+What happens when we vary the number of source locations and the threshold for establishment?
+
+```{r}
+
+# factorial experiment
+expList <- list(establishThresh=as.list(1:9/10), N = as.list(1:10*2))
+
+# Run the experiment
+set.seed(234)
+dev()
+clearPlot()
+out <- experiment(mySim, params = list(establishment = expList),
+                  .plotInitialTime=NA) # turn off plotting
+
+# plot the experiment
+expDF <- cbind(expand.grid(expList), 
+               numEstablishments=
+                 (sapply(out, function(sim) sum(sim$establish[]))))
+expDF <- data.frame(sapply(expDF, unlist, recursive = FALSE))
+
+
+g <- ggplot(expDF, aes(establishThresh, N)) +
+  geom_raster(aes(fill=numEstablishments)) +
+  scale_fill_gradient(high="darkgreen", low="lightgreen", trans = "log",
+                      breaks=c(1,10,100,500, 1000)) 
+  
+
+g
+  
+
+```
+
+
+## Plotting
+
+The plot is simply a map of where establishment will occur.
+
+
+# Data dependencies
+
+## Input data
+
+None required. This is a teaching module that creates its own inputs.
+
+## Output data
+
+Description of the module outputs.
+
+# Links to other modules
+
+Describe any anticipated linkages to other modules.
+
