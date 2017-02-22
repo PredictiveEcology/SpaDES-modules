@@ -45,7 +45,7 @@ times <- list(start = 2005.0, end = 2020.0, timeunit = "year")
 parameters <- list(
   .globals = list(burnStats = "fireStats"),
   fireSpreadLcc = list(drought = 1.2), # in
-  caribouMovementLcc = list(N = 1e3, startTime = times$start+1, 
+  caribouMovementLcc = list(N = 1e3, startTime = times$start + 1, 
                             glmInitialTime = NA_real_)
 )
 modules <- list("LCC2005")

@@ -1,4 +1,4 @@
-stopifnot(packageVersion("SpaDES") >= "1.2.0.9009")
+stopifnot(packageVersion("SpaDES") >= "1.3.1.9043")
 
 defineModule(sim, list(
   name = "test",
@@ -8,7 +8,7 @@ defineModule(sim, list(
                      email = "alexander.chubaty@canada.ca",
                      role = c("aut", "cre"))),
   childModules = character(),
-  version = numeric_version("1.1.1"),
+  version = list(SpaDES = "1.3.1.9043", test = "1.2.0"),
   spatialExtent = raster::extent(rep(NA_real_, 4)),
   timeframe = as.POSIXlt(c(NA, NA)),
   timeunit = NA_character_, # e.g., "year,",
@@ -22,19 +22,18 @@ defineModule(sim, list(
     defineParameter(".saveInitialTime", "numeric", NA, NA, NA, "This describes the simulation time at which the first save event should occur"),
     defineParameter(".saveInterval", "numeric", NA, NA, NA, "This describes the simulation time at which the first save event should occur")
   ),
-  inputObjects = data.frame(
-    objectName = c("DEM", "habitatQuality"), # DEM is smallest; habitatQuality is largest
-    objectClass = c("RasterLayer", "RasterLayer"),
-    sourceURL = c("https://github.com/PredictiveEcology/SpaDES/raw/master/inst/maps/DEM.tif",
-                  "https://github.com/PredictiveEcology/SpaDES/raw/master/inst/maps/habitatQuality.tif"),
-    other = NA_character_,
-    stringsAsFactors = FALSE
+  inputObjects = bind_rows(
+    # DEM is smallest; habitatQuality is largest
+    expectsInput(objectName = "DEM", objectClass = "RasterLayer", desc = "",
+                 sourceURL = "https://github.com/PredictiveEcology/SpaDES/raw/master/inst/maps/DEM.tif",
+                 other = NA_character_),
+    expectsInput(objectName = "habitatQuality", objectClass = "RasterLayer", desc = "",
+                 sourceURL = "https://github.com/PredictiveEcology/SpaDES/raw/master/inst/maps/habitatQuality.tif",
+                 other = NA_character_)
   ),
-  outputObjects = data.frame(
-    objectName = NA_character_,
-    objectClass = NA_character_,
-    other = NA_character_,
-    stringsAsFactors = FALSE
+  outputObjects = bind_rows(
+    createsOutput(objectName = NA_character_, objectClass = NA_character_,
+                  desc = NA_character_, other = NA_character_)
   )
 ))
 

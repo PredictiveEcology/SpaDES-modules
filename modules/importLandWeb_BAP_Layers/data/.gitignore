@@ -1,0 +1,107 @@
+.Rapp.history
+.RData
+.Rhistory
+.Rproj.user
+.Rproj
+NetLogoR\*.Rproj
+.csv
+.log
+*.tif
+*_cache/
+cache/
+code/benchmarks/*_cache
+code/benchmarks/*/
+code/shinyOutputs/
+SpaDES/CRAN-download-data/
+SpaDES-package-downloads_cache/
+SpaDES-package-downloads_files/
+LandCoverOfCanada2005_V1_4.zip
+Yesterday*.txt
+
+*.tif
+*.dat
+*.hdr
+*.gz
+*.xml
+
+
+#################
+## LaTeX
+#################
+*.acn
+*.acr
+*.alg
+*.aux
+*.bbl
+*.blg
+*.dvi
+*.fdb_latexmk
+*.glg
+*.glo
+*.gls
+*.idx
+*.ilg
+*.ind
+*.ist
+*.lof
+*.log
+*.lot
+*.maf
+*.mtc
+*.mtc0
+*.nav
+*.nlo
+*.out
+*.pdfsync
+*.ps
+*.snm
+*.synctex.gz
+*.toc
+*.vrb
+*.xdy
+*.tdo
+# Windows image file caches
+Thumbs.db
+ehthumbs.db
+# Folder config file
+Desktop.ini
+# Recycle Bin used on file shares
+$RECYCLE.BIN/
+# Windows Installer files
+*.cab
+*.msi
+*.msm
+*.msp
+# Windows shortcuts
+*.lnk
+# =========================
+# Operating System Files
+# =========================
+# OSX
+# =========================
+.DS_Store
+.AppleDouble
+.LSOverride
+# Thumbnails
+._*
+# Files that might appear on external disk
+.Spotlight-V100
+.Trashes
+# Directories potentially created on remote AFP share
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+Rplots.pdf
+cache*/gallery/*.rda
+cache*
+Huge.RData
+gallery/*
+backpack.db
+manuscripts/01-SpaDES_intro/linenumbers.tex.bak
+*.tif
+objectiveFnValues.txt
+objectiveFnValues_RawPattern.txt
+Rplots1.pdf
+McIntire-lab.Rproj

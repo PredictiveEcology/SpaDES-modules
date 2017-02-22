@@ -51,7 +51,13 @@ times <- list(start = 1, end = 10)
 
 clearPlot()
 mySim <- simInit(times = times, params = parameters, modules = modules)
-mySim1 <- spades(copy(mySim))
+mySim1 <- spades(Copy(mySim))
+```
+
+### Run with shiny
+
+```{r shiny}
+shine(mySim)
 ```
 
 ## Alternate seeds

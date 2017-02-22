@@ -58,6 +58,10 @@ doEvent.cropReprojectLccAge <- function(sim, eventTime, eventType, debug = FALSE
 
 ### template initilization
 cropReprojectLccInit <- function(sim) {
+  if (proj4string(inputMapPolygon) != proj4string(lcc05)) {
+    inputMapPolygon <- spTransform(inputMapPolygon, CRS(proj4string(lcc05)))
+  }
+
   totalArea <- rgeos::gArea(inputMapPolygon) / 1e4
   if (totalArea > 100e6) {
     stop("In the current implementation, please select another, smaller polygon",
@@ -140,7 +144,7 @@ cropReprojectLccCacheFunctions <- function(sim) {
             files = "LCC2005_V1_4a.tif",
             exdir = file.path(modulePath(sim), "LccToBeaconsReclassify", "data"))
     }
-    
+
     sim$age <- raster::raster(file.path(modulePath(sim), "forestAge", "data", "can_age04_1km.tif"))
     sim$lcc05 <- raster::raster(file.path(modulePath(sim), "LccToBeaconsReclassify", "data", "LCC2005_V1_4a.tif"))
   }
