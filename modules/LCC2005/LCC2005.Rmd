@@ -1,11 +1,13 @@
 ---
 title: "LCC2005"
 author: "Alex Chubaty & Eliot McIntire" 
-date: "07 September 2016"
+date: "12 May 2017"
 output: html_document
 ---
 
-This is an example model of forest dynamics. It includes simple versions of forest succession in Canada's boreal forest, a simple cellular automaton fire model, some GIS data operations to select subset areas of a larger dataset, a reclassification module from a many-class land cover to a few-class land cover and a simple agent movement model. These are all toy versions of each of these types and so are not useful for real world applications; but they allow highlighting of some of SpaDES's capabilities.
+This is an example model of forest dynamics.
+It includes simple versions of forest succession in Canada's boreal forest, a simple cellular automaton fire model, some GIS data operations to select subset areas of a larger dataset, a reclassification module from a many-class land cover to a few-class land cover, and a simple agent movement model.
+These are all toy versions of each of these types and so are not useful for real world applications; but they allow highlighting of some of `SpaDES`'s capabilities.
 
 This example uses the notion of a 'module group' or 'parent' module that contains several child modules:
 
@@ -18,21 +20,19 @@ This example uses the notion of a 'module group' or 'parent' module that contain
 
 This code also shows how modules can have different time units, specifically, the child modules which have 2 different time units (month for caribou, year for others).
 
-The code will download all modules and data required to run the spades call at the end.
-If this is running on a Windows OS or on an OS X machine, the visualizations will be quick because a device will be opened that is not within RStudio.
-On a Linux, this will not occur, so visualization will be slow (RStudio graphics device is slow).
+The code will download all modules and data required to run the `spades` call at the end.
+Visualizations will be quick because a device will be opened that is not within RStudio.
 
 ```{r download-modules, eval=FALSE}
 library(SpaDES)
 
-# pick a directory to download modules and data to. Can use a temp directory
+# pick a directory to download modules and data to
 workDirectory <- file.path(dirname(tempdir()), "Lcc2005")
 moduleDir <- file.path(workDirectory, "modules")
 checkPath(moduleDir, create = TRUE)
 
 downloadModule("LCC2005", moduleDir) # default `data=FALSE` doesn't download data
 ```
-
 
 Module groups make loading multiple modules easier: only the name of the module group needs to be specified in the `simInit` call, which will then initialize the simulation with the child modules.
 
@@ -59,14 +59,13 @@ paths <- list(
 # This next step will download data if they do not yet exist locally
 mySim <- simInit(times = times, params = parameters, modules = modules,
                  paths = paths)
-
 ```
 
-Now that the `mySim` object has been initialized, we can run the simulation by calling
-`spades`
+Now that the `mySim` object has been initialized, we can run the simulation by calling `spades`:
 
 ```{r run-SpaDES, eval=FALSE}
-dev() # on Windows and Mac, this opens external device if using Rstudio, it is faster
+dev.useRSGD(FALSE) # do not use Rstudio graphics device
+dev() # opens external (non-RStudio) device, which is faster
 clearPlot()
 
 mySimOut <- spades(mySim)
@@ -75,7 +74,6 @@ mySimOut <- spades(mySim)
 Plot(mySimOut$lcc05, title = "Land Cover, with simulated area")
 # Plot small Yellow polygon showing area simulated
 Plot(mySimOut$inputMapPolygon, addTo = "mySimOut$lcc05", gp = gpar(col = "yellow", lwd = 2))
-
 ```
 
 In addition to running a model, there are many things built into SpaDES that allow a user to explore the modules and models.
@@ -98,5 +96,4 @@ ls.str(mySimOut)
 
 # show parameters that can easily be changed in simInit call
 params(mySim)
-
 ```

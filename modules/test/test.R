@@ -1,4 +1,4 @@
-stopifnot(packageVersion("SpaDES") >= "1.3.1.9043")
+stopifnot(packageVersion("SpaDES") >= "2.0.0")
 
 defineModule(sim, list(
   name = "test",
@@ -8,7 +8,7 @@ defineModule(sim, list(
                      email = "alexander.chubaty@canada.ca",
                      role = c("aut", "cre"))),
   childModules = character(),
-  version = list(SpaDES = "1.3.1.9043", test = "1.2.0"),
+  version = list(SpaDES = "2.0.0", test = "1.3.0"),
   spatialExtent = raster::extent(rep(NA_real_, 4)),
   timeframe = as.POSIXlt(c(NA, NA)),
   timeunit = NA_character_, # e.g., "year,",
@@ -25,10 +25,10 @@ defineModule(sim, list(
   inputObjects = bind_rows(
     # DEM is smallest; habitatQuality is largest
     expectsInput(objectName = "DEM", objectClass = "RasterLayer", desc = "",
-                 sourceURL = "https://github.com/PredictiveEcology/SpaDES/raw/master/inst/maps/DEM.tif",
+                 sourceURL = "https://github.com/PredictiveEcology/quickPlot/raw/master/inst/maps/DEM.tif",
                  other = NA_character_),
     expectsInput(objectName = "habitatQuality", objectClass = "RasterLayer", desc = "",
-                 sourceURL = "https://github.com/PredictiveEcology/SpaDES/raw/master/inst/maps/habitatQuality.tif",
+                 sourceURL = "https://github.com/PredictiveEcology/quickPlot/raw/master/inst/maps/habitatQuality.tif",
                  other = NA_character_)
   ),
   outputObjects = bind_rows(
