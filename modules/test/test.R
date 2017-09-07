@@ -25,10 +25,10 @@ defineModule(sim, list(
   inputObjects = bind_rows(
     # DEM is smallest; habitatQuality is largest
     expectsInput(objectName = "DEM", objectClass = "RasterLayer", desc = "",
-                 sourceURL = "https://github.com/PredictiveEcology/quickPlot/raw/master/inst/maps/DEM.tif",
+                 sourceURL = "https://raw.githubusercontent.com/PredictiveEcology/quickPlot/master/inst/maps/DEM.tif",
                  other = NA_character_),
     expectsInput(objectName = "habitatQuality", objectClass = "RasterLayer", desc = "",
-                 sourceURL = "https://github.com/PredictiveEcology/quickPlot/raw/master/inst/maps/habitatQuality.tif",
+                 sourceURL = "https://raw.githubusercontent.com/PredictiveEcology/quickPlot/master/inst/maps/habitatQuality.tif",
                  other = NA_character_)
   ),
   outputObjects = bind_rows(
