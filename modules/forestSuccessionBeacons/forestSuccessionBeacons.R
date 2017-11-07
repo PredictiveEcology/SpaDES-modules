@@ -43,7 +43,7 @@ defineModule(sim, list(
 doEvent.forestSuccessionBeacons <- function(sim, eventTime, eventType, debug = FALSE) {
   if (eventType == "init") {
     # do stuff for this event
-    sim <- sim$forestSuccessionInit(sim)
+    sim <- forestSuccessionInit(sim)
 
     # schedule the next event
     sim <- scheduleEvent(sim, params(sim)$forestSuccessionBeacons$startTime,
@@ -52,7 +52,7 @@ doEvent.forestSuccessionBeacons <- function(sim, eventTime, eventType, debug = F
                          "forestSuccessionBeacons", "plot.init", .last())
   } else if (eventType == "succession") {
     # do stuff for this event
-    sim <- sim$forestSuccessionSuccession(sim)
+    sim <- forestSuccessionSuccession(sim)
 
     # schedule the next event
     sim <- scheduleEvent(sim, time(sim) +
