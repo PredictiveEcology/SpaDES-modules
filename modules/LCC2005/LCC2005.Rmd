@@ -26,20 +26,30 @@ Visualizations will be quick because a device will be opened that is not within 
 ```{r download-modules, eval=FALSE}
 library(SpaDES)
 
-# pick a directory to download modules and data to
+# set the main working directory
 workDirectory <- file.path(dirname(tempdir()), "Lcc2005")
+
+# set the directories
+inputDir <-  file.path(workDirectory, "simInputs")
 moduleDir <- file.path(workDirectory, "modules")
+outputDir <- file.path(workDirectory, "simOutputs")
+cacheDir <- file.path(workDirectory, "cache")
+
+setPaths(modulePath = moduleDir, inputPath = inputDir, outputPath = outputDir, cachePath = cacheDir)
+
+# Alternatively, directory paths can be created using `checkPaths`
 checkPath(moduleDir, create = TRUE)
 
 downloadModule("LCC2005", moduleDir) # default `data=FALSE` doesn't download data
+
 ```
 
-Module groups make loading multiple modules easier: only the name of the module group needs to be specified in the `simInit` call, which will then initialize the simulation with the child modules.
+
+
+"LCC2005" is a module group. Module groups make loading multiple modules easier: only the name of the module group needs to be specified in the `simInit` call, which will then initialize the simulation with the child modules. 
 
 ```{r module-group-init, eval=FALSE}
 # setup simulation
-outputDir <- file.path(workDirectory, "simOutputs")
-cacheDir <- checkPath(file.path(outputDir, "cache"), create = TRUE)
 
 times <- list(start = 2005.0, end = 2020.0, timeunit = "year")
 parameters <- list(
@@ -52,11 +62,11 @@ modules <- list("LCC2005")
 paths <- list(
   cachePath = cacheDir,
   modulePath = moduleDir,
-  inputPath = moduleDir,
+  inputPath = inputDir,
   outputPath = outputDir
 )
 
-# This next step will download data if they do not yet exist locally
+# This next step will set up the simulation using the defined parameters. It will also download data if they do not yet exist locally
 mySim <- simInit(times = times, params = parameters, modules = modules,
                  paths = paths)
 ```
