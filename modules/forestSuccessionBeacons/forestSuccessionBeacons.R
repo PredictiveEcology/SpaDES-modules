@@ -41,7 +41,9 @@ defineModule(sim, list(
 
 ### event functions
 doEvent.forestSuccessionBeacons <- function(sim, eventTime, eventType, debug = FALSE) {
-  if (eventType == "init") {
+  switch(
+    eventType,
+    init = {
     # do stuff for this event
     sim <- forestSuccessionInit(sim)
 
@@ -50,7 +52,8 @@ doEvent.forestSuccessionBeacons <- function(sim, eventTime, eventType, debug = F
                          "forestSuccessionBeacons", "succession")
     sim <- scheduleEvent(sim, params(sim)$forestSuccessionBeacons$.plotInitialTime,
                          "forestSuccessionBeacons", "plot.init", .last())
-  } else if (eventType == "succession") {
+  },
+    succession = {
     # do stuff for this event
     sim <- forestSuccessionSuccession(sim)
 
@@ -58,7 +61,8 @@ doEvent.forestSuccessionBeacons <- function(sim, eventTime, eventType, debug = F
     sim <- scheduleEvent(sim, time(sim) +
                            params(sim)$forestSuccessionBeacons$returnInterval,
                          "forestSuccessionBeacons", "succession")
-  } else if (eventType == "plot.init") {
+  },
+    plot.init = {
     # do stuff for this event
     Plot(sim$vegMap)
     Plot(sim$trajMap)
@@ -67,7 +71,8 @@ doEvent.forestSuccessionBeacons <- function(sim, eventTime, eventType, debug = F
     sim <- scheduleEvent(sim, time(sim) +
                            params(sim)$forestSuccessionBeacons$.plotInterval,
                          "forestSuccessionBeacons", "plot", .last())
-  } else if (eventType == "plot") {
+  },
+    plot = {
     # do stuff for this event
     Plot(sim$vegMap)
 
@@ -95,13 +100,15 @@ doEvent.forestSuccessionBeacons <- function(sim, eventTime, eventType, debug = F
     sim <- scheduleEvent(sim, time(sim) +
                            params(sim)$forestSuccessionBeacons$.plotInterval,
                          "forestSuccessionBeacons", "plot", .last())
-  } else {
+  },
+
     warning(paste(
       "Undefined event type: \'", events(sim)[1,"eventType", with = FALSE],
       "\' in module \'", events(sim)[1, "moduleName", with = FALSE], "\'",
       sep = ""
     ))
-  }
+  )
+
   return(invisible(sim))
 }
 
