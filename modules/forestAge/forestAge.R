@@ -39,7 +39,9 @@ defineModule(sim, list(
 
 ### event functions
 doEvent.forestAge <- function(sim, eventTime, eventType, debug = FALSE) {
-  if (eventType == "init") {
+  switch(
+    eventType,
+    init = {
     ### check for object dependencies:
     ### (use `checkObject` or similar)
 
@@ -50,7 +52,8 @@ doEvent.forestAge <- function(sim, eventTime, eventType, debug = FALSE) {
     sim <- scheduleEvent(sim, params(sim)$forestAge$startTime, "forestAge", "age")
     sim <- scheduleEvent(sim, params(sim)$forestAge$.plotInitialTime, "forestAge", "plot.init")
 
-  } else if (eventType == "age") {
+  },
+    age = {
       # do stuff for this event
     sim <- sim$forestAgeAge(sim)
 
@@ -58,27 +61,28 @@ doEvent.forestAge <- function(sim, eventTime, eventType, debug = FALSE) {
     sim <- scheduleEvent(sim, time(sim) +
                              params(sim)$forestAge$returnInterval,
                          "forestAge", "age")
-  } else if (eventType == "plot.init") {
+  },
+  plot.init = {
     # do stuff for this event
     Plot(sim$ageMap, legendRange = c(0, 200))
 
     # schedule the next event
     sim <- scheduleEvent(sim, time(sim) + params(sim)$forestAge$.plotInterval,
                          "forestAge", "plot", .last())
-  } else if (eventType == "plot") {
+  }, plot = {
     # do stuff for this event
     Plot(sim$ageMap, legendRange = c(0, 200))
 
     # schedule the next event
     sim <- scheduleEvent(sim, time(sim) + params(sim)$forestAge$.plotInterval,
                          "forestAge", "plot", .last())
-  } else {
+  },
     warning(paste(
       "Undefined event type: \'", events(sim)[1, "eventType", with = FALSE],
       "\' in module \'", events(sim)[1, "moduleName", with = FALSE], "\'",
       sep = ""
     ))
-  }
+  )
   return(invisible(sim))
 }
 

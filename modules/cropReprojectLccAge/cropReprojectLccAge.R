@@ -40,19 +40,21 @@ defineModule(sim, list(
 ))
 
 doEvent.cropReprojectLccAge <- function(sim, eventTime, eventType, debug = FALSE) {
-  if (eventType == "init") {
+  switch(
+    eventType,
+    init = {
 
     # do stuff for this event
     sim <- cropReprojectLccCacheFunctions(sim)
     sim <- cropReprojectLccInit(sim)
 
     # schedule future event(s)
-  } else {
+  },
     warning(paste(
       "Undefined event type: '", events(sim)[1, "eventType", with = FALSE],
       "' in module '", events(sim)[1, "moduleName", with = FALSE], "'", sep = ""
     ))
-  }
+  )
   return(invisible(sim))
 }
 
