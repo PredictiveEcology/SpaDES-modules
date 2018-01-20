@@ -162,7 +162,6 @@ caribou2MovementsInit <- function(sim) {
   ## Assign the individuals a random locations inside their mating area
   matingAreas_loc_list <- list()
   for(i in 1:length(sim$unique_MA)){
-    browser()
     matingAreas_loc_list[[i]] <- dotsInPolys(sim$unique_MA[[i]],as.integer(params(sim)$caribou2Movements$N_subpop[i]),f="random",compatible=TRUE)[[1]]
   }
   matingAreas_loc <- do.call(rbind,matingAreas_loc_list)

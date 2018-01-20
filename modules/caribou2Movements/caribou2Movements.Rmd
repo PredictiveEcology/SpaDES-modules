@@ -3,6 +3,8 @@ title: "caribou2Movements"
 author: "Bauduin Sarah"
 date: "Decembre 2015"
 output: pdf_document
+editor_options: 
+  chunk_output_type: console
 ---
 
 # Overview
@@ -27,9 +29,9 @@ In the FL, individuals perform loops going away and back to their last visited h
 library(SpaDES)
 library(googledrive)
 
-path_module <- file.path("~","Documents","GitHub","McIntire-lab","modulesPrivate")
+path_module <- getwd()
 
-downloadData("caribou2Movements", path = path_module)
+downloadModule("caribou2Movements", path = path_module)
 
 caribouFileOnGDrive <- as_id("https://drive.google.com/file/d/1G9C81lFFJupshFwT7ByyFJn3OqArybKK/view?usp=sharing")
 caribouFile <- file.path(path_module, "caribou2Movements/data/inputs_caribou2Movements.RData")
