@@ -43,7 +43,7 @@ doEvent.caribouMovementLcc <- function(sim, eventTime, eventType, debug = FALSE)
     ### (use `checkObject` or similar)
     checkObject(sim, "vegMap")
     # do stuff for this event
-    sim <- sim$caribouMovementInit(sim)
+    sim <- caribouMovementInit(sim)
 
 
     # schedule the next event
@@ -53,7 +53,7 @@ doEvent.caribouMovementLcc <- function(sim, eventTime, eventType, debug = FALSE)
 
   } else if (eventType == "move") {
     # do stuff for this event
-    sim <- sim$caribouMovementMove(sim)
+    sim <- caribouMovementMove(sim)
 
     # schedule the next event
     sim <- scheduleEvent(sim, time(sim) + params(sim)$caribouMovementLcc$moveInterval,

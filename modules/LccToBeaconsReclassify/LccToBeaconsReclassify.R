@@ -37,7 +37,7 @@ doEvent.LccToBeaconsReclassify <- function(sim, eventTime, eventType, debug = FA
   if (eventType == "init") {
     checkObject(sim, name = "vegMapLcc") # Lcc map or a clipped extent version
 
-    sim <- sim$LccToBeaconsReclassifyInit(sim)
+    sim <- LccToBeaconsReclassifyInit(sim)
 
     sim <- scheduleEvent(sim, params(sim)$LccToBeaconsReclassify$.plotInitialTime,
                          "LccToBeaconsReclassify", "plot", .last())
@@ -123,9 +123,9 @@ LccToBeaconsReclassifyInit <- function(sim) {
     class = "data.frame", row.names = c(NA, -11L)
   )
 
-  lcc05VegLabels <- paste(lcc05VegReclass$LCC05.classes, collapse = ",") %>% 
+  lcc05VegLabels <- paste(lcc05VegReclass$LCC05.classes, collapse = ",") %>%
     strsplit(., ",") %>%
-    .[[1]] %>% 
+    .[[1]] %>%
     as.numeric()
   numLccInVeg <- sapply(strsplit(unname(
     sapply(as.character(lcc05VegReclass$LCC05.classes), function(x) { x })
@@ -134,7 +134,7 @@ LccToBeaconsReclassifyInit <- function(sim) {
                          rep(lcc05VegReclass$VEG.reclass, numLccInVeg))
 
   # Trajectory
-  lcc05TrajLabels <- paste(lcc05TrajReclass$LCC05.classes, collapse = ",") %>% 
+  lcc05TrajLabels <- paste(lcc05TrajReclass$LCC05.classes, collapse = ",") %>%
     strsplit(., ",") %>%
     .[[1]] %>%
     as.numeric()

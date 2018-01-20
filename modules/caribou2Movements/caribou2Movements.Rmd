@@ -25,11 +25,17 @@ In the FL, individuals perform loops going away and back to their last visited h
 
 ```{r load inputs, eval=FALSE}
 library(SpaDES)
+library(googledrive)
 
 path_module <- file.path("~","Documents","GitHub","McIntire-lab","modulesPrivate")
 
 downloadData("caribou2Movements", path = path_module)
-load(file.path(path_module, "caribou2Movements/data/inputs_caribou2Movements.RData"))
+
+caribouFileOnGDrive <- as_id("https://drive.google.com/file/d/1G9C81lFFJupshFwT7ByyFJn3OqArybKK/view?usp=sharing")
+caribouFile <- file.path(path_module, "caribou2Movements/data/inputs_caribou2Movements.RData")
+drive_download(caribouFileOnGDrive, path = caribouFile)
+load(caribouFile)
+
 ```
 
 ```{r usage, eval=FALSE}
@@ -71,9 +77,14 @@ mySim <- simInit(
 )
 #p <- profvis::profvis(out<-spades(sim = mySim, debug = FALSE)) # uncomment this to see 
                                                            #  profile in a web browser
-shine(mySim)
 system.time(out <- spades(sim = mySim, debug = TRUE))
 ```
+
+```{r experimental shiny interface}
+
+shine(mySim)
+```
+
 
 # Events
 
