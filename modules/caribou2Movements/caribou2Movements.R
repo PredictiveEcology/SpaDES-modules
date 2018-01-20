@@ -11,7 +11,7 @@ defineModule(sim, list(
               person(c("Eliot", "J", "B"), "McIntire",
                      email = "Eliot.McIntire@NRCan.gc.ca", role = c("cre"))),
   childModules = character(),
-  version = numeric_version("1.0.2"),
+  version = numeric_version("1.0.3"),
   spatialExtent = raster::extent(rep(NA_real_, 4)),
   timeframe = as.POSIXlt(c(NA, NA)),
   timeunit = "day",
