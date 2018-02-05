@@ -77,9 +77,9 @@ doEvent.forestSuccessionBeacons <- function(sim, eventTime, eventType, debug = F
     Plot(sim$vegMap)
 
     # ggplot
-    labelsShort <- character(max(levels(sim$vegMap)[[1]]$ID))
-    labelsShort[levels(sim$vegMap)[[1]]$ID] <- sapply(
-      strsplit(as.character(levels(sim$vegMap)[[1]]$Class), " "),
+    labelsShort <- character(max(raster::levels(sim$vegMap)[[1]]$ID))
+    labelsShort[raster::levels(sim$vegMap)[[1]]$ID] <- sapply(
+      strsplit(as.character(raster::levels(sim$vegMap)[[1]]$Class), " "),
       function(x) paste(substr(x, 1, 3), collapse = "_")
     )
     veg <- data.frame(veg = sort(na.omit(getValues(sim$vegMap))))

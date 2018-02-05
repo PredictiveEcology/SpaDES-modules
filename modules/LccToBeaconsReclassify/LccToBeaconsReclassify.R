@@ -209,7 +209,7 @@ LccToBeaconsReclassifyInit <- function(sim) {
     ID = lcc05VegReclass$VEG.reclass,
     Class = lcc05VegReclass$Description
   ) %>%
-    .[levels(sim$vegMapBeacons)[[1]]$ID,]
+    .[raster::levels(sim$vegMapBeacons)[[1]]$ID,]
 
   indices <- c(1, lcc05VegTable[, 1][fmatch(1:11, lcc05VegTable[, 2])] + 1)
   setColors(sim$vegMapBeacons, n = 12 ) <- getColors(sim$vegMapLcc)[[1]][indices]
