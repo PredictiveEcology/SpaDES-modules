@@ -1,13 +1,13 @@
 library(igraph)
 library(SpaDES)
 
-setwd("~/Documents/GitHub/SpaDES-modules")
+setwd("~/GitHub/SpaDES-modules")
 
 # check all module versions, and rezip if needed
 omit <- ".Rproj.user"
 
 allModules <- list.dirs("modules/", recursive = FALSE) %>% basename()
-currentModules <- if(length(omit)) {
+currentModules <- if (length(omit)) {
   allModules[!allModules %in% omit]
 } else {
   allModules
@@ -22,7 +22,7 @@ overwrite = TRUE
 out <- lapply(currentModules, function(x) {
   version <- SpaDES.core::moduleVersion(module = x, path = "modules") %>% as.character()
   zipFile <- paste0("modules/", x, "/", x, "_", version, ".zip")
-  if(!file.exists(zipFile) | overwrite == TRUE) {
+  if (!file.exists(zipFile) | overwrite == TRUE) {
     SpaDES.core::zipModule(x, "modules")
     rezipped <<- append(rezipped, x)
   }
