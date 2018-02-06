@@ -211,7 +211,7 @@ LccToBeaconsReclassifyInit <- function(sim) {
   ) %>%
     .[raster::levels(sim$vegMapBeacons)[[1]]$ID,]
 
-  indices <- c(1, lcc05VegTable[, 1][fmatch(raster::levels(sim$vegMapBeacons)[[1]]$ID, lcc05VegTable[, 2])] + 1)    ## 1:11 were being forced, but they didn't all exist
+  indices <- c(1, lcc05VegTable[, 1][fmatch(1:11, lcc05VegTable[, 2])] + 1)
   setColors(sim$vegMapBeacons, n = 12) <- getColors(sim$vegMapLcc)[[1]][indices]
 
   sim$trajMapBeacons <- reclassify(sim$vegMapLcc, lcc05TrajTable)
