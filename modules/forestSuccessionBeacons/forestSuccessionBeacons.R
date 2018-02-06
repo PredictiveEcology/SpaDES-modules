@@ -77,20 +77,22 @@ doEvent.forestSuccessionBeacons <- function(sim, eventTime, eventType, debug = F
       Plot(sim$vegMap)
 
       # ggplot
-      labelsShort <- as.data.frame(raster::levels(sim$vegMap))
-      labelsShort$Class <-  sapply(
-        strsplit(as.character(labelsShort$Class), " "),
+      labelsShort <- character(max(raster::levels(sim$vegMap)[[1]]$ID))
+      labelsShort[raster::levels(sim$vegMap)[[1]]$ID] <- sapply(
+        strsplit(as.character(raster::levels(sim$vegMap)[[1]]$Class), " "),
         function(x) paste(substr(x, 1, 3), collapse = "_")
       )
 
-
       veg <- data.frame(veg = sort(na.omit(getValues(sim$vegMap))))
+
       histColors <- getColors(sim$vegMap)$layer
+      histColors[as.numeric(as.character(unique(veg$veg)))]
+
       sim$vegTypeDistribution <- ggplot(veg, aes(factor(veg), fill = factor(veg)),
                                         xlab = "Vegetation Type") +
         geom_bar() +
-        scale_fill_manual(values = histColors[as.numeric(as.character(unique(veg$veg)))]) +
-        scale_x_discrete(breaks = labelsShort$ID, labels = labelsShort$Class) +
+        scale_fill_manual(values = histColors) +
+        scale_x_discrete(breaks = 1:11, labels = labelsShort) +
         theme(axis.text.x = element_text(size = 10, angle = 45, hjust = 1, colour = "black"),
               axis.text.y = element_text(size = 10, colour = "black"),
               axis.title.x = element_text(size = 12, colour = "black"),
