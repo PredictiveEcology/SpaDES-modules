@@ -10,7 +10,7 @@ defineModule(sim, list(
     person(c("Alex", "M"), "Chubaty", email = "alexander.chubaty@canada.ca", role = c("aut")),
     person("Steve", "Cumming", email = "Steve.Cumming@sbf.ulaval.ca", role = c("aut"))
   ),
-  version = numeric_version("1.1.2.9"),
+  version = numeric_version("1.1.2"),
   spatialExtent = raster::extent(rep(NA_real_, 4)),
   timeframe = as.POSIXlt(c("2005-01-01", NA)),
   timeunit = "year",
@@ -55,11 +55,11 @@ doEvent.LccToBeaconsReclassify <- function(sim, eventTime, eventType, debug = FA
     sim <- scheduleEvent(sim, time(sim) + params(sim)$LccToBeaconsReclassify$.saveInterval,
                          "LccToBeaconsReclassify", "save", .last()+1)
   } else {
-      warning(paste(
-        "Undefined event type: '", events(sim)[1, "eventType", with = FALSE],
-        "' in module '", events(sim)[1, "moduleName", with = FALSE], "'",
-        sep = ""
-      ))
+    warning(paste(
+      "Undefined event type: '", events(sim)[1, "eventType", with = FALSE],
+      "' in module '", events(sim)[1, "moduleName", with = FALSE], "'",
+      sep = ""
+    ))
   }
   return(invisible(sim))
 }
@@ -173,7 +173,7 @@ LccToBeaconsReclassifyInit <- function(sim) {
     X.160 = c("Closed coniferous", "Open coniferous", "Closed coniferous",
               "Closed coniferous", "Closed coniferous", "Closed coniferous",
               "Herbaceous")
-    ),
+  ),
   .Names = c("Veg.Type", "X0.2", "X3.20", "X21.60", "X61.80", "X81.120", "X121.160", "X.160"),
   class = "data.frame", row.names = c(NA, -7L)) %>%
     as.tbl()
@@ -211,8 +211,8 @@ LccToBeaconsReclassifyInit <- function(sim) {
   ) %>%
     .[raster::levels(sim$vegMapBeacons)[[1]]$ID,]
 
-  indices <- c(1, lcc05VegTable[, 1][fmatch(1:11, lcc05VegTable[, 2])] + 1)
-  setColors(sim$vegMapBeacons, n = 12 ) <- getColors(sim$vegMapLcc)[[1]][indices]
+  indices <- c(1, lcc05VegTable[, 1][fmatch(raster::levels(sim$vegMapBeacons)[[1]]$ID, lcc05VegTable[, 2])] + 1)    ## 1:11 were being forced, but they didn't all exist
+  setColors(sim$vegMapBeacons, n = 12) <- getColors(sim$vegMapLcc)[[1]][indices]
 
   sim$trajMapBeacons <- reclassify(sim$vegMapLcc, lcc05TrajTable)
   setColors(sim$trajMapBeacons, n = 12) <- colorRampPalette(brewer.pal(8, "Set1"))(12)

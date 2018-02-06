@@ -9,7 +9,7 @@ defineModule(sim, list(
     person(c("Eliot", "J", "B"), "McIntire", email = "eliot.mcintire@canada.ca", role = c("aut", "cre")),
     person(c("Alex", "M"), "Chubaty", email = "alexander.chubaty@canada.ca", role = c("aut")),
     person("Steve", "Cumming", email = "Steve.Cumming@sbf.ulaval.ca", role = c("aut"))),
-  version = numeric_version("1.1.0.9"),
+  version = numeric_version("1.1.0"),
   spatialExtent = raster::extent(rep(NA_real_, 4)),
   timeframe = as.POSIXlt(c("2015-01-01", NA)),
   timeunit = "year",
@@ -44,63 +44,65 @@ doEvent.forestSuccessionBeacons <- function(sim, eventTime, eventType, debug = F
   switch(
     eventType,
     init = {
-    # do stuff for this event
-    sim <- forestSuccessionInit(sim)
+      # do stuff for this event
+      sim <- forestSuccessionInit(sim)
 
-    # schedule the next event
-    sim <- scheduleEvent(sim, params(sim)$forestSuccessionBeacons$startTime,
-                         "forestSuccessionBeacons", "succession")
-    sim <- scheduleEvent(sim, params(sim)$forestSuccessionBeacons$.plotInitialTime,
-                         "forestSuccessionBeacons", "plot.init", .last())
-  },
+      # schedule the next event
+      sim <- scheduleEvent(sim, params(sim)$forestSuccessionBeacons$startTime,
+                           "forestSuccessionBeacons", "succession")
+      sim <- scheduleEvent(sim, params(sim)$forestSuccessionBeacons$.plotInitialTime,
+                           "forestSuccessionBeacons", "plot.init", .last())
+    },
     succession = {
-    # do stuff for this event
-    sim <- forestSuccessionSuccession(sim)
+      # do stuff for this event
+      sim <- forestSuccessionSuccession(sim)
 
-    # schedule the next event
-    sim <- scheduleEvent(sim, time(sim) +
-                           params(sim)$forestSuccessionBeacons$returnInterval,
-                         "forestSuccessionBeacons", "succession")
-  },
+      # schedule the next event
+      sim <- scheduleEvent(sim, time(sim) +
+                             params(sim)$forestSuccessionBeacons$returnInterval,
+                           "forestSuccessionBeacons", "succession")
+    },
     plot.init = {
-    # do stuff for this event
-    Plot(sim$vegMap)
-    Plot(sim$trajMap)
+      # do stuff for this event
+      Plot(sim$vegMap)
+      Plot(sim$trajMap)
 
-    # schedule the next event
-    sim <- scheduleEvent(sim, time(sim) +
-                           params(sim)$forestSuccessionBeacons$.plotInterval,
-                         "forestSuccessionBeacons", "plot", .last())
-  },
+      # schedule the next event
+      sim <- scheduleEvent(sim, time(sim) +
+                             params(sim)$forestSuccessionBeacons$.plotInterval,
+                           "forestSuccessionBeacons", "plot", .last())
+    },
     plot = {
-    # do stuff for this event
-    Plot(sim$vegMap)
+      # do stuff for this event
+      Plot(sim$vegMap)
 
-    # ggplot
-    labelsShort <- character(max(raster::levels(sim$vegMap)[[1]]$ID))
-    labelsShort[raster::levels(sim$vegMap)[[1]]$ID] <- sapply(
-      strsplit(as.character(raster::levels(sim$vegMap)[[1]]$Class), " "),
-      function(x) paste(substr(x, 1, 3), collapse = "_")
-    )
-    veg <- data.frame(veg = sort(na.omit(getValues(sim$vegMap))))
-    histColors <- getColors(sim$vegMap)$layer
-    sim$vegTypeDistribution <- ggplot(veg, aes(factor(veg), fill = factor(veg)),
-                                      xlab = "Vegetation Type") +
-      geom_bar() +
-      scale_fill_manual(values = histColors[as.numeric(as.character(unique(veg$veg)))]) +
-      scale_x_discrete(breaks = 1:11, labels = labelsShort) +
-      theme(axis.text.x = element_text(size = 10, angle = 45, hjust = 1, colour = "black"),
-            axis.text.y = element_text(size = 10, colour = "black"),
-            axis.title.x = element_text(size = 12, colour = "black"),
-            axis.title.y = element_text(size = 12, colour = "black"),
-            legend.position = "none")
-    Plot(sim$vegTypeDistribution)
+      # ggplot
+      labelsShort <- as.data.frame(raster::levels(sim$vegMap))
+      labelsShort$Class <-  sapply(
+        strsplit(as.character(labelsShort$Class), " "),
+        function(x) paste(substr(x, 1, 3), collapse = "_")
+      )
 
-    # schedule the next event
-    sim <- scheduleEvent(sim, time(sim) +
-                           params(sim)$forestSuccessionBeacons$.plotInterval,
-                         "forestSuccessionBeacons", "plot", .last())
-  },
+
+      veg <- data.frame(veg = sort(na.omit(getValues(sim$vegMap))))
+      histColors <- getColors(sim$vegMap)$layer
+      sim$vegTypeDistribution <- ggplot(veg, aes(factor(veg), fill = factor(veg)),
+                                        xlab = "Vegetation Type") +
+        geom_bar() +
+        scale_fill_manual(values = histColors[as.numeric(as.character(unique(veg$veg)))]) +
+        scale_x_discrete(breaks = labelsShort$ID, labels = labelsShort$Class) +
+        theme(axis.text.x = element_text(size = 10, angle = 45, hjust = 1, colour = "black"),
+              axis.text.y = element_text(size = 10, colour = "black"),
+              axis.title.x = element_text(size = 12, colour = "black"),
+              axis.title.y = element_text(size = 12, colour = "black"),
+              legend.position = "none")
+      Plot(sim$vegTypeDistribution)
+
+      # schedule the next event
+      sim <- scheduleEvent(sim, time(sim) +
+                             params(sim)$forestSuccessionBeacons$.plotInterval,
+                           "forestSuccessionBeacons", "plot", .last())
+    },
 
     warning(paste(
       "Undefined event type: \'", events(sim)[1,"eventType", with = FALSE],
