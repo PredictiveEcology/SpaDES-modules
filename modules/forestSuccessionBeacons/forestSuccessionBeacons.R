@@ -84,10 +84,7 @@ doEvent.forestSuccessionBeacons <- function(sim, eventTime, eventType, debug = F
       )
 
       veg <- data.frame(veg = sort(na.omit(getValues(sim$vegMap))))
-
       histColors <- getColors(sim$vegMap)$layer
-      histColors[as.numeric(as.character(unique(veg$veg)))]
-
       sim$vegTypeDistribution <- ggplot(veg, aes(factor(veg), fill = factor(veg)),
                                         xlab = "Vegetation Type") +
         geom_bar() +
