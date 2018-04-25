@@ -109,7 +109,7 @@ cropReprojectLccCacheFunctions <- function(sim) {
     sim$cacheLoc <- file.path(cachePath(sim), "cropReprojectLccAge") %>%
       checkPath(create = TRUE)
     if (!file.exists(file.path(sim$cacheLoc, "backpack.db"))) {
-      createEmptyRepo(sim$cacheLoc)
+      createLocalRepo(sim$cacheLoc)
     }
 
     # Step 2 - create a version of every function that is slow that includes the caching implicitly
