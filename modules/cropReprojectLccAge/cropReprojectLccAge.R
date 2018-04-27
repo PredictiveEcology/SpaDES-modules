@@ -10,7 +10,7 @@ defineModule(sim, list(
   keywords = c("translator", "lcc05", "Land Cover Classification", "vegetation"),
   childModules = character(),
   authors = c(person(c("Eliot", "J","B"), "McIntire", email = "eliot.mcintire@canada.ca", role = c("aut", "cre"))),
-  version = numeric_version("1.1.4"),
+  version = numeric_version("1.1.5"),
   spatialExtent = raster::extent(rep(NA_real_, 4)),
   timeframe = as.POSIXlt(c(NA, NA)),
   timeunit = NA_character_,
@@ -70,21 +70,21 @@ cropReprojectLccInit <- function(sim) {
          " (less than 100 million hectares).")
   }
   #inputMapPolygon <- inputMapPolygon
-  vegMapLcc2 <- cropReprojectLccAge$crop(lcc05, inputMapPolygon)
+  vegMapLcc2 <- sim$crop(lcc05, inputMapPolygon)
   crs(vegMapLcc2) <- crs(sim$lcc05)
 
-  sim$vegMapLcc <- cropReprojectLccAge$mask(x = vegMapLcc2, mask = inputMapPolygon)
+  sim$vegMapLcc <- sim$mask(x = vegMapLcc2, mask = inputMapPolygon)
   setColors(sim$vegMapLcc, n = 256) <- getColors(sim$lcc05)[[1]] # mask removes colors!
 
   #if(ncell(sim$vegMapLcc)>5e5) beginCluster(min(parallel::detectCores(),6))
 
   # age will not run with projectRaster directly.
   # Instead, project the vegMap to age, then crop, then project back to vegMap.
-  #vegMapLcc.crsAge <- cropReprojectLccAge$projectRaster(sim$vegMapLcc, crs = crs(sim$age))
-  maskLayer <- Cache(cropReprojectLccAge$spTransform, x = sim$inputMapPolygon, CRSobj = crs(sim$age))
-  age.crsAge2 <- cropReprojectLccAge$crop(sim$age, maskLayer)
-  age.crsAge <- cropReprojectLccAge$mask(x = age.crsAge2, mask = maskLayer)
-  sim$ageMapInit <- cropReprojectLccAge$projectRaster(from = age.crsAge,
+  #vegMapLcc.crsAge <- sim$projectRaster(sim$vegMapLcc, crs = crs(sim$age))
+  maskLayer <- Cache(sim$spTransform, x = sim$inputMapPolygon, CRSobj = crs(sim$age))
+  age.crsAge2 <- sim$crop(sim$age, maskLayer)
+  age.crsAge <- sim$mask(x = age.crsAge2, mask = maskLayer)
+  sim$ageMapInit <- sim$projectRaster(from = age.crsAge,
                                                       to = sim$vegMapLcc,
                                                       method = "ngb")
 
@@ -104,7 +104,7 @@ cropReprojectLccInit <- function(sim) {
 cropReprojectLccCacheFunctions <- function(sim) {
   # for slow functions, add cached versions. Then use sim$xxx() throughout module instead of xxx()
 
-  if (params(sim)$cropReprojectLccAge$useCache) {
+  if (P(sim)$useCache) {
     # Step 1 - create a location for the cached data if it doesn't already exist
     sim$cacheLoc <- file.path(cachePath(sim), "cropReprojectLccAge") %>%
       checkPath(create = TRUE)
@@ -113,24 +113,24 @@ cropReprojectLccCacheFunctions <- function(sim) {
     }
 
     # Step 2 - create a version of every function that is slow that includes the caching implicitly
-    sim$cropReprojectLccAge$mask <- function(...) {
+    sim$mask <- function(...) {
       reproducible::Cache(cacheRepo = sim$cacheLoc, FUN = raster::mask, ...)
     }
-    sim$cropReprojectLccAge$crop <- function(...) {
+    sim$crop <- function(...) {
       reproducible::Cache(cacheRepo = sim$cacheLoc, FUN = raster::crop, ...)
     }
-    sim$cropReprojectLccAge$projectRaster <- function(...) {
+    sim$projectRaster <- function(...) {
       reproducible::Cache(cacheRepo = sim$cacheLoc, FUN = raster::projectRaster, ...)
     }
-    sim$cropReprojectLccAge$spTransform <- function(...) {
+    sim$spTransform <- function(...) {
       reproducible::Cache(cacheRepo = sim$cacheLoc, FUN = sp::spTransform,  ...)
     }
   } else {
     # Step 3 - create a non-caching version in case caching is not desired
-    sim$cropReprojectLccAge$mask <- raster::mask
-    sim$cropReprojectLccAge$crop <- raster::crop
-    sim$cropReprojectLccAge$projectRaster <- raster::projectRaster
-    sim$cropReprojectLccAge$spTransform <- sp::spTransform
+    sim$mask <- raster::mask
+    sim$crop <- raster::crop
+    sim$projectRaster <- raster::projectRaster
+    sim$spTransform <- sp::spTransform
   }
 
   return(invisible(sim))
@@ -188,7 +188,7 @@ cropReprojectLccCacheFunctions <- function(sim) {
 
   sim <- cropReprojectLccCacheFunctions(sim)
 
-  inputMapPolygon <- cropReprojectLccAge$spTransform(inputMapPolygon, CRSobj = lcc05CRS)
+  inputMapPolygon <- sim$spTransform(inputMapPolygon, CRSobj = lcc05CRS)
 
   sim$inputMapPolygon <- inputMapPolygon
 
