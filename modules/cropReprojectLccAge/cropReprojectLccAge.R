@@ -139,7 +139,7 @@ cropReprojectLccCacheFunctions <- function(sim) {
 ### Inputs
 .inputObjects <- function(sim) {
   if (is.null(sim$age) | is.null(sim$lcc05)) {
-    checksums1 <- downloadData("LCC2005", file.path(modulePath(sim)))
+    checksums1 <- downloadData("LccToBeaconsReclassify", file.path(modulePath(sim)))
     result1 <- checksums1[checksums1$expectedFile == "LCC2005_V1_4a.tif",]$result
     if (result1 != "OK" | is.na(result1)) {
       unzip(zipfile = file.path(modulePath(sim), "LccToBeaconsReclassify", "data", "LandCoverOfCanada2005_V1_4.zip"),
