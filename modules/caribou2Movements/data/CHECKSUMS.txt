@@ -1,2 +1,1 @@
-"file" "checksum"
-"inputs_caribou2Movements.RData" "024c0dcf838a6f7c"
+"file" "checksum" "filesize" "algorithm"
