@@ -109,7 +109,7 @@ cropReprojectLccCacheFunctions <- function(sim) {
     sim$cacheLoc <- file.path(cachePath(sim), "cropReprojectLccAge") %>%
       checkPath(create = TRUE)
     if (!file.exists(file.path(sim$cacheLoc, "backpack.db"))) {
-      createEmptyRepo(sim$cacheLoc)
+      createLocalRepo(sim$cacheLoc)
     }
 
     # Step 2 - create a version of every function that is slow that includes the caching implicitly
@@ -139,7 +139,7 @@ cropReprojectLccCacheFunctions <- function(sim) {
 ### Inputs
 .inputObjects <- function(sim) {
   if (is.null(sim$age) | is.null(sim$lcc05)) {
-    checksums1 <- downloadData("LCC2005", file.path(modulePath(sim)))
+    checksums1 <- downloadData("LccToBeaconsReclassify", file.path(modulePath(sim)))
     result1 <- checksums1[checksums1$expectedFile == "LCC2005_V1_4a.tif",]$result
     if (result1 != "OK" | is.na(result1)) {
       unzip(zipfile = file.path(modulePath(sim), "LccToBeaconsReclassify", "data", "LandCoverOfCanada2005_V1_4.zip"),
