@@ -8,10 +8,3 @@
 .Rproj.user
 *-Ex.R
 *.tif
-
-
-# Ignore data in modules
-modules/*/data
-
-# but include checksums
-!modules/*/data/CHECKSUMS.txt
