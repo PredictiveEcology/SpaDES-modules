@@ -1,3 +1,3 @@
-"file" "checksum"
-"DEM.tif" "77c56d42fecac5b1"
-"habitatQuality.tif" "f21251dcdf23dde0"
+"file" "checksum" "filesize" "algorithm"
+"DEM.tif" "77c56d42fecac5b1" "6045" "xxhash64"
+"habitatQuality.tif" "f21251dcdf23dde0" "43558" "xxhash64"
