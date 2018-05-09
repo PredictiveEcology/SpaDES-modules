@@ -31,7 +31,9 @@ defineModule(sim, list(
   inputObjects = data.frame(
     objectName = c("lcc05", "age", "inputMapPolygon"),
     objectClass = c("RasterLayer", "RasterLayer", "SpatialPolygons"),
-    sourceURL = c(NA_character_, NA_character_, NA_character_),
+    sourceURL = c("ftp://ftp.ccrs.nrcan.gc.ca/ad/NLCCLandCover/LandcoverCanada2005_250m/LandCoverOfCanada2005_V1_4.zip",
+                  "ftp://ftp.daac.ornl.gov/data/nacp/NA_TreeAge//data/can_age04_1km.tif",
+                  NA_character_),
     other = rep(NA_character_, 3L), stringsAsFactors = FALSE),
   outputObjects = data.frame(
     objectName = c("vegMapLcc", "ageMapInit"),
