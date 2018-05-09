@@ -138,17 +138,26 @@ cropReprojectLccCacheFunctions <- function(sim) {
 
 ### Inputs
 .inputObjects <- function(sim) {
-  if (is.null(sim$age) | is.null(sim$lcc05)) {
-    checksums1 <- downloadData("LccToBeaconsReclassify", file.path(modulePath(sim)))
-    result1 <- checksums1[checksums1$expectedFile == "LCC2005_V1_4a.tif",]$result
-    if (result1 != "OK" | is.na(result1)) {
-      unzip(zipfile = file.path(modulePath(sim), "LccToBeaconsReclassify", "data", "LandCoverOfCanada2005_V1_4.zip"),
-            files = "LCC2005_V1_4a.tif",
-            exdir = file.path(modulePath(sim), "LccToBeaconsReclassify", "data"))
-    }
+  if(!suppliedElsewhere(sim$age)) {
+    URL <- "ftp://ftp.daac.ornl.gov/data/nacp/NA_TreeAge//data/can_age04_1km.tif"
+    tryCatch(expr = {
+      sim$age <- prepInputs(targetFile = "can_age04_1km.tif",
+                            url = URL, destinationPath = dataPath(sim))},
+      error = function(err) {
+        cat("Can't download can_age04_1km.tif from", URL,
+            "\nPlease download and provide the object 'lcc05' as input for cropReprojectLccAge manually\n")
+      })
+  }
 
-    sim$age <- raster::raster(file.path(modulePath(sim), "forestAge", "data", "can_age04_1km.tif"))
-    sim$lcc05 <- raster::raster(file.path(modulePath(sim), "LccToBeaconsReclassify", "data", "LCC2005_V1_4a.tif"))
+  if(!suppliedElsewhere(sim$lcc05)) {
+    URL <- "ftp://ftp.ccrs.nrcan.gc.ca/ad/NLCCLandCover/LandcoverCanada2005_250m/LandCoverOfCanada2005_V1_4.zip"
+    tryCatch(expr = {
+      sim$lcc05 <- prepInputs(targetFile = "LCC2005_V1_4a.tif", archive = "LandCoverOfCanada2005_V1_4.zip",
+                              url = URL, destinationPath = dataPath(sim))},
+      error = function(err) {
+        cat("Can't download LCC2005_V1_4a.tif from", URL,
+            "\nPlease download and provide the object 'lcc05' as input for cropReprojectLccAge manually\n")
+      })
   }
 
   lcc05CRS <- crs(sim$lcc05)
