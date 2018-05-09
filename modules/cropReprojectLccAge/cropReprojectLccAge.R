@@ -35,10 +35,8 @@ defineModule(sim, list(
     expectsInput(objectName = "inputMapPolygon", objectClass = "SpatialPolygons", desc = "", sourceURL = NA)
     ),
   outputObjects = bind_rows(
-    createsOutput(objectName = "vegMapLcc",
-                  objectClass = "RasterLayer"),
-    createsOutput(objectName = "ageMapInit",
-                  objectClass = "RasterLayer")
+    createsOutput(objectName = "vegMapLcc", objectClass = "RasterLayer", desc = ""),
+    createsOutput(objectName = "ageMapInit", objectClass = "RasterLayer", desc = "")
   )
 ))
 
