@@ -5,8 +5,7 @@ defineModule(sim, list(
   description = paste(
     "A translator module.",
     "Crops and reprojects the land cover classification from 2005 to a smaller,",
-    "cropped RasterLayer, defined by ext, and with new projection defined by newCRS"
-  ),
+    "cropped RasterLayer, defined by ext, and with new projection defined by newCRS"),
   keywords = c("translator", "lcc05", "Land Cover Classification", "vegetation"),
   childModules = character(),
   authors = c(person(c("Eliot", "J","B"), "McIntire", email = "eliot.mcintire@canada.ca", role = c("aut", "cre"))),
@@ -28,17 +27,19 @@ defineModule(sim, list(
                     "Initial time for saving"),
     defineParameter(".saveInterval", "numeric", NA_real_, NA, NA,
                     "Interval between save events")),
-  inputObjects = data.frame(
-    objectName = c("lcc05", "age", "inputMapPolygon"),
-    objectClass = c("RasterLayer", "RasterLayer", "SpatialPolygons"),
-    sourceURL = c("ftp://ftp.ccrs.nrcan.gc.ca/ad/NLCCLandCover/LandcoverCanada2005_250m/LandCoverOfCanada2005_V1_4.zip",
-                  "ftp://ftp.daac.ornl.gov/data/nacp/NA_TreeAge//data/can_age04_1km.tif",
-                  NA_character_),
-    other = rep(NA_character_, 3L), stringsAsFactors = FALSE),
-  outputObjects = data.frame(
-    objectName = c("vegMapLcc", "ageMapInit"),
-    objectClass = c("RasterLayer", "RasterLayer"),
-    other = rep(NA_character_, 2L), stringsAsFactors = FALSE)
+  inputObjects = bind_rows(
+    expectsInput(objectName = "lcc05", objectClass = "RasterLayer", desc = "",
+                 sourceURL = "ftp://ftp.ccrs.nrcan.gc.ca/ad/NLCCLandCover/LandcoverCanada2005_250m/LandCoverOfCanada2005_V1_4.zip"),
+    expectsInput(objectName = "age", objectClass = "RasterLayer", desc = "",
+                 sourceURL = "ftp://ftp.daac.ornl.gov/data/nacp/NA_TreeAge//data/can_age04_1km.tif"),
+    expectsInput(objectName = "inputMapPolygon", objectClass = "SpatialPolygons", desc = , sourceURL = NA)
+    ),
+  outputObjects = bind_rows(
+    createsOutput(objectName = "vegMapLcc",
+                  objectClass = "RasterLayer"),
+    createsOutput(objectName = "ageMapInit",
+                  objectClass = "RasterLayer")
+  )
 ))
 
 doEvent.cropReprojectLccAge <- function(sim, eventTime, eventType, debug = FALSE) {
