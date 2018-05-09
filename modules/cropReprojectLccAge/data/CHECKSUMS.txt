@@ -1,1 +1,2 @@
 "file" "checksum" "filesize" "algorithm"
+"can_age04_1km.tif" "1adab6dc08ed02d3" "9084677" "xxhash64"
