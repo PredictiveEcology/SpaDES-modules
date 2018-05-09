@@ -24,7 +24,7 @@ defineModule(sim, list(
   ),
   inputObjects = bind_rows(
     #expectsInput("objectName", "objectClass", "input object description", sourceURL, ...),
-    expectsInput(objectName = "CanopyCover_1990", objectClass = "RasterLayer", 
+    expectsInput(objectName = "CanopyCover_1990", objectClass = "RasterLayer",
                  desc = "Classified layer from Paul Pickell", sourceURL = "https://docs.google.com/uc?id=0BxZrk9psrK4naXNqMV9HcVVoeUE&export=download")
   ),
   outputObjects = bind_rows(
@@ -52,7 +52,7 @@ doEvent.importLandWeb_BAP_Layers = function(sim, eventTime, eventType, debug = F
     # do stuff for this event
 
     Plot(mySim$SPP_1990, visualSqueeze = 0.99)
-    
+
     #Plot(objectFromModule) # uncomment this, replace with object to plot
     # schedule future event(s)
 
@@ -114,8 +114,8 @@ doEvent.importLandWeb_BAP_Layers = function(sim, eventTime, eventType, debug = F
 ### template initialization
 importLandWeb_BAP_LayersInit <- function(sim) {
   # # ! ----- EDIT BELOW ----- ! #
-  
-  
+
+
 
   # ! ----- STOP EDITING ----- ! #
 
@@ -182,35 +182,35 @@ importLandWeb_BAP_LayersEvent2 <- function(sim) {
   # }
   # ! ----- EDIT BELOW ----- ! #
   dataDir <- file.path(modulePath(sim), "importLandWeb_BAP_Layers", "data")
-  
-  allFiles <- c("CC_1990_100m.tif", "CC_1990_FILLED_100m.tif", "CC_2000_100m.tif", 
-         "CC_2010_100m.tif", "HT_1990_100m.tif", "HT_1990_FILLED_100m.tif", 
-         "HT_2000_100m.tif", "HT_2010_100m.tif", "SPP_1990_100m.tif", 
-         "SPP_1990_100m.tif.aux.xml", "SPP_1990_FILLED_100m.tif", "SPP_1990_FILLED_100m.tif.aux.xml", 
-         "SPP_2000_100m.tif", "SPP_2000_100m.tif.aux.xml", "SPP_2010_100m.tif", 
+
+  allFiles <- c("CC_1990_100m.tif", "CC_1990_FILLED_100m.tif", "CC_2000_100m.tif",
+         "CC_2010_100m.tif", "HT_1990_100m.tif", "HT_1990_FILLED_100m.tif",
+         "HT_2000_100m.tif", "HT_2010_100m.tif", "SPP_1990_100m.tif",
+         "SPP_1990_100m.tif.aux.xml", "SPP_1990_FILLED_100m.tif", "SPP_1990_FILLED_100m.tif.aux.xml",
+         "SPP_2000_100m.tif", "SPP_2000_100m.tif.aux.xml", "SPP_2010_100m.tif",
          "SPP_2010_100m.tif.aux.xml")
   haveAllFiles <- allFiles %in% dir(dataDir)
-  
+
   #check <- checksums("importLandWeb_BAP_Layers", modulePath(sim))
   if(!all(haveAllFiles)) {
-    
+
     message("Download file from browser. Save it to ", dataDir)
     wh <- which(unlist(lapply(sim@depends@dependencies, function(x) x@name=="importLandWeb_BAP_Layers")))
     browseURL(sim@depends@dependencies[[wh]]@inputObjects$sourceURL)
     readline("Press any key when file is downloaded")
   #downloadData("importLandWeb_BAP_Layers")
-    untar(exdir = dataDir, #files = allFiles[!haveAllFiles], 
+    untar(exdir = dataDir, #files = allFiles[!haveAllFiles],
           file.path(dataDir, "2016-12-1 14.58.57-LANDWEB_DATA_LAYERS.tar.gz"))
   }
-    
-    
+
+
   origFiles <- dir(dataDir, pattern = "dat$", full.names = TRUE)
-  
+
   args <- list(origFiles, function(i) {
-    a <- SpaDES::rasterToMemory(i)
-    if(grepl(basename(i), pattern="^SPP")) { 
-      levels(a) <- data.frame(ID=c(11, 14, 22, 23, 26, 31, 32, 33, 34, 41, 42, 43, 44, 201), 
-                              Names = c("Decid pure", "Decid-PiceGlau", "PiceMari pure", 
+    a <- SpaDES.core::rasterToMemory(i)
+    if(grepl(basename(i), pattern="^SPP")) {
+      levels(a) <- data.frame(ID=c(11, 14, 22, 23, 26, 31, 32, 33, 34, 41, 42, 43, 44, 201),
+                              Names = c("Decid pure", "Decid-PiceGlau", "PiceMari pure",
                                         "PiceMari-Pinus", "PiceMari-other", "Pinus-Decid",
                                         "Pinus-PiceMari", "Pinus pure", "Pinus-PiceGlau",
                                         "PiceGlau-Decid", "PiceGlau-PiceMari", "PiceGlau-Pinus",
@@ -224,13 +224,13 @@ importLandWeb_BAP_LayersEvent2 <- function(sim) {
         setColors(a) <- "Greens"
       }
     }
-    newFileName <- paste(c(paste(c(strsplit(basename(i), split = "_NAD83")[[1]][1]), 
-                                 collapse = "_"), ".tif"), 
+    newFileName <- paste(c(paste(c(strsplit(basename(i), split = "_NAD83")[[1]][1]),
+                                 collapse = "_"), ".tif"),
                          collapse = "")
-    writeRaster(a, filename = file.path(dataDir, newFileName), overwrite = TRUE)
+    raster::writeRaster(a, filename = file.path(dataDir, newFileName), overwrite = TRUE)
     return(invisible(NULL))
   })
-  
+
   #if(params(sim)$importLandWeb_BAP_Layers$.useCache) {
     fun <- "Cache"
     args <- append(list(FUN = lapply), args)
@@ -239,11 +239,11 @@ importLandWeb_BAP_LayersEvent2 <- function(sim) {
   #}
   do.call(fun, args)
   #Cache(lapply, origFiles, ...)
-        
+
   sim$SPP_1990 <- Cache(rasterToMemory, file.path(dataDir, "SPP_1990_FILLED_100m.tif"))
-  
-  suppressWarnings(levels(sim$SPP_1990) <- data.frame(ID=c(11, 14, 22, 23, 26, 31, 32, 33, 34, 41, 42, 43, 44, 201), 
-                          Names = c("Decid pure", "Decid-PiceGlau", "PiceMari pure", 
+
+  suppressWarnings(levels(sim$SPP_1990) <- data.frame(ID=c(11, 14, 22, 23, 26, 31, 32, 33, 34, 41, 42, 43, 44, 201),
+                          Names = c("Decid pure", "Decid-PiceGlau", "PiceMari pure",
                                     "PiceMari-Pinus", "PiceMari-other", "Pinus-Decid",
                                     "Pinus-PiceMari", "Pinus pure", "Pinus-PiceGlau",
                                     "PiceGlau-Decid", "PiceGlau-PiceMari", "PiceGlau-Pinus",
