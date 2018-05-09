@@ -1,6 +1,0 @@
-"file" "checksum" "filesize" "algorithm"
-"CMR.asc" "83351c3f010df218" "342995" "xxhash64"
-"HabitatSuitability.asc" "f309e6e21ffc92e5" "428995" "xxhash64"
-"outputSeles.zip" "a80af43a62a957db" "745298" "xxhash64"
-"packs2008.asc" "bc0a48692b40dd2a" "343217" "xxhash64"
-"wolves2008.asc" "f92e1ef31c37e8c7" "343047" "xxhash64"
