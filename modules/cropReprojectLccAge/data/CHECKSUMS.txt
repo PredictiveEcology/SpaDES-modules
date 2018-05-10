@@ -1,1 +1,3 @@
 "file" "checksum" "filesize" "algorithm"
+"can_age04_1km.tif" "1adab6dc08ed02d3" "9084677" "xxhash64"
+"LCC2005_V1_4a.tif" "b50567fc83bcc5de" "437916202" "xxhash64"
