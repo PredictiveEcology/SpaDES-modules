@@ -11,3 +11,7 @@ The easiest way to use modules from this repository is using the built-in functi
     downloadModule(name = "moduleName", path = saveTo)
 
 This will download and unzip the module files in the directory speficied by `saveTo`.
+
+## Other modules
+
+For a list of other modules currently in development, see [here](https://github.com/PredictiveEcology/SpaDES-modules/wiki/Current-modules-in-development).
