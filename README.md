@@ -14,10 +14,10 @@ This will download and unzip the module files in the directory speficied by `sav
 
 ## Example download -- Game of Life
 
-    # install.packages("SpaDES")
+    #    # install.packages("SpaDES")
     library(SpaDES)
-    setPaths() # sets 4 paths that SpaDES uses to temporary locations -- try non-temporary locations too!
-    # setPaths(modulePath = "~") # can try non-temporary locations too!
+    setPaths() # sets 4 paths that SpaDES uses to temporary locations
+    # setPaths(modulePath = "~") # can try non-temporary locations too to keep between R sessions
     
     moduleName <- "gameOfLife"
     downloadModule(moduleName) # downloads to getPaths()$modulePath
