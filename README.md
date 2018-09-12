@@ -14,15 +14,16 @@ This will download and unzip the module files in the directory speficied by `sav
 
 ## Example download -- Game of Life
 
+    # install.packages("SpaDES")
     library(SpaDES)
     setPaths() # sets 4 paths that SpaDES uses to temporary locations -- try non-temporary locations too!
     # setPaths(modulePath = "~") # can try non-temporary locations too!
-
+    
     moduleName <- "gameOfLife"
     downloadModule(moduleName) # downloads to getPaths()$modulePath
-
+    
     modules <- list(moduleName)
-
+    
     ######################
     ## Blinking
     ######################
@@ -30,16 +31,16 @@ This will download and unzip the module files in the directory speficied by `sav
     X = c(10)
     Y = c(10)
     TYPE <- "blinker" ## see below for other types
-
+    
     parameters <- list(
       gameOfLife = list(X = X, Y = Y, initialType = TYPE)
     )
     times <- list(start = 1, end = 30) # only run for 10 steps
-
+    
     clearPlot()
     dev() # creates new, faster window if in RStudio
     mySim <- simInitAndSpades(times = times, params = parameters, modules = modules)
-
+    
     ######################
     # Do random starts on bigger map
     ######################
@@ -47,16 +48,17 @@ This will download and unzip the module files in the directory speficied by `sav
     X = c(100)
     Y = c(100)
     TYPE <- NA ## random
-
+    
     parameters <- list(
       gameOfLife = list(X = X, Y = Y, initialType = TYPE)
     )
     clearPlot()
     mySim <- simInitAndSpades(times = times, params = parameters, modules = modules)
     ####################
-    ######################
+    ####################
+
     
-# Load documentation and source code
+#### Load documentation and source code
 
     ####################
     #  Load Documentation and Source Code
