@@ -10,7 +10,7 @@ defineModule(sim, list(
     person(c("Alex", "M"), "Chubaty", email = "alexander.chubaty@canada.ca", role = c("aut")),
     person("Steve", "Cumming", email = "Steve.Cumming@sbf.ulaval.ca", role = c("aut"))
   ),
-  version = numeric_version("1.1.2"),
+  version = numeric_version("1.1.3"),
   spatialExtent = raster::extent(rep(NA_real_, 4)),
   timeframe = as.POSIXlt(c("2005-01-01", NA)),
   timeunit = "year",
@@ -205,11 +205,15 @@ LccToBeaconsReclassifyInit <- function(sim) {
 
   # Make a factor map, allowing for character labels
   sim$vegMapBeacons <- ratify(reclassify(sim$vegMapLcc, lcc05VegTable))
-  levels(sim$vegMapBeacons) <- data.frame(
+  # Next warning is about missing levels -- this is OK. We want to know that
+  #   there are pixels or no pixels in every class... mostly because
+  #   "burned" is often absent in the LCC layer, but will start to exist and
+  #   we need to have a raster factor level for it
+  suppressWarnings(levels(sim$vegMapBeacons) <- data.frame(
     ID = lcc05VegReclass$VEG.reclass,
     Class = lcc05VegReclass$Description
-  ) %>%
-    .[raster::levels(sim$vegMapBeacons)[[1]]$ID,]
+  )) #%>% # This and next line removed to maintain all factor levels, even those that are absent
+  #.[raster::levels(sim$vegMapBeacons)[[1]]$ID,]
 
   indices <- c(1, lcc05VegTable[, 1][fmatch(1:11, lcc05VegTable[, 2])] + 1)
   setColors(sim$vegMapBeacons, n = 12) <- getColors(sim$vegMapLcc)[[1]][indices]
