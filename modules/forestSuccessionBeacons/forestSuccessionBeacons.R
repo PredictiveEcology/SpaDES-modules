@@ -9,7 +9,7 @@ defineModule(sim, list(
     person(c("Eliot", "J", "B"), "McIntire", email = "eliot.mcintire@canada.ca", role = c("aut", "cre")),
     person(c("Alex", "M"), "Chubaty", email = "alexander.chubaty@canada.ca", role = c("aut")),
     person("Steve", "Cumming", email = "Steve.Cumming@sbf.ulaval.ca", role = c("aut"))),
-  version = numeric_version("1.1.0"),
+  version = numeric_version("1.1.1"),
   spatialExtent = raster::extent(rep(NA_real_, 4)),
   timeframe = as.POSIXlt(c("2015-01-01", NA)),
   timeunit = "year",
@@ -64,8 +64,8 @@ doEvent.forestSuccessionBeacons <- function(sim, eventTime, eventType, debug = F
     },
     plot.init = {
       # do stuff for this event
-      Plot(sim$vegMap)
-      Plot(sim$trajMap)
+      Plot(sim$vegMap, title = "Vegetation cover type")
+      Plot(sim$trajMap, title = "Succession trajectory")
 
       # schedule the next event
       sim <- scheduleEvent(sim, time(sim) +
@@ -73,8 +73,6 @@ doEvent.forestSuccessionBeacons <- function(sim, eventTime, eventType, debug = F
                            "forestSuccessionBeacons", "plot", .last())
     },
     plot = {
-      # do stuff for this event
-      Plot(sim$vegMap)
 
       # ggplot
       labelsShort <- character(max(raster::levels(sim$vegMap)[[1]]$ID))
@@ -82,20 +80,35 @@ doEvent.forestSuccessionBeacons <- function(sim, eventTime, eventType, debug = F
         strsplit(as.character(raster::levels(sim$vegMap)[[1]]$Class), " "),
         function(x) paste(substr(x, 1, 3), collapse = "_")
       )
+      fullLabelVec <- c("Clo_con", "Ope_con", "Mix", "Dec", "Shr", "Her", "Bur", "Wet",
+                        "Wat", "Cro", "Oth")
+      # Test that labels are approximately correct
+      if (!all(labelsShort[nzchar(labelsShort)] %in% fullLabelVec))
+        stop("It is likely that the vegetation map used is not from LCC2005. Please check.")
 
-      veg <- data.frame(veg = sort(na.omit(getValues(sim$vegMap))))
+      veg <- data.frame(veg = na.omit(getValues(sim$vegMap)))
       histColors <- getColors(sim$vegMap)$layer
-      sim$vegTypeDistribution <- ggplot(veg, aes(factor(veg), fill = factor(veg)),
+      rasLevels <- raster::levels(sim$vegMap)[[1]]
+      veg$veg <- factor(as.numeric(veg$veg),
+                        levels = rasLevels$ID,
+                        labels = labelsShort,
+                        ordered = TRUE)
+      names(histColors) <- c(labelsShort, "NA") # giving a name means labels work with colours
+      sim$vegTypeDistribution <- ggplot(veg, aes(veg,
+                                                 fill = veg),
                                         xlab = "Vegetation Type") +
         geom_bar() +
         scale_fill_manual(values = histColors) +
-        scale_x_discrete(breaks = 1:11, labels = labelsShort) +
+        scale_x_discrete() +
         theme(axis.text.x = element_text(size = 10, angle = 45, hjust = 1, colour = "black"),
               axis.text.y = element_text(size = 10, colour = "black"),
               axis.title.x = element_text(size = 12, colour = "black"),
               axis.title.y = element_text(size = 12, colour = "black"),
               legend.position = "none")
-      Plot(sim$vegTypeDistribution)
+
+      # Plot ggplot first -- it is very slow
+      Plot(sim$vegTypeDistribution, title = "Vegetation cover type")
+      Plot(sim$vegMap)
 
       # schedule the next event
       sim <- scheduleEvent(sim, time(sim) +
@@ -115,6 +128,7 @@ doEvent.forestSuccessionBeacons <- function(sim, eventTime, eventType, debug = F
 
 forestSuccessionInit <- function(sim) {
   sim$vegMap <- sim$vegMapBeacons
+  # Check that all levels are represented
   sim$trajMap <- sim$trajMapBeacons
   return(invisible(sim))
 }
