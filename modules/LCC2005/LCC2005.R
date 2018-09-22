@@ -11,9 +11,9 @@ defineModule(sim, list(
     "caribouMovementLcc", "cropReprojectLccAge", "fireSpreadLcc",
     "forestAge", "forestSuccessionBeacons", "LccToBeaconsReclassify"
   ),
-  version = list(LCC2005 = "1.1.1", caribouMovementLcc = "1.1.0", cropReprojectLccAge = "1.1.5",
+  version = list(LCC2005 = "1.1.2", caribouMovementLcc = "1.1.0", cropReprojectLccAge = "1.1.5",
                  fireSpreadLcc = "1.1.2", forestAge = "1.1.2", forestSuccessionBeacons = "1.1.0",
-                 LccToBeaconsReclassify = "1.1.2"),
+                 LccToBeaconsReclassify = "1.1.3"),
   spatialExtent = raster::extent(rep(NA_real_, 4)),
   timeframe = as.POSIXlt(c(NA, NA)),
   timeunit = "year",
