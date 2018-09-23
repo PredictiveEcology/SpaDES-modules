@@ -9,7 +9,7 @@ defineModule(sim, list(
     person(c("Alex", "M"), "Chubaty", email = "alexander.chubaty@canada.ca", role = c("aut", "cre")),
     person(c("Eliot", "J", "B"), "McIntire", email = "eliot.mcintire@canada.ca", role = c("aut", "cre")),
     person("Steve", "Cumming", email = "Steve.Cumming@sbf.ulaval.ca", role = c("aut"))),
-  version = numeric_version("1.1.2"),
+  version = numeric_version("1.1.3"),
   spatialExtent = raster::extent(rep(NA_real_, 4)),
   timeframe = as.POSIXlt(c(NA, NA)),
   timeunit = "year",
@@ -42,41 +42,41 @@ doEvent.forestAge <- function(sim, eventTime, eventType, debug = FALSE) {
   switch(
     eventType,
     init = {
-    ### check for object dependencies:
-    ### (use `checkObject` or similar)
+      ### check for object dependencies:
+      ### (use `checkObject` or similar)
 
-    # do stuff for this event
-    sim <- sim$forestAgeInit(sim)
-
-    # schedule the next event
-    sim <- scheduleEvent(sim, params(sim)$forestAge$startTime, "forestAge", "age")
-    sim <- scheduleEvent(sim, params(sim)$forestAge$.plotInitialTime, "forestAge", "plot.init")
-
-  },
-    age = {
       # do stuff for this event
-    sim <- sim$forestAgeAge(sim)
+      sim <- sim$forestAgeInit(sim)
 
       # schedule the next event
-    sim <- scheduleEvent(sim, time(sim) +
+      sim <- scheduleEvent(sim, params(sim)$forestAge$startTime, "forestAge", "age")
+      sim <- scheduleEvent(sim, params(sim)$forestAge$.plotInitialTime, "forestAge", "plot.init")
+
+    },
+    age = {
+      # do stuff for this event
+      sim <- sim$forestAgeAge(sim)
+
+      # schedule the next event
+      sim <- scheduleEvent(sim, time(sim) +
                              params(sim)$forestAge$returnInterval,
-                         "forestAge", "age")
-  },
-  plot.init = {
-    # do stuff for this event
-    Plot(sim$ageMap, legendRange = c(0, 200))
+                           "forestAge", "age")
+    },
+    plot.init = {
+      # do stuff for this event
+      Plot(sim$ageMap, legendRange = c(0, 200), title = "Stand age")
 
-    # schedule the next event
-    sim <- scheduleEvent(sim, time(sim) + params(sim)$forestAge$.plotInterval,
-                         "forestAge", "plot", .last())
-  }, plot = {
-    # do stuff for this event
-    Plot(sim$ageMap, legendRange = c(0, 200))
+      # schedule the next event
+      sim <- scheduleEvent(sim, time(sim) + params(sim)$forestAge$.plotInterval,
+                           "forestAge", "plot", .last())
+    }, plot = {
+      # do stuff for this event
+      Plot(sim$ageMap, legendRange = c(0, 200))
 
-    # schedule the next event
-    sim <- scheduleEvent(sim, time(sim) + params(sim)$forestAge$.plotInterval,
-                         "forestAge", "plot", .last())
-  },
+      # schedule the next event
+      sim <- scheduleEvent(sim, time(sim) + params(sim)$forestAge$.plotInterval,
+                           "forestAge", "plot", .last())
+    },
     warning(paste(
       "Undefined event type: \'", events(sim)[1, "eventType", with = FALSE],
       "\' in module \'", events(sim)[1, "moduleName", with = FALSE], "\'",

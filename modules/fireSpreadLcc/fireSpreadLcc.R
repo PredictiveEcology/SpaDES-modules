@@ -8,7 +8,7 @@ defineModule(sim, list(
   authors = c(person(c("Alex", "M"), "Chubaty", email = "alexander.chubaty@canada.ca", role = c("aut", "cre")),
               person(c("Eliot", "J", "B"), "McIntire", email = "eliot.mcintire@canada.ca", role = c("aut", "cre")),
               person("Steve", "Cumming", email = "Steve.Cumming@sbf.ulaval.ca", role = c("aut"))),
-  version = numeric_version("1.1.2"),
+  version = numeric_version("1.1.3"),
   spatialExtent = raster::extent(rep(NA_real_, 4)),
   timeframe = as.POSIXlt(c("2005-01-01", NA)),
   timeunit = "year",
@@ -71,7 +71,7 @@ doEvent.fireSpreadLcc <- function(sim, eventTime, eventType, debug = FALSE) {
   } else if (eventType == "plot.init") {
     # do stuff for this event
     Plot(sim$FiresCumul,zero.color = "white", legendRange = 0:sim$maxFiresCumul,
-         cols=c("orange", "darkred"))
+         cols=c("orange", "darkred"), title = "Cumulative number of\nfires in a pixel")
 
     # schedule the next event
     sim <- scheduleEvent(sim, time(sim) + P(sim)$.plotInterval, "fireSpreadLcc", "plot")
@@ -92,7 +92,7 @@ doEvent.fireSpreadLcc <- function(sim, eventTime, eventType, debug = FALSE) {
               axis.text.y = element_text(size = 10, colour = "black"),
               axis.title.x = element_text(size = 12, colour = "black"),
               axis.title.y = element_text(size = 12, colour = "black"))
-      suppressMessages(Plot(sim$FireSizeDistribution))
+      suppressMessages(Plot(sim$FireSizeDistribution, title = "Fire size distribution"))
     }
 
     # schedule the next event
