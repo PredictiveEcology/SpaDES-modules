@@ -11,7 +11,7 @@ defineModule(sim, list(
   keywords = c("cellular automata", "game of life"),
   authors = c(person(c("Alex", "M"), "Chubaty", email = "alexander.chubaty@canada.ca", role = c("aut", "cre"))),
   childModules = character(0),
-  version = numeric_version("0.0.4"),
+  version = numeric_version("0.0.5"),
   spatialExtent = raster::extent(rep(NA_real_, 4)),
   timeframe = as.POSIXlt(c(NA, NA)),
   timeunit = "year",
@@ -86,7 +86,7 @@ gameOfLifeInit <- function(sim) {
     params(sim)$gameOfLife$Y <- P(sim)$X
   }
   sim$world <- raster(extent(0, P(sim)$X, 0, P(sim)$Y),
-                      ncols = P(sim)$X, nrows = P(sim)$Y, 
+                      ncols = P(sim)$X, nrows = P(sim)$Y,
                       vals = vals)
   return(invisible(sim))
 }
@@ -95,7 +95,7 @@ gameOfLifeGeneration <- function(sim) {
   w <- matrix(c(1,1,1,1,0,1,1,1,1), ncol = 3, nrow = 3)
   r <- sim$world
   f <- focal(r, w, fun = sum, na.rm = TRUE, pad = TRUE)
-  
+
   # Any live cell with fewer than two live neighbours dies.
   sim$world[r*f < 2] <- FALSE
 

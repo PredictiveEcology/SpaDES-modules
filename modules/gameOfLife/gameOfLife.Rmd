@@ -3,13 +3,9 @@ title: "Conway's Game of Life"
 author: "Alex Chubaty"
 date: "17 November 2016"
 output: pdf_document
+editor_options: 
+  chunk_output_type: console
 ---
-
-```{r setup}
-library(magrittr)
-library(raster)
-library(SpaDES)
-```
 
 # Overview
 
@@ -33,11 +29,9 @@ From [Wikipedia](https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life):
 # Usage
 
 ```{r module_usage, eval=FALSE}
-library(igraph)
-library(raster)
 library(SpaDES)
 
-setPaths()
+setPaths(modulePath = "modules/.")
 
 X = 10
 Y = 10
@@ -49,15 +43,10 @@ parameters <- list(
 )
 times <- list(start = 1, end = 10)
 
+dev() # opens external faster window if using Rstudio
 clearPlot()
 mySim <- simInit(times = times, params = parameters, modules = modules)
-mySim1 <- spades(Copy(mySim))
-```
-
-### Run with shiny
-
-```{r shiny}
-shine(mySim)
+mySimOut <- spades(Copy(mySim)) # use explicit Copy because of pass by reference simList object
 ```
 
 ## Alternate seeds
@@ -68,6 +57,7 @@ Names correspond to those in the Wikipdia article.
 ### Stills
 
 ```{r still-seeds, echo=FALSE}
+library(magrittr)
 block <- c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
            0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
            0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -169,6 +159,16 @@ beacon <- c(0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 clearPlot()
 Plot(blinker, toad, beacon, new = TRUE)
 ```
+
+### Run with shiny
+
+# This is still very experimental and only certain things will work
+```{r shiny}
+if (!require(SpaDES.shiny))
+  remotes::install_github("PredictiveEcology/SpaDES.shiny@development", INSTALL_opts = "--no-staged-install") # uses reproducible package -- installs and/or loads
+shine(mySim)
+```
+
 
 # Events
 
