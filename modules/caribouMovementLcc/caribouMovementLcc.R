@@ -63,14 +63,18 @@ doEvent.caribouMovementLcc <- function(sim, eventTime, eventType, debug = FALSE)
 
     # This wipes out previous values of the caribou map with a white raster
     Plot(sim$caribouRas, zero.color="white",
+         title = "Caribou\nCumulative visits per pixel",
          legendRange=c(0, 50), cols=c("lightgrey", "black"))
 
     # schedule the next event
     sim <- scheduleEvent(sim, time(sim) + params(sim)$caribouMovementLcc$.plotInterval,
                          "caribouMovementLcc", "plot")
   } else if (eventType == "plot") {
-    # do stuff for this event
-    Plot(sim$caribouRas, zero.color="white",
+    # somewhat convoluted way to prevent repeated title creation
+    needNewTitle <- quickPlot:::.quickPlotEnv$quickPlot2$curr@arr
+    suppressMessages(aa <- Cache(function(...) {"out"}, needNewTitle, "caribouRas")) #
+    updateTitle <- if (attr(aa, ".Cache")$newCache) "Caribou\nCumulative visits per pixel" else ""
+    Plot(sim$caribouRas, zero.color="white", title = updateTitle,
          legendRange=c(0, 50), cols=c("lightgrey", "black"))
 
     # schedule the next event

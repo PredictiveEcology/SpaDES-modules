@@ -64,7 +64,9 @@ doEvent.forestSuccessionBeacons <- function(sim, eventTime, eventType, debug = F
     },
     plot.init = {
       # do stuff for this event
-      Plot(sim$vegMap, title = "Vegetation cover type")
+      mod$plotTitle1 <- "Vegetation cover type"
+
+      Plot(sim$vegMap, title = mod$plotTitle1)
       Plot(sim$trajMap, title = "Succession trajectory")
 
       # schedule the next event
@@ -87,7 +89,7 @@ doEvent.forestSuccessionBeacons <- function(sim, eventTime, eventType, debug = F
         stop("It is likely that the vegetation map used is not from LCC2005. Please check.")
 
       veg <- data.frame(veg = na.omit(getValues(sim$vegMap)))
-      histColors <- getColors(sim$vegMap)$layer
+      histColors <- getColors(sim$vegMap)[[1]]
       rasLevels <- raster::levels(sim$vegMap)[[1]]
       veg$veg <- factor(as.numeric(veg$veg),
                         levels = rasLevels$ID,
@@ -107,8 +109,14 @@ doEvent.forestSuccessionBeacons <- function(sim, eventTime, eventType, debug = F
               legend.position = "none")
 
       # Plot ggplot first -- it is very slow
-      Plot(sim$vegTypeDistribution, title = "Vegetation cover type")
-      Plot(sim$vegMap)
+      Plot(sim$vegTypeDistribution,
+           title = if (time(sim) == P(sim)$.plotInitialTime + P(sim)$.plotInterval) "Vegetation cover type" else "" )
+
+      needNewTitle <- quickPlot:::.quickPlotEnv$quickPlot2$curr@arr
+      suppressMessages(aa <- Cache(function(...) {"out"}, needNewTitle, "VegCover")) #
+      updateTitle1 <- if (attr(aa, ".Cache")$newCache) mod$plotTitle1 else ""
+
+      Plot(sim$vegMap, title = updateTitle1)
 
       # schedule the next event
       sim <- scheduleEvent(sim, time(sim) +

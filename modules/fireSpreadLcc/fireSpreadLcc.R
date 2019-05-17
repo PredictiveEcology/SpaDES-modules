@@ -70,15 +70,19 @@ doEvent.fireSpreadLcc <- function(sim, eventTime, eventType, debug = FALSE) {
     ## stats scheduling done by burn event
   } else if (eventType == "plot.init") {
     # do stuff for this event
+    mod$plotTitle <- "Cumulative number of\nfires in a pixel" # mod$ is for module-level objects
     Plot(sim$FiresCumul,zero.color = "white", legendRange = 0:sim$maxFiresCumul,
-         cols=c("orange", "darkred"), title = "Cumulative number of\nfires in a pixel")
+         cols=c("orange", "darkred"), title = mod$plotTitle)
 
     # schedule the next event
     sim <- scheduleEvent(sim, time(sim) + P(sim)$.plotInterval, "fireSpreadLcc", "plot")
   } else if (eventType == "plot") {
-    # do stuff for this event
+    # somewhat convoluted way to prevent repeated title creation
+    needNewTitle <- quickPlot:::.quickPlotEnv$quickPlot2$curr@arr
+    suppressMessages(aa <- Cache(function(...) {"out"}, needNewTitle, "FiresCumul")) #
+    updateTitle <- if (attr(aa, ".Cache")$newCache) mod$plotTitle else ""
     Plot(sim$FiresCumul,zero.color = "white", legendRange = 0:sim$maxFiresCumul,
-         cols=c("orange", "darkred"))
+         cols=c("orange", "darkred"), title = updateTitle)
 
     if (length(sim[[P(sim)$burnStatsName]]) > 0) {
 
@@ -92,7 +96,13 @@ doEvent.fireSpreadLcc <- function(sim, eventTime, eventType, debug = FALSE) {
               axis.text.y = element_text(size = 10, colour = "black"),
               axis.title.x = element_text(size = 12, colour = "black"),
               axis.title.y = element_text(size = 12, colour = "black"))
-      suppressMessages(Plot(sim$FireSizeDistribution, title = "Fire size distribution"))
+
+      plotTitle2 <- "Fire size distribution"
+      needNewTitle <- quickPlot:::.quickPlotEnv$quickPlot2$curr@arr
+      suppressMessages(aa <- Cache(function(...) {"out"}, needNewTitle, "FiresDbn")) #
+      updateTitle <- if (attr(aa, ".Cache")$newCache) plotTitle2 else ""
+
+      suppressMessages(Plot(sim$FireSizeDistribution, title = updateTitle))
     }
 
     # schedule the next event

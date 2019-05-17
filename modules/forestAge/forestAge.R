@@ -64,14 +64,19 @@ doEvent.forestAge <- function(sim, eventTime, eventType, debug = FALSE) {
     },
     plot.init = {
       # do stuff for this event
-      Plot(sim$ageMap, legendRange = c(0, 200), title = "Stand age")
+      mod$plotTitle <- "Stand age"
+      Plot(sim$ageMap, legendRange = c(0, 200), title = mod$plotTitle)
 
       # schedule the next event
       sim <- scheduleEvent(sim, time(sim) + params(sim)$forestAge$.plotInterval,
                            "forestAge", "plot", .last())
     }, plot = {
-      # do stuff for this event
-      Plot(sim$ageMap, legendRange = c(0, 200))
+      # somewhat convoluted way to prevent repeated title creation
+      needNewTitle <- quickPlot:::.quickPlotEnv$quickPlot2$curr@arr
+      suppressMessages(aa <- Cache(function(...) {"out"}, needNewTitle, "ageMap")) #
+      updateTitle <- if (attr(aa, ".Cache")$newCache) mod$plotTitle else ""
+
+      Plot(sim$ageMap, legendRange = c(0, 200), title = updateTitle)
 
       # schedule the next event
       sim <- scheduleEvent(sim, time(sim) + params(sim)$forestAge$.plotInterval,
