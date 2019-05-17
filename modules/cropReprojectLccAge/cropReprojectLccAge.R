@@ -61,20 +61,20 @@ doEvent.cropReprojectLccAge <- function(sim, eventTime, eventType, debug = FALSE
 
 ### template initilization
 cropReprojectLccInit <- function(sim) {
-  if (proj4string(inputMapPolygon) != proj4string(lcc05)) {
-    inputMapPolygon <- spTransform(inputMapPolygon, CRS(proj4string(lcc05)))
+  if (proj4string(sim$inputMapPolygon) != proj4string(sim$lcc05)) {
+    sim$inputMapPolygon <- spTransform(sim$inputMapPolygon, CRS(proj4string(sim$lcc05)))
   }
 
-  totalArea <- rgeos::gArea(inputMapPolygon) / 1e4
+  totalArea <- rgeos::gArea(sim$inputMapPolygon) / 1e4
   if (totalArea > 100e6) {
     stop("In the current implementation, please select another, smaller polygon",
          " (less than 100 million hectares).")
   }
   #inputMapPolygon <- inputMapPolygon
-  vegMapLcc2 <- sim$crop(lcc05, inputMapPolygon)
+  vegMapLcc2 <- sim$crop(sim$lcc05, sim$inputMapPolygon)
   crs(vegMapLcc2) <- crs(sim$lcc05)
 
-  sim$vegMapLcc <- sim$mask(x = vegMapLcc2, mask = inputMapPolygon)
+  sim$vegMapLcc <- sim$mask(x = vegMapLcc2, mask = sim$inputMapPolygon)
   setColors(sim$vegMapLcc, n = 256) <- getColors(sim$lcc05)[[1]] # mask removes colors!
 
   #if(ncell(sim$vegMapLcc)>5e5) beginCluster(min(parallel::detectCores(),6))
@@ -110,7 +110,7 @@ cropReprojectLccCacheFunctions <- function(sim) {
     sim$cacheLoc <- file.path(cachePath(sim), "cropReprojectLccAge") %>%
       checkPath(create = TRUE)
     if (!file.exists(file.path(sim$cacheLoc, "backpack.db"))) {
-      createLocalRepo(sim$cacheLoc)
+      archivist::createLocalRepo(sim$cacheLoc)
     }
 
     # Step 2 - create a version of every function that is slow that includes the caching implicitly
@@ -141,13 +141,22 @@ cropReprojectLccCacheFunctions <- function(sim) {
 .inputObjects <- function(sim) {
   if(!suppliedElsewhere(sim$age)) {
     URL <- "ftp://ftp.daac.ornl.gov/data/nacp/NA_TreeAge//data/can_age04_1km.tif"
-    tryCatch(expr = {
-      sim$age <- prepInputs(targetFile = "can_age04_1km.tif",
-                            url = URL, destinationPath = dataPath(sim))},
-      error = function(err) {
-        cat("Can't download can_age04_1km.tif from", URL,
-            "\nPlease download and provide the object 'lcc05' as input for cropReprojectLccAge manually\n")
-      })
+    manualURL = "https://daac.ornl.gov/cgi-bin/dsviewer.pl?ds_id=1096"
+
+    sim$age <- try(prepInputs(targetFile = "can_age04_1km.tif",
+                          url = URL, destinationPath = dataPath(sim)))
+    if (is(sim$age, "try-error")) {
+        cat("Can't download can_age04_1km.tif which is comes in a zip file from", manualURL,
+            "\nPlease download and provide either the zip file or unzipped 'can_age04_1km.tif', putting it in this folder:\n",
+            dataPath(sim))
+      pathToDwnload <- readline("When download completed; provide the path to the folder where downloaded:")
+
+      sim$age <- try(prepInputs(targetFile = "can_age04_1km.tif",
+                                url = file.path(pathToDwnload, "NA_TREEAGE_1096.zip"),
+                                destinationPath = dataPath(sim)))
+
+
+    }
   }
 
   if(!suppliedElsewhere(sim$lcc05)) {
