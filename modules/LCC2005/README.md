@@ -1,9 +1,7 @@
----
-title: "LCC2005"
-author: "Alex Chubaty & Eliot McIntire" 
-date: "12 May 2017"
-output: html_document
----
+# LCC2005
+
+Alex Chubaty & Eliot McIntire
+12 May 2017
 
 This is an example model of forest dynamics.
 It includes simple versions of forest succession in Canada's boreal forest, a simple cellular automaton fire model, some GIS data operations to select subset areas of a larger dataset, a reclassification module from a many-class land cover to a few-class land cover, and a simple agent movement model.
