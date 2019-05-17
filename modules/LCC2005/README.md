@@ -25,7 +25,7 @@ Visualizations will be quick because a device will be opened that is not within 
 library(SpaDES)
 
 # set the main working directory
-workDirectory <- file.path(dirname(tempdir()), "Lcc2005")
+workDirectory <- file.path(dirname(tempdir()), "LCC2005")
 
 # set the directories
 inputDir <-  file.path(workDirectory, "simInputs")
@@ -65,6 +65,7 @@ paths <- list(
 )
 
 # This next step will set up the simulation using the defined parameters. It will also download data if they do not yet exist locally
+options("spades.moduleCodeChecks" = FALSE) # code checking is for advanced users
 mySim <- simInit(times = times, params = parameters, modules = modules,
                  paths = paths)
 ```
