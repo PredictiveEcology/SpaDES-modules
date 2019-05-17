@@ -16,7 +16,7 @@ defineModule(sim, list(
   timeunit = "year",
   citation = list("citation.bib"),
   documentation = list("README.txt", "LccToBeaconsReclassify.Rmd"),
-  reqdPkgs = list("raster", "RColorBrewer", "fastmatch", "dplyr"),
+  reqdPkgs = list("raster", "RColorBrewer", "fastmatch", "dplyr", "tibble"),
   parameters = rbind(
     defineParameter(".plotInitialTime", "numeric", NA_real_, NA, NA, desc = "Initial time for plotting"),
     defineParameter(".plotInterval", "numeric", NA_real_, NA, NA, desc = "Interval between plotting"),
