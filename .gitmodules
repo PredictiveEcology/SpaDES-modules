@@ -1,5 +1,3 @@
 [submodule "modules/LandMine"]
 	path = modules/LandMine
 	url = https://github.com/PredictiveEcology/LandMine
-[submodule "modules/wolfAlps"]
-	url = https://github.com/PredictiveEcology/wolfAlps
