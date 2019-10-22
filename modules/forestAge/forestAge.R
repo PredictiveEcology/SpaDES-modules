@@ -28,7 +28,8 @@ defineModule(sim, list(
     objectName = c("ageMapInit", "ageMap"),
     objectClass = c("RasterLayer", "RasterLayer"),
     sourceURL = c(
-      "ftp://ftp.daac.ornl.gov/data/nacp/NA_TreeAge//data/can_age04_1km.tif",
+      #"ftp://ftp.daac.ornl.gov/data/nacp/NA_TreeAge//data/can_age04_1km.tif",
+      "https://github.com/PredictiveEcology/SpaDES.Workshops/raw/master/can_age04_1km.tif",
       NA_character_
     ),
     other = rep(NA_character_, 2L), stringsAsFactors = FALSE),
