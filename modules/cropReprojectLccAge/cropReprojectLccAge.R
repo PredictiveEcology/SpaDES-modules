@@ -31,7 +31,8 @@ defineModule(sim, list(
     expectsInput(objectName = "lcc05", objectClass = "RasterLayer", desc = "",
                  sourceURL = "ftp://ftp.ccrs.nrcan.gc.ca/ad/NLCCLandCover/LandcoverCanada2005_250m/LandCoverOfCanada2005_V1_4.zip"),
     expectsInput(objectName = "age", objectClass = "RasterLayer", desc = "",
-                 sourceURL = "ftp://ftp.daac.ornl.gov/data/nacp/NA_TreeAge//data/can_age04_1km.tif"),
+                 #sourceURL = "ftp://ftp.daac.ornl.gov/data/nacp/NA_TreeAge//data/can_age04_1km.tif"),
+                 sourceUrl = "https://github.com/PredictiveEcology/SpaDES.Workshops/raw/master/can_age04_1km.tif"),
     expectsInput(objectName = "inputMapPolygon", objectClass = "SpatialPolygons", desc = "", sourceURL = NA)
     ),
   outputObjects = bind_rows(
