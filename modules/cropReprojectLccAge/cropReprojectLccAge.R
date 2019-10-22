@@ -9,7 +9,7 @@ defineModule(sim, list(
   keywords = c("translator", "lcc05", "Land Cover Classification", "vegetation"),
   childModules = character(),
   authors = c(person(c("Eliot", "J","B"), "McIntire", email = "eliot.mcintire@canada.ca", role = c("aut", "cre"))),
-  version = numeric_version("1.1.6"),
+  version = numeric_version("1.1.7"),
   spatialExtent = raster::extent(rep(NA_real_, 4)),
   timeframe = as.POSIXlt(c(NA, NA)),
   timeunit = NA_character_,
