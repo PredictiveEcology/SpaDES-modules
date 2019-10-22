@@ -1,7 +1,7 @@
 library(igraph)
 library(SpaDES)
 
-setwd("~/GitHub/SpaDES-modules")
+setwd("~/GitHub/PredictiveEcology/SpaDES-modules")
 
 # check all module versions, and rezip if needed
 omit <- ".Rproj.user"
