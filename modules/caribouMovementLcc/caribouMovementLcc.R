@@ -25,15 +25,16 @@ defineModule(sim, list(
     defineParameter(".plotInterval", "numeric", 1, NA, NA, desc = "Interval between plotting"),
     defineParameter(".saveInitialTime", "numeric", NA_real_, NA, NA, desc = "Initial time for saving"),
     defineParameter(".saveInterval", "numeric", NA_real_, NA, NA, desc = "Interval between save events")),
-  inputObjects = data.frame(
-    objectName = c("ageMap", "vegMap"),
-    objectClass = c("RasterLayer", "RasterLayer"),
-    sourceURL  =  c(NA_character_, NA_character_),
-    other = rep(NA_character_, 2L), stringsAsFactors = FALSE),
-  outputObjects = data.frame(
-    objectName = c("caribou", "caribouRas", "glmPlot", "glmPVals"),
-    objectClass = c("SpatialPointsDataFrame", "RasterLayer", "gg", "numeric"),
-    other = rep(NA_character_, 4L), stringsAsFactors = FALSE)
+  inputObjects = bind_rows(
+    expectsInput("ageMap", "RasterLayer", desc = "", sourceURL = ""),
+    expectsInput("vegMap", "RasterLayer", desc = "", sourceURL = "")
+  ),
+  outputObjects = binh_rows(
+    createsOutput("caribou", "SpatialPointsDataFrame", desc = ""),
+    createsOutput("caribouRas", "RasterLayer", desc = ""),
+    createsOutput("glmPlot", "gg", desc = ""),
+    createsOutput("glmPVals", "numeric", desc = "")
+  )
 ))
 
 ### event functions
