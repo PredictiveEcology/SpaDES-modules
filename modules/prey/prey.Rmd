@@ -1,0 +1,47 @@
+---
+title: "prey"
+author: "Ceres Barros"
+date: "25 January 2020"
+output: pdf_document
+---
+
+# Overview
+
+This is a very simple population density model, that simulates prey densities following a Lotka-Volterra-type model. Prey population growth follows a logistic growth equation and, in the absence of predators, is solely dependent on its growth rate, `r` and the environment's carrying capacity, `K`. In the presence of predators, prey densities decrease in function of predator population densities (`predPop`) and predation efficiency (`beta`).
+
+# Usage
+
+```{r module_usage}
+library(SpaDES)
+setPaths(modulePath = "../test")
+simModules <- list("prey")
+simParams <- list(prey = list(r = 0.1,
+                              K = 100,
+                              beta = 0.02))
+simObjects <- list("prey0" = 10)
+simTimes <- list(start = 1, end = 100)
+
+simOut <- simInitAndSpades(times = simTimes, params = simParams,
+                 modules = simModules, objects = simObjects, debug = TRUE)
+```
+
+# Events
+There are three events in this model:
+
+* `growthPrey` simulates changes in the density of the prey population (`preyPop`) at each time step (*i*) using the following equation:
+$$preyPop(i) <- preyPop(i-1) * exp(r * (1 - preyPop(i-1) / K))$$ 
+
+* `plotPrey` plots the density of the prey population in funtion of time.
+
+# Data dependencies
+There are no real data dependencies in this module, but it requires knowledge of `K`, `r` and `beta` parameter values (default to 100, 0.1 and 0.2 respectively).
+
+## Input data
+The module requires the initial prey population size (e.g. an input object supplied via the `objects` argument in `simInitAndSpades` or `simInit`functions) and predator population densities at each time step (`predPop` numeric vector).
+
+## Output data
+Outputs predator population densities for each timestep (`preyPop` numeric vector) and the number of hunted/consumed prey (`preyConsumed`).
+
+# Links to other modules
+This module should to be linked to the module `predator`, which supplies predator population densities (`predPop`) at each time step. If this module is not available, `prey` will try to make simulate prey densities in the absence of predators (constant predator density at 0) and an initial prey population value density of 2.
+

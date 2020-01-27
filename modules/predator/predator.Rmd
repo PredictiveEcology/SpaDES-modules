@@ -1,0 +1,46 @@
+---
+title: "predator"
+author: "Ceres Barros"
+date: "25 January 2020"
+output: pdf_document
+---
+
+# Overview
+
+This is a very simple population density model, that simulates predator densities following a Lotka-Volterra-type model. Predator population growth is solely dependent on the availability of prey and the predator's uptake efficiency (`delta`) of the hunted prey (`preyConsumed`), and in the absence of prey it decreases at a constant rate `gamma`.
+
+# Usage
+
+```{r module_usage}
+library(SpaDES)
+setPaths(modulePath = "../test")
+simModules <- list("predator")
+simParams <- list(predator = list(delta = 0.5,
+                                  gamma = 0.1))
+simObjects <- list("pred0" = 2)
+simTimes <- list(start = 1, end = 100)
+
+simOut <- simInitAndSpades(times = simTimes, params = simParams,
+                           modules = simModules, objects = simObjects, debug = TRUE)
+```
+
+# Events
+There are only two events in this model:
+
+* `growthPred` simulates changes in the density of the predator population (`predPop`) at each time step (*i*) using the following equation:
+$$predPop(i) <- predPop(i-1) + delta*preyConsumed - gammapredPop(i-1)$$ 
+
+* `plotPred` plots the density of the predator population in funtion of time.
+
+# Data dependencies
+There are no real data dependencies in this module, but it requires knowledge of the `delta` and `gamma` parameter values (default to 0.5 and 0.1, respectively).
+
+## Input data
+The module requires the initial predator population size (e.g. an input object supplied via the `objects` argument in `simInitAndSpades` or `simInit`functions), prey population densities at each time step (`preyPop` numeric vector) and the number of hunted/consumed prey at each time step (`preyConsumed` numeric vector).
+
+## Output data
+Outputs predator population densities for each timestep (`predPop` numeric vector).
+
+# Links to other modules
+This module should to be linked to the module `prey`, which supplies prey population densities (`preyPop`) and hunted/consumed prey (`preyConsumed`) at each time step. If this module is not available, `predator` will try to make this object (constant prey densities at 10 and a random value of prey consumed between 1 and 2) and the initial population value (1).
+
