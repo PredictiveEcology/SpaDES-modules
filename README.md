@@ -19,6 +19,12 @@ getModule("PredictiveEcology/scfm", overwrite = TRUE, modulePath = "myModules")
 
 ```
 
+For known modules, please see:
+
+```
+https://github.com/PredictiveEcology/SpaDES-modules/wiki/Current-modules-in-development
+```
+
 ## Downloading modules from this repository
 
 Another way to use modules is to get them from this repository is using the built-in functionality in the `SpaDES` package:

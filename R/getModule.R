@@ -30,5 +30,7 @@ getModule <- function(gitRepo, overwrite = FALSE, modulePath = ".") {
   file.rename(badDirname, gsub(basename(badDirname), repo, badDirname)) # it was downloaded with a branch suffix
   unlink(zipFileName)
   message(gitRepo, " downloaded and placed in ", normalizePath(repoFull))
+  browser()
+  message("To run it, try: \nfile.edit('",normalizePath(winslash = "/", file.path(repoFull, paste0(repo, ".Rmd"))),"')")
   return(normalizePath(repoFull))
 }
