@@ -11,14 +11,6 @@
 #' @export
 getModule <- function(gitRepo, overwrite = FALSE, modulePath = ".") {
   if (!dir.exists(modulePath)) dir.create(modulePath, recursive = TRUE)
-  # grSplit <- strsplit(gitRepo, "/|@")[[1]]
-  # acct <- grSplit[[1]]
-  # repo <- grSplit[[2]]
-  # if (length(grSplit) > 2) {
-  #   br <- grSplit[[3]]
-  # } else {
-  #   br <- "master"
-  # }
   gr <- splitGitRepo(gitRepo)
   ar <- file.path(gr$acct, gr$repo)
   repoFull <- file.path(modulePath, gr$repo)
@@ -60,17 +52,21 @@ splitGitRepo <- function(gitRepo) {
   list(acct = acct, repo = repo, br = br)
 }
 
-buildPackage <- function(gitRepo, overwrite = FALSE, modulePath = ".") {
+installPackage <- function(gitRepo, overwrite = FALSE) {
   gr <- splitGitRepo(gitRepo)
-  capture.output(type = "message", {
-    out <- getModule(gitRepo, overwrite, modulePath)
-  })
+  modulePath <- file.path(tempdir(), paste0(sample(LETTERS, 8), collapse = ""))
+  dir.create(modulePath, recursive = TRUE)
+  out <- getModule(gitRepo, overwrite, modulePath = modulePath)
   orig <- setwd(modulePath)
+  if (nchar(Sys.which("R")) > 0) {
   out1 <- system(paste("R CMD build ", gr$repo), intern = TRUE)
   buildingLine <- grep("building", out1, value = TRUE)
   packageTarName <- strsplit(buildingLine, "'")[[1]][2]
   if (is.na(packageTarName)) { # linux didn't have that character
     packageTarName <- gsub(paste0("^.*(", gr$repo, ".*tar.gz).*$"), "\\1", buildingLine)
   }
-  system(paste("R CMD INSTALL",packageTarName), intern = TRUE)
+  system(paste("R CMD INSTALL",packageTarName), wait = TRUE)
+  } else {
+    message("Can't install packages this way because R is not on the search path")
+  }
 }
