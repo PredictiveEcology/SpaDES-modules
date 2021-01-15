@@ -2,6 +2,15 @@
 
 A collection of available modules for use with the `SpaDES` R package ([link](http://spades.predictiveecology.org/)).
 
+## Downloading modules from GitHub
+
+The easiest way is to find the original GitHub location of the module you want to download and run this:
+
+```
+source("https://raw.githubusercontent.com/PredictiveEcology/SpaDES-modules/master/R/getModule.R")
+
+```
+
 ## Downloading modules
 
 The easiest way to use modules from this repository is using the built-in functionality in the `SpaDES` package:
