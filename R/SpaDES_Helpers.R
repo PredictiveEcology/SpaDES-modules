@@ -76,17 +76,19 @@ installPackage <- function(gitRepo, overwrite = FALSE, libPath = .libPaths()[1])
 #' @param ask Passed to \code{update.packages}
 #' @param type passed to both \code{update.packages} and \code{install.packages}. This
 #'   will set \code{"binary"} on windows, if not set, to get the binary packages from CRAN
-installSpades <- function(ask = FALSE, type, libPaths = .libPaths()[1]) {
+#' @param libPath Passed to \code{install.packages(lib = libPath, ...)}
+installSpaDES <- function(ask = FALSE, type, libPath = .libPaths()[1]) {
   args <- list(checkBuilt = TRUE, ask = ask)
-  if (identical("windows", .Platform$OS.type) && missing(type))
+  isWin <- identical("windows", .Platform$OS.type)
+  if (isWin && missing(type))
     args$type <- "binary"
   do.call(update.packages, args)
 
   #  install
   args <- list(c("SpaDES.core", "SpaDES.tools"), dependencies = TRUE)
-  if (identical("windows", .Platform$OS.type) && missing(type))
+  if (isWin && missing(type))
     args$type <- "binary"
-  if (!identical("windows", .Platform$OS.type) && !require(igraph))
-    install.packages("igraph", type = "source") # igraph needs to be installed from source
+  if (!isWin && !require(igraph))
+    install.packages("igraph", type = "source", lib = libPath) # igraph needs to be installed from source
   do.call(install.packages, args)
 }
