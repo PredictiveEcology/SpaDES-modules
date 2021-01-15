@@ -1,3 +1,9 @@
+---
+title: "SpaDES modules readme"
+author: "Eliot McIntire eliotmcintire at gmail.com"
+date: "`r format(Sys.time(), '%d %B %Y')`"
+---
+
 # SpaDES modules
 
 A collection of available modules for use with the `SpaDES` R package ([link](http://spades.predictiveecology.org/)).
@@ -19,11 +25,8 @@ getModule("PredictiveEcology/scfm", overwrite = TRUE, modulePath = "myModules")
 
 ```
 
-For known modules, please see:
-
-```
-https://github.com/PredictiveEcology/SpaDES-modules/wiki/Current-modules-in-development
-```
+**Please see list of [currently known modules](https://github.com/PredictiveEcology/SpaDES-modules/wiki/Current-modules-in-development)**
+`
 
 ## Downloading modules from this repository
 
