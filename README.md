@@ -7,6 +7,7 @@ A collection of available modules for use with the `SpaDES` R package ([link](ht
 The easiest way is to find the original GitHub location of the module you want to download and run this:
 
 ```
+# Get a function called getModule to get a SpaDES module by GitHub name
 source("https://raw.githubusercontent.com/PredictiveEcology/SpaDES-modules/master/R/getModule.R")
 
 # Get e.g., the Biomass_core module
@@ -17,15 +18,15 @@ getModule("PredictiveEcology/scfm", overwrite = TRUE)
 
 ```
 
-## Downloading modules
+## Downloading modules from this repository
 
-The easiest way to use modules from this repository is using the built-in functionality in the `SpaDES` package:
+Another way to use modules is to get them from this repository is using the built-in functionality in the `SpaDES` package:
 
     library(SpaDES)
     saveTo <- "~/SpaDES-modules" # change this to suit your needs
     downloadModule(name = "moduleName", path = saveTo)
 
-This will download and unzip the module files in the directory speficied by `saveTo`.
+This will download and unzip the module files in the directory specified by `saveTo`.
 
 ## Example download -- Game of Life
 
