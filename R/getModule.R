@@ -1,4 +1,4 @@
-getModule <- function(gitRepo, overwrite = FALSE) {
+getModule <- function(gitRepo, overwrite = FALSE, modulePath = ".") {
   grSplit <- strsplit(gitRepo, "/|@")[[1]]
   acct <- grSplit[[1]]
   repo <- grSplit[[2]]
@@ -17,14 +17,15 @@ getModule <- function(gitRepo, overwrite = FALSE) {
     else
       break
   }
-  out <- unzip(zipFileName) # unzip it
+  out <- unzip(zipFileName, exdir = modulePath) # unzip it
   if (dir.exists(repo))
     if (isTRUE(overwrite)) {
       unlink(repo, recursive = TRUE)
     } else {
       stop(repo, " directory already exists. Use overwrite = TRUE if you want to overwrite it")
     }
-  file.rename(gsub("\\./", "", unique(dirname(out))[1]), repo) # it was downloaded with a branch suffix
-  message(gitRepo, " downloaded and unzipped in ", repo)
+  badDirname <- unique(dirname(out))[1]
+  file.rename(badDirname, gsub(basename(badDirname), repo, badDirname)) # it was downloaded with a branch suffix
+  message(gitRepo, " downloaded and unzipped in ", normalizePath(file.path(modulePath, repo)))
   return(invisible())
 }
