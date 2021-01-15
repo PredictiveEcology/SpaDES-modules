@@ -54,7 +54,8 @@ splitGitRepo <- function(gitRepo) {
 
 #' Install R Package from GitHub source code
 #'
-#' A lightweight alternative to \code{devtools::install_github}
+#' A lightweight alternative to \code{devtools::install_github}. All dependencies
+#' must have been installed already for this to work.
 #'
 #' @param gitRepo A repository in the form: Account/Repository@Branch or Account/Repository@SHA
 #' @param libPath The folder where you would like the package installed. Defaults
