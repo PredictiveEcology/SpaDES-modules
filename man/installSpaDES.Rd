@@ -12,7 +12,8 @@ installSpaDES(ask = FALSE, type, libPath = .libPaths()[1])
 \item{type}{passed to both \code{update.packages} and \code{install.packages}. This
 will set \code{"binary"} on windows, if not set, to get the binary packages from CRAN}
 
-\item{libPath}{Passed to \code{install.packages(lib = libPath, ...)}}
+\item{libPath}{Passed to both \code{update.packages(lib.lob = libPath)} and
+\code{install.packages(lib = libPath, ...)}}
 }
 \description{
 Install SpaDES packages, making sure to update.packages first

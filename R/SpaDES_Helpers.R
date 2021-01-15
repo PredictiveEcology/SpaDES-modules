@@ -89,7 +89,8 @@ installGitHubPackage <- installGithubPackage
 #' @param ask Passed to \code{update.packages}
 #' @param type passed to both \code{update.packages} and \code{install.packages}. This
 #'   will set \code{"binary"} on windows, if not set, to get the binary packages from CRAN
-#' @param libPath Passed to \code{install.packages(lib = libPath, ...)}
+#' @param libPath Passed to both \code{update.packages(lib.lob = libPath)} and
+#'   \code{install.packages(lib = libPath, ...)}
 installSpaDES <- function(ask = FALSE, type, libPath = .libPaths()[1]) {
   srch <- search()
   basePkgs <- dir(tail(.libPaths(),1))
@@ -107,7 +108,10 @@ installSpaDES <- function(ask = FALSE, type, libPath = .libPaths()[1]) {
     if (!identical("y", tolower(out)))
         stop("Try to restart R with Ctrl-Alt-F10 if you are in RStudio")
   }
-  args <- list(checkBuilt = TRUE, ask = ask)
+  writeable <- unlist(lapply(.libPaths(), file.access, mode = 2)) == 0
+  if (any(writeable))
+    libPathsForUpdate <- .libPaths()[writeable]
+  args <- list(checkBuilt = TRUE, ask = ask, lib.loc = libPathsForUpdate)
   isWin <- identical("windows", .Platform$OS.type)
   if (isWin && missing(type))
     args$type <- "binary"
