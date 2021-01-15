@@ -98,7 +98,7 @@ installSpaDES <- function(ask = FALSE, type, libPath = .libPaths()[1]) {
     srch <<- grep(bp, srch, value = TRUE, invert = TRUE)
   })
 
-  if (length(nonBase) > 0) {
+  if (length(srch) > 0) {
     message("It looks like you may need to restart your R session to get an R session without",
             "R packages loaded already. If you are using RStudio and you are unable to restart without",
             "lots of R packages being pre-loaded, you may need to run this from a non-RStudio",
