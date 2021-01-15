@@ -10,11 +10,12 @@ The easiest way is to find the original GitHub location of the module you want t
 # Get a function called getModule to get a SpaDES module by GitHub name
 source("https://raw.githubusercontent.com/PredictiveEcology/SpaDES-modules/master/R/getModule.R")
 
+# Set up a few SpaDES modules in a folder called "myModules"
 # Get e.g., the Biomass_core module
-getModule("PredictiveEcology/Biomass_core", overwrite = TRUE)
+getModule("PredictiveEcology/Biomass_core", overwrite = TRUE, modulePath = "myModules")
 
 # Get e.g., the SCFM modules
-getModule("PredictiveEcology/scfm", overwrite = TRUE)
+getModule("PredictiveEcology/scfm", overwrite = TRUE, modulePath = "myModules")
 
 ```
 
