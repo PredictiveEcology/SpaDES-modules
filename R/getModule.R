@@ -18,11 +18,12 @@ getModule <- function(gitRepo, overwrite = FALSE) {
       break
   }
   out <- unzip(zipFileName) # unzip it
-  if (dir.exists(repo) && isTRUE(overwrite)) {
-    unlink(repo, recursive = TRUE)
-  } else {
-    stop(repo, " directory already exists. Use overwrite = TRUE if you want to overwrite it")
-  }
+  if (dir.exists(repo))
+    if (isTRUE(overwrite)) {
+      unlink(repo, recursive = TRUE)
+    } else {
+      stop(repo, " directory already exists. Use overwrite = TRUE if you want to overwrite it")
+    }
   file.rename(gsub("\\./", "", unique(dirname(out))[1]), repo) # it was downloaded with a branch suffix
   message(gitRepo, " downloaded and unzipped in ", repo)
   return(invisible())

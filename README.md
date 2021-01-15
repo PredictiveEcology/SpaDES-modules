@@ -9,6 +9,12 @@ The easiest way is to find the original GitHub location of the module you want t
 ```
 source("https://raw.githubusercontent.com/PredictiveEcology/SpaDES-modules/master/R/getModule.R")
 
+# Get e.g., the Biomass_core module
+getModule("PredictiveEcology/Biomass_core", overwrite = TRUE)
+
+# Get e.g., the SCFM modules
+getModule("PredictiveEcology/scfm", overwrite = TRUE)
+
 ```
 
 ## Downloading modules
