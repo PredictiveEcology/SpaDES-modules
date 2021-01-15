@@ -1,8 +1,3 @@
----
-title: "SpaDES modules readme"
-author: "Eliot McIntire eliotmcintire at gmail.com"
-date: "`r format(Sys.time(), '%d %B %Y')`"
----
 
 # SpaDES modules
 
