@@ -52,7 +52,7 @@ splitGitRepo <- function(gitRepo) {
   list(acct = acct, repo = repo, br = br)
 }
 
-installPackage <- function(gitRepo, overwrite = FALSE) {
+installPackage <- function(gitRepo, overwrite = FALSE, libPath = .libPaths()[1]) {
   gr <- splitGitRepo(gitRepo)
   modulePath <- file.path(tempdir(), paste0(sample(LETTERS, 8), collapse = ""))
   dir.create(modulePath, recursive = TRUE)
@@ -65,8 +65,28 @@ installPackage <- function(gitRepo, overwrite = FALSE) {
   if (is.na(packageTarName)) { # linux didn't have that character
     packageTarName <- gsub(paste0("^.*(", gr$repo, ".*tar.gz).*$"), "\\1", buildingLine)
   }
-  system(paste("R CMD INSTALL",packageTarName), wait = TRUE)
+  system(paste0("R CMD INSTALL --library=", normalizePath(libPath, winslash = "/"), " ",packageTarName), wait = TRUE)
   } else {
     message("Can't install packages this way because R is not on the search path")
   }
+}
+
+#' Install SpaDES packages, making sure to update.packages first
+#'
+#' @param ask Passed to \code{update.packages}
+#' @param type passed to both \code{update.packages} and \code{install.packages}. This
+#'   will set \code{"binary"} on windows, if not set, to get the binary packages from CRAN
+installSpades <- function(ask = FALSE, type, libPaths = .libPaths()[1]) {
+  args <- list(checkBuilt = TRUE, ask = ask)
+  if (identical("windows", .Platform$OS.type) && missing(type))
+    args$type <- "binary"
+  do.call(update.packages, args)
+
+  #  install
+  args <- list(c("SpaDES.core", "SpaDES.tools"), dependencies = TRUE)
+  if (identical("windows", .Platform$OS.type) && missing(type))
+    args$type <- "binary"
+  if (!identical("windows", .Platform$OS.type) && !require(igraph))
+    install.packages("igraph", type = "source") # igraph needs to be installed from source
+  do.call(install.packages, args)
 }

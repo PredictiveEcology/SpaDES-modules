@@ -5,19 +5,20 @@ A collection of available modules for use with the `SpaDES` R package ([link](ht
 
 ## Downloading modules from GitHub
 
-The easiest way is to find the original GitHub location of the module you want to download and run this:
+The easiest way is to identify the original GitHub location of the module you want (e.g., `PredictiveEcology/Biomass_core`) to download and run this:
 
 ```
-# Get a function called getModule to get a SpaDES module by GitHub name
-source("https://raw.githubusercontent.com/PredictiveEcology/SpaDES-modules/master/R/getModule.R")
+# Choose module and choose what folder to install it in. You will have to remember this folder.
+# Choice 1 -- Normal Install
+# This is easier for people who do not use git yet
+# Get the function "getModule"
+source("https://raw.githubusercontent.com/PredictiveEcology/SpaDES-modules/master/R/SpaDES_Helpers.R")
+getModule('PredictiveEcology/Biomass_core', modulePath = ".") 
 
-# Set up a few SpaDES modules in a folder called "myModules"
-# Get e.g., the Biomass_core module
-getModule("PredictiveEcology/Biomass_core", overwrite = TRUE, modulePath = "myModules")
-
-# Get e.g., the SCFM modules
-getModule("PredictiveEcology/scfm", overwrite = TRUE, modulePath = "myModules")
-
+# Choice 2 -- Git Install
+# This has the advantage that your source code will be linked to the main source code
+# Use git command line or your favorite Git client and fork/clone it with:
+git clone git@github.com:PredictiveEcology/Biomass_core
 ```
 
 **Please see list of [currently known modules](https://github.com/PredictiveEcology/SpaDES-modules/wiki/Current-modules-in-development)**
