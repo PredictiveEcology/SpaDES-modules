@@ -4,13 +4,15 @@
 \alias{installSpaDES}
 \title{Install SpaDES packages, making sure to update.packages first}
 \usage{
-installSpaDES(ask = FALSE, type, libPaths = .libPaths()[1])
+installSpaDES(ask = FALSE, type, libPath = .libPaths()[1])
 }
 \arguments{
 \item{ask}{Passed to \code{update.packages}}
 
 \item{type}{passed to both \code{update.packages} and \code{install.packages}. This
 will set \code{"binary"} on windows, if not set, to get the binary packages from CRAN}
+
+\item{libPath}{Passed to \code{install.packages(lib = libPath, ...)}}
 }
 \description{
 Install SpaDES packages, making sure to update.packages first

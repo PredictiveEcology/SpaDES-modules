@@ -52,11 +52,19 @@ splitGitRepo <- function(gitRepo) {
   list(acct = acct, repo = repo, br = br)
 }
 
-installPackage <- function(gitRepo, overwrite = FALSE, libPath = .libPaths()[1]) {
+#' Install R Package from GitHub source code
+#'
+#' A lightweight alternative to \code{devtools::install_github}
+#'
+#' @param gitRepo A repository in the form: Account/Repository@Branch or Account/Repository@SHA
+#' @param libPath The folder where you would like the package installed. Defaults
+#'   to \code{.libPaths()[1]}
+#' @export
+installGithubPackage <- function(gitRepo, libPath = .libPaths()[1]) {
   gr <- splitGitRepo(gitRepo)
   modulePath <- file.path(tempdir(), paste0(sample(LETTERS, 8), collapse = ""))
   dir.create(modulePath, recursive = TRUE)
-  out <- getModule(gitRepo, overwrite, modulePath = modulePath)
+  out <- getModule(gitRepo, overwrite = TRUE, modulePath = modulePath)
   orig <- setwd(modulePath)
   if (nchar(Sys.which("R")) > 0) {
   out1 <- system(paste("R CMD build ", gr$repo), intern = TRUE)
@@ -71,6 +79,10 @@ installPackage <- function(gitRepo, overwrite = FALSE, libPath = .libPaths()[1])
   }
 }
 
+#' @rdname installGithubPackage
+#' @export
+installGitHubPackage <- installGithubPackage
+
 #' Install SpaDES packages, making sure to update.packages first
 #'
 #' @param ask Passed to \code{update.packages}
@@ -78,6 +90,22 @@ installPackage <- function(gitRepo, overwrite = FALSE, libPath = .libPaths()[1])
 #'   will set \code{"binary"} on windows, if not set, to get the binary packages from CRAN
 #' @param libPath Passed to \code{install.packages(lib = libPath, ...)}
 installSpaDES <- function(ask = FALSE, type, libPath = .libPaths()[1]) {
+  srch <- search()
+  basePkgs <- dir(tail(.libPaths(),1))
+  basePkgs <- c(basePkgs, "GlobalEnv", "Autoloads")
+  nonBase <- lapply(basePkgs, function(bp) {
+    srch <<- grep(bp, srch, value = TRUE, invert = TRUE)
+  })
+
+  if (length(nonBase) > 0) {
+    message("It looks like you may need to restart your R session to get an R session without",
+            "R packages loaded already. If you are using RStudio and you are unable to restart without",
+            "lots of R packages being pre-loaded, you may need to run this from a non-RStudio",
+            " R session.")
+    out <- readline("Do you want to proceed anyway? Y or N")
+    if (!identical("y", tolower(out)))
+        stop("Try to restart R with Ctrl-Alt-F10 if you are in RStudio")
+  }
   args <- list(checkBuilt = TRUE, ask = ask)
   isWin <- identical("windows", .Platform$OS.type)
   if (isWin && missing(type))
@@ -86,7 +114,7 @@ installSpaDES <- function(ask = FALSE, type, libPath = .libPaths()[1]) {
 
   #  install
   args <- list(c("SpaDES.core", "SpaDES.tools"), dependencies = TRUE)
-  if (isWin && missing(type))
+   if (isWin && missing(type))
     args$type <- "binary"
   if (!isWin && !require(igraph))
     install.packages("igraph", type = "source", lib = libPath) # igraph needs to be installed from source
