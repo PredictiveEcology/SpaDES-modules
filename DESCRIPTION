@@ -1,0 +1,23 @@
+Package: SpaDES.modules
+Type: Package
+Title: A web repository for SpaDES modules and code to download them
+Description: A simple package with one main function, `getModule`, that
+    downloads a single SpaDES module at a time, by name.
+URL: 
+    https://github.com/PredictiveEcology/SpaDES-modules
+Date: 2021-01-15
+Version: 0.0.1
+Authors@R: c(
+    person("Eliot J B", "McIntire", email = "eliot.mcintire@canada.ca",
+    role = c("aut", "cre"), comment = c(ORCID = "0000-0002-6914-8316")),
+    person("Her Majesty the Queen in Right of Canada, as represented by the Minister of Natural Resources Canada",
+    role = "cph")
+    )
+Depends:
+    R (>= 3.5)
+Encoding: UTF-8
+Language: en-CA
+License: GPL-3
+VignetteBuilder: knitr, rmarkdown
+BugReports: https://github.com/PredictiveEcology/SpaDES-modules/issues
+RoxygenNote: 7.1.1
