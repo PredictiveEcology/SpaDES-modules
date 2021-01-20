@@ -91,7 +91,9 @@ installGitHubPackage <- installGithubPackage
 #'   will set \code{"binary"} on windows, if not set, to get the binary packages from CRAN
 #' @param libPath Passed to both \code{update.packages(lib.lob = libPath)} and
 #'   \code{install.packages(lib = libPath, ...)}
-installSpaDES <- function(ask = FALSE, type, libPath = .libPaths()[1]) {
+installSpaDES <- function(ask = FALSE, type, libPath = .libPaths()[1],
+                          versions = c(SpaDES.core = "1.0.5", SpaDES.tools = "0.3.6"),
+                          dontUpdate = c("scam")) {
   srch <- search()
   basePkgs <- dir(tail(.libPaths(),1))
   basePkgs <- c(basePkgs, "GlobalEnv", "Autoloads")
@@ -109,19 +111,39 @@ installSpaDES <- function(ask = FALSE, type, libPath = .libPaths()[1]) {
         stop("Try to restart R with Ctrl-Alt-F10 if you are in RStudio")
   }
   writeable <- unlist(lapply(.libPaths(), file.access, mode = 2)) == 0
-  if (any(writeable))
+  args <- list(checkBuilt = TRUE, ask = ask)
+  if (any(writeable)) {
     libPathsForUpdate <- .libPaths()[writeable]
-  args <- list(checkBuilt = TRUE, ask = ask, lib.loc = libPathsForUpdate)
+    args$lib.loc <- libPathsForUpdate
+  }
   isWin <- identical("windows", .Platform$OS.type)
   if (isWin && missing(type))
     args$type <- "binary"
-  do.call(update.packages, args)
+  olds <- do.call(old.packages, args)
+  toUpdate <- setdiff(olds[,"Package"], dontUpdate)
+  args[["pkgs"]] <- toUpdate
+  args[["dependencies"]] <- FALSE
+  do.call(install.packages, args)
 
   #  install
   args <- list(c("SpaDES.core", "SpaDES.tools"), dependencies = TRUE)
    if (isWin && missing(type))
     args$type <- "binary"
-  if (!isWin && !require(igraph))
-    install.packages("igraph", type = "source", lib = libPath) # igraph needs to be installed from source
-  do.call(install.packages, args)
+
+  if (!isWin && !dir.exists(file.path(.libPaths()[1], "igraph")))
+    install.packages("igraph", type = "source", lib = libPath, repos = "https://cran.rstudio.com") # igraph needs to be installed from source
+  ip <- installed.packages()
+  versions <- versions[args[[1]]]
+  whichOK <- unlist(lapply(seq(versions), function(ind) {
+    ok <- (!identical(as.character(packageVersion(names(versions)[ind])), versions[ind]))
+    if (identical(ok, TRUE))
+      message("skipping install of ", names(versions)[ind], "; version is OK")
+    ok
+  }))
+  args[[1]] <- args[[1]][!whichOK]
+
+  if (length(args[[1]])) {
+    do.call(install.packages, args)
+  }
+  return(invisible())
 }
