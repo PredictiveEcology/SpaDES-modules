@@ -2,6 +2,8 @@
 title: "Running Biomass_core with a sample study area in Alberta, Canada"
 author: "Eliot McIntire"
 date: "19 January 2021"
+output:
+  pdf_document: default
 editor_options:
   chunk_output_type: console
 ---
