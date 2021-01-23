@@ -12,7 +12,7 @@ See [SpaDES-modules repository](https://github.com/PredictiveEcology/SpaDES-modu
 
 # Usage example
 
-```{r setup}
+```{r setup, eval=FALSE}
 workshopPath = "~/SpaDESWorkshop"
 modulePath = file.path(workshopPath, "modules")
 if (Sys.info()[["user"]] == "emcintir") {
@@ -64,7 +64,7 @@ species <- prepSpeciesTable(speciesTable = speciesTable,
 
 ```
 
-```{r setup-simList}
+```{r setup-simList, eval=FALSE}
 times <- list(start = 2011, end = 2012)
 
 ## Usage example
@@ -99,7 +99,7 @@ mySim <- simInit(times = times, params = parameters, modules = modules, objects 
 # Can check the Landis Traits
 ```
 
-```{r run-dynamic-simulation}
+```{r run-dynamic-simulation, eval=FALSE}
 mySimOut <- spades(mySim, debug = TRUE)
 ```
 
