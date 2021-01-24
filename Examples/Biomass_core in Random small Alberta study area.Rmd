@@ -1,16 +1,18 @@
 ---
-title: "Running Biomass_core with a sample study area in Alberta, Canada"
+title: "Running `Biomass_core` with a sample study area in Alberta, Canada"
 author: "Eliot McIntire"
 date: "19 January 2021"
-output:
-  pdf_document: default
 editor_options:
   chunk_output_type: console
 ---
 
 ## Get the module
 
-See [SpaDES-modules repository](https://github.com/PredictiveEcology/SpaDES-modules) to see how to download this and other SpaDES modules.
+See [SpaDES-modules repository](https://github.com/PredictiveEcology/SpaDES-modules) to see how to download this and other SpaDES modules. Alternatively, it can be forked or cloned from github.com directly.
+
+## About the module
+
+See [Biomass_core introduction](https://github.com/PredictiveEcology/Biomass_core/blob/master/Biomass_core.Rmd)
 
 # Usage example
 

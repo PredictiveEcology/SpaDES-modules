@@ -2,8 +2,6 @@
 title: "Using Biomass_borealDataPrep with Biomass_core to estimate input data layers"
 author: "Eliot McIntire"
 date: "19 January 2021"
-output:
-  pdf_document: default
 editor_options:
   chunk_output_type: console
 ---
@@ -12,75 +10,18 @@ editor_options:
 knitr::opts_chunk$set(echo = TRUE, eval = FALSE)
 ```
 
-# Overview
-
-This module converts open datasets that are available for all of Canada's forests, into the input requirements for LandR Biomass, a forest landscape succession model derived from the Landis-II Biomass Succession Model.
-This has been partially tested for some parts of the Western Boreal Forest.
-
-Specifically, it takes the stand biomass, stand age, ecozone, ecoprovince, and ecoregion maps of Canada, as well as species specific biomass maps of Canada (defaulting to the kNN biomass maps) and derives Land-R Biomass parameter estimates from these data. Species traits are taken from those used by Dominic Cyr for LANDIS-II simulations.
-
-Keeping data preparation outside of the LandR Biomass_core module maintains the modularity of the LandR modules.
-
-# Functioning
-
-The module defaults to using kNN species cover maps and a study area in Alberta.
-After downloading all the necessary data (see above), the module proceeds to prepare the necessary objects and parameters for the simulation.
-
-These are:
-* `cohortData` - a `data.table` contaning cohort-level information per pixelGroup (a group of pixels with identical species composition, ecoregion, age structure and biomass)
-* `pixelGroupMap` - a map of the study area with pixelGroup IDs
-* `speciesEcoregion` - a table of species parameters by ecoregion
-* `sufficientLight` - a table of light requirements corresponding to each shade tolerance trait value 1:5) and each shading amount in a pixel (1:5).
-* `ecoregion` - a table with ecoregions coded as "active" or "inactive
-* `biomassMap` - a map stand biomasses used to initialise the simulation
-* `ecoregionMap` - a map of ecoregion IDs - note that ecoregions are a combination of land cover class and ecodistrict.
-* `minRelativeB` - a parameter defining the cut points to classify stand shadeness
-
-Depending on the objects, some are parametrised using empirical models, others using expert knowledge (`sufficientLight`)
-
-**NOTE:** all raster _inputs_ should be at the scale of `rasterToMatchLarge` and all raster _outputs_ will be at the scale of `rasterToMatch`.
-
-## Filling data gaps
-
-* mismatches between stand age, stand biomass and species cover are dealt with by trusting species cover first.
-  If `cover > 0` and `age == 0`, `age` is empirically estimated using a LMEM:
-
-    age ~ B * speciesCode + (1 | initialEcoregionCode) + cover
-
-  If `cover` and `age == 0` and `biomass > 0`, `biomass` is set to `0`.
-
-* species longevities are taken from published numbers from closest regions and adjusted using expert opinion
-
-* the user can choose to deal with certain land cover classes, like urban tissue and recent burns, as a data gap.
-  In this case, the module replaces these classes with the closest forest type, geographically.
-
-
-## Parametrisation
-**Species parameters**
-1. establishment probabilites - species establishment probabilities by ecoregion are empirically estimated using species cover data (converted to presence/absence) and a GLMEM defined as:
-prob. presence ~ species + (1|ecoregion)
-2. maxB and maxANPP - maxB is also estimated empirically, using stand age, stand biomass per species, per ecoregion data and a LMEM defined as:
-B ~ logAge * speciesCode + cover * speciesCode + (logAge + cover + speciesCode | ecoregionGroup)
-The model is then used to predict expected B when cover = 100 and logAge = log(longevity) for a given species in a given ecoregion.
-maxANPP is defined as maxB/30 following LANDIS-II.
-3. growth and mortality curve shapes are, at the moment, taken from LANDIS-II parameters. This is changing soon (see "in development" section below)
-
-All empirically estimated parameters can be estiamted using data from a larger study area (`studyAreaLarge`) than the one used to run the simulation (`studyArea`), if the user provides such a polygon.
-
-## In development
-**Changes to species parameters**
-1.	We run ~41,000,000 hypothetical species with full factorial combinations of longevity, ratio of maxANPP to maxBiomass, growthcurve, mortalityshape
-2.	We take the closest permanent and temporary sample plots in or near the study area and find the hypothetical species in previous step that most closely matches the growth dynamics in the PSPs. This gives us the growthcurve, mortalityshape, and ratio of maximum biomass to maximum ANPP for each species in our study area
-3.	We introduce a new parameter, actualMaxBiomass, as the maxB parameter obtained empirically cannot be easily reached in the simulation, depending on the combination of growthcurve, mortalityshape, and longevity. The actualMaxBiomass is then obtained by multiplying the empirically estiamted maxB by the ratio between the maxBiomass parameter used for the simulations in poitn 1 and the maximum simulated biomass actually achivied in the simulations (of point 1).  We use this actualMaxBiomass so that the resulting non-linear growth curves will hit the the empirically estimated maxB.
-3.	Species-specific maxANPP is estimated by multiplying the empirically estimated maxB (spatial) above and the ratio of the simulated maxANPP parameter (point 1) to the maximum simulated biomass (point 1) at the species level.
-
 ## Get the module
 
-See [SpaDES-modules repository](https://github.com/PredictiveEcology/SpaDES-modules) to see how to download this and other SpaDES modules.
+See [SpaDES-modules repository](https://github.com/PredictiveEcology/SpaDES-modules) to see how to download this and other SpaDES modules. Alternatively, it can be forked or cloned from github.com directly.
+
+## About the modules
+
+See [Biomass_core introduction](https://github.com/PredictiveEcology/Biomass_core/blob/master/Biomass_core.Rmd)
+See [Biomass_borealDataPrep introduction](https://github.com/PredictiveEcology/Biomass_borealDataPrep/blob/master/Biomass_borealDataPrep.Rmd)
 
 # Usage example
 
-```{r setup}
+```{r setup-paths-options, eval=FALSE}
 workshopPath = "~/SpaDESWorkshop"
 modulePath = file.path(workshopPath, "modules")
 if (Sys.info()[["user"]] == "emcintir") {
@@ -134,7 +75,7 @@ studyAreaName <- "RandomAB"
 
 ```
 
-```{r setup-simList}
+```{r setup-simList, eval=FALSE}
 times <- list(start = 2011, end = 2015)
 
 ## Usage example
@@ -172,7 +113,7 @@ mySim <- simInit(times = times, params = parameters, modules = modules, objects 
 # Can check the Landis Traits
 ```
 
-```{r run-dynamic-simulation}
+```{r run-dynamic-simulation, eval=FALSE}
 mySimOut <- spades(mySim, debug = TRUE)
 ```
 
