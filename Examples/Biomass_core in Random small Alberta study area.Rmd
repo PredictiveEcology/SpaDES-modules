@@ -12,7 +12,7 @@ See [SpaDES-modules repository](https://github.com/PredictiveEcology/SpaDES-modu
 
 ## About the module
 
-See [Biomass_core introduction](https://github.com/PredictiveEcology/Biomass_core/blob/master/Biomass_core.Rmd)
+See [Biomass_core introduction](https://htmlpreview.github.io/?https://raw.githubusercontent.com/PredictiveEcology/SpaDES-modules/master/Examples/Biomass_core-in-Random-small-Alberta-study-area.html)
 
 # Usage example
 
