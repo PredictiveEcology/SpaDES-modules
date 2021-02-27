@@ -201,6 +201,5 @@ makeSureAllPackagesInstalled <- function(modulePath) {
     Require::Require(require = FALSE, AllPackagesUnlisted$AllPackagesUnlisted, upgrade = FALSE)
     unlink(AllPackagesFile)
   }
-  message("All packages correctly installed and correct versions")
 }
 
