@@ -4,7 +4,13 @@
 \alias{installSpaDES}
 \title{Install SpaDES packages, making sure to update.packages first}
 \usage{
-installSpaDES(ask = FALSE, type, libPath = .libPaths()[1])
+installSpaDES(
+  ask = FALSE,
+  type,
+  libPath = .libPaths()[1],
+  versions = c(SpaDES.core = "1.0.5", SpaDES.tools = "0.3.6"),
+  dontUpdate = c("scam")
+)
 }
 \arguments{
 \item{ask}{Passed to \code{update.packages}}
