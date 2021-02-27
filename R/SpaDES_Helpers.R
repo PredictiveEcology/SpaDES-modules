@@ -164,8 +164,9 @@ makeSureAllPackagesInstalled <- function(modulePath) {
   AllPackagesFile <- "._AllPackages.rds"
   if (!file.exists(AllPackagesFile)) {
     AllModules <- dir(modulePath)
-    if (is(try(packageVersion("SpaDES.core")), "try-error")) {
+    if (is(try(packageVersion("SpaDES.core"), silent = TRUE), "try-error")) {
       if (!require("Require")) {install.packages("Require"); require("Require")}
+      message("Need to install SpaDES.core from CRAN to continue")
       Require("SpaDES.core")
     }
     AllPackages <- lapply(AllModules, function(mod) {
