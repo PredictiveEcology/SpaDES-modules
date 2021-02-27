@@ -164,6 +164,10 @@ makeSureAllPackagesInstalled <- function(modulePath) {
   AllPackagesFile <- "._AllPackages.rds"
   if (!file.exists(AllPackagesFile)) {
     AllModules <- dir(modulePath)
+    if (is(try(packageVersion("SpaDES.22")), "try-error")) {
+      if (!require("Require")) {install.packages("Require"); require("Require")}
+      Require("SpaDES.core")
+    }
     AllPackages <- lapply(AllModules, function(mod) {
       print(mod)
       SpaDES.core::packages(modules = mod, paths = modulePath)
