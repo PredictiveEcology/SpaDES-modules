@@ -25,11 +25,11 @@ defineModule(sim, list(
     defineParameter(".plotInterval", "numeric", 1, NA, NA, desc = "Interval between plotting"),
     defineParameter(".saveInitialTime", "numeric", NA_real_, NA, NA, desc = "Initial time for saving"),
     defineParameter(".saveInterval", "numeric", NA_real_, NA, NA, desc = "Interval between save events")),
-  inputObjects = bind_rows(
+  inputObjects = bindrows(
     expectsInput("ageMap", "RasterLayer", desc = "", sourceURL = ""),
     expectsInput("vegMap", "RasterLayer", desc = "", sourceURL = "")
   ),
-  outputObjects = binh_rows(
+  outputObjects = bindrows(
     createsOutput("caribou", "SpatialPointsDataFrame", desc = ""),
     createsOutput("caribouRas", "RasterLayer", desc = ""),
     createsOutput("glmPlot", "gg", desc = ""),
