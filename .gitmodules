@@ -4,3 +4,9 @@
 [submodule "modules/wolfAlps"]
 	path = modules/wolfAlps
 	url = https://github.com/PredictiveEcology/wolfAlps
+[submodule "modules/Biomass_validationKNN"]
+	path = modules/Biomass_validationKNN
+	url = https://github.com/PredictiveEcology/Biomass_validationKNN.git
+[submodule "modules/Biomass_core"]
+	path = modules/Biomass_core
+	url = https://github.com/PredictiveEcology/Biomass_core.git
