@@ -9,16 +9,24 @@ The easiest way is to identify the original GitHub location of the module you wa
 
 ```
 # Choose module and choose what folder to install it in. You will have to remember this folder.
-# Choice 1 -- Normal Install
-# This is easier for people who do not use git yet
+# Choice 1 -- Simple install
+# This is useful for most cases (e.g., don't want to clone the module via git)
 # Get the function "getModule"
-source("https://raw.githubusercontent.com/PredictiveEcology/SpaDES-modules/master/R/SpaDES_Helpers.R")
-getModule('PredictiveEcology/Biomass_core', modulePath = ".") 
+if (!require("Require")) {install.packages("Require"); library(Require)}
+Require("PredictiveEcology/SpaDES.install") # install/load this package
 
-# Choice 2 -- Git Install
+modulePath = "modules" # Create one path for all modules for a project
+getModule('PredictiveEcology/Biomass_core', modulePath = modulePath) 
+getModule('PredictiveEcology/Biomass_regeneration', modulePath = modulePath) 
+```
+
+Or, a user can get the module through git, which has the benefit of maintaining version control, but is for more advanced use.
+```
+# Choice 2 -- Git install
 # This has the advantage that your source code will be linked to the main source code
 # Use git command line or your favorite Git client and fork/clone it with:
 git clone git@github.com:PredictiveEcology/Biomass_core
+git clone git@github.com:PredictiveEcology/Biomass_regeneration
 ```
 
 **Please see list of [currently known modules](https://github.com/PredictiveEcology/SpaDES-modules/wiki/Current-modules-in-development)**
