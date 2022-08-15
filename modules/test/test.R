@@ -1,20 +1,18 @@
-stopifnot(packageVersion("SpaDES") >= "2.0.0")
-
 defineModule(sim, list(
   name = "test",
   description = "used for SpaDES package development testing",
   keywords = c("devlopment", "testing", "SpaDES package"),
   authors = c(person(c("Alex", "M"), "Chubaty",
-                     email = "alexander.chubaty@canada.ca",
+                     email = "achubaty@for-cast.ca",
                      role = c("aut", "cre"))),
   childModules = character(),
-  version = list(SpaDES = "2.0.0", test = "1.3.0"),
+  version = list(test = "1.3.1"),
   spatialExtent = raster::extent(rep(NA_real_, 4)),
   timeframe = as.POSIXlt(c(NA, NA)),
   timeunit = NA_character_, # e.g., "year,",
   citation = list("citation.bib"),
-  documentation = list("README.txt", "test.Rmd"),
-  reqdPkgs = list(),
+  documentation = list("README.md", "test.Rmd"),
+  reqdPkgs = list("SpaDES (>= 2.0.0)"),
   parameters = rbind(
     #defineParameter("paramName", "paramClass", value, min, max, "parameter description")),
     defineParameter(".plotInitialTime", "numeric", NA, NA, NA, "This describes the simulation time at which the first plot event should occur"),
