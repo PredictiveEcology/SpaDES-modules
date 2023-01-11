@@ -1,5 +1,3 @@
-stopifnot(packageVersion("SpaDES") >= "1.2.0.9009")
-
 ## Module metadata
 defineModule(sim, list(
   name = "caribou2Movements",
