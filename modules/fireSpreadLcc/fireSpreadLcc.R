@@ -1,5 +1,3 @@
-stopifnot(packageVersion("SpaDES") >= "1.2.0.9006")
-
 defineModule(sim, list(
   name = "fireSpreadLcc",
   description = "Simulate fire ignition and spread on a landscape, where spread probability varies according to percent pine. Fire size statistics are collected immediately after each burn event. Requires a global simulation parameter `.stackName` be set.",
