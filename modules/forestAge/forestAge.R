@@ -1,5 +1,3 @@
-stopifnot(packageVersion("SpaDES") >= "1.2.0.9009")
-
 defineModule(sim, list(
   name = "forestAge",
   description = "A basic forest age module based on Canada Land Cover Classes 2005.",
