@@ -1,5 +1,3 @@
-stopifnot(packageVersion("SpaDES") >= "1.2.0.9006")
-
 defineModule(sim, list(
   name = "caribouMovementLcc",
   description = "Simulate caribou movement via correlated random walk.",
