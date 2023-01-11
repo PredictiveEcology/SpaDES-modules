@@ -1,5 +1,3 @@
-stopifnot(packageVersion("SpaDES") >= "1.3.1.9010")
-
 defineModule(sim, list(
   name = "cropReprojectLccAge",
   description = paste(
