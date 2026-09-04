@@ -4,7 +4,7 @@
 model code that other people have already written, and a place to list your own
 so that others can find them.
 
-### 👉 [Browse the module list](https://github.com/PredictiveEcology/SpaDES-modules/wiki/Current-modules-in-development)
+### 👉 [Browse the module list](https://github.com/PredictiveEcology/SpaDES-modules/wiki/Modules-list)
 
 The list is grouped by subject — forests, fire, carbon, wildlife, disturbance,
 climate data, and so on. Each entry gives the name of the people who wrote it and
@@ -70,7 +70,7 @@ skeleton files for you, and you fill in the parts that do the work.
 
 Put your module in a public GitHub repository, then either
 
-- edit the [module list](https://github.com/PredictiveEcology/SpaDES-modules/wiki/Current-modules-in-development)
+- edit the [module list](https://github.com/PredictiveEcology/SpaDES-modules/wiki/Modules-list)
   yourself (it is a wiki page, anyone can edit it), or
 - [open an issue](https://github.com/PredictiveEcology/SpaDES-modules/issues)
   telling us the repository name and what the module does.
@@ -80,7 +80,7 @@ Put your module in a public GitHub repository, then either
 A handful of small, old demonstration modules sit in `modules/` (for example
 `gameOfLife` and `LCC2005`). They are kept for teaching and for historical
 reasons, and are no longer maintained. Anything you are likely to want for real
-work is in the [module list](https://github.com/PredictiveEcology/SpaDES-modules/wiki/Current-modules-in-development).
+work is in the [module list](https://github.com/PredictiveEcology/SpaDES-modules/wiki/Modules-list).
 
 ## Where to get help
 
