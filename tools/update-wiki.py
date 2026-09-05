@@ -29,6 +29,9 @@ import subprocess
 import sys
 from concurrent.futures import ThreadPoolExecutor
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import classify as _cls
+
 HERE = os.path.dirname(os.path.abspath(__file__))
 TEMPLATE = os.path.join(HERE, "modules-list.template.md")
 
@@ -289,6 +292,26 @@ def marker(n12: int, archived: bool, legacy: bool,
     return s
 
 
+TYPE_RULE = {
+ "Data": "fetches or prepares inputs — `prepInputs()`, a real `sourceURL`, a database or Drive read, or `data`/`studyArea` in the name",
+ "Parameterizing": "fits a statistical model itself. A model merely *defined* for another module to fit does not count",
+ "Prediction": "steps forward through time, but its output never comes back to it",
+ "Simulation": "steps forward **and** its output returns — directly, or round a loop through other modules",
+ "Summary": "renders reports, or summarises many runs",
+ "Translator": "exists to let one module talk to another",
+ "Library": "builds a reusable reference set — factorial designs, yield tables — for other runs to compare against",
+ "Validation": "compares output against independent observations",
+ "In development": "no signal found in code, description or README",
+}
+
+
+def type_legend() -> str:
+    rows = ["| | type | means |", "|---|---|---|"]
+    for t, rule in TYPE_RULE.items():
+        rows.append(f"| {_cls.ICON[t]} | **{t}** | {rule} |")
+    return "\n".join(rows)
+
+
 def scan_table(counts: list[tuple[str, int, int]]) -> str:
     rows = ["| account | public repos | modules found |", "|---|---|---|"]
     for acct, nrepo, nmod in sorted(counts, key=lambda x: -x[1]):
@@ -376,12 +399,27 @@ def main() -> int:
         archived = bool(info.get("isArchived", info.get("archived", False)))
         return pair, dict(n12=commits_since(owner, repo, br, since),
                           archived=archived, legacy=detect_legacy(src) if src else False,
-                          resolved=bool(src))
+                          resolved=bool(src), src=src, branch=br, modname=modname)
 
     st = {}
     with ThreadPoolExecutor(max_workers=WORKERS) as ex:
         for pair, d in ex.map(status, entries):
             st[pair] = d
+
+    # -- 3b. module types -------------------------------------------------
+    print("3b/5 classifying module types", file=sys.stderr)
+    sources = {d["modname"]: d["src"] for d in st.values() if d and d.get("src")}
+    types, comps = _cls.from_sources(sources)
+    undetermined = [m for m, t in types.items() if t == ["In development"]]
+    if undetermined:                       # last resort: read their prose
+        bymod = {d["modname"]: (o, r, d["branch"])
+                 for (o, r), d in st.items() if d and d.get("src")}
+        def getprose(m):
+            o, r, br = bymod[m]
+            return m, "".join(raw(o, r, br, f) for f in ("README.md", f"{m}.Rmd"))
+        with ThreadPoolExecutor(max_workers=WORKERS) as ex:
+            prose = dict(ex.map(getprose, undetermined))
+        types, comps = _cls.from_sources(sources, prose)
 
     # -- 4. render -------------------------------------------------------
     print("4/5  rendering", file=sys.stderr)
@@ -389,6 +427,14 @@ def main() -> int:
     cinfo0 = gh_json("repos/bcgov/castor") or {}
     castor_live = bool(commits_since("bcgov", "castor",
                                      cinfo0.get("default_branch", "main"), since))
+
+    def typeicons(modname):
+        """Type icons follow the status markers, separated by a middot."""
+        t = types.get(modname)
+        if not t:
+            return ""
+        return " · " + " ".join(_cls.ICON[x.rstrip("*")] + ("*" if x.endswith("*") else "")
+                                for x in t)
 
     def annotate(m: re.Match) -> str:
         head = m["pre"] + m["label"] + m["mid"]
@@ -405,9 +451,10 @@ def main() -> int:
             mk = "🟢" if d["n12"] >= 1 else ("🔵" if castor_live else "⚪")
             if d["legacy"]:
                 mk += " ⚠"
-            return f"{head} {mk}{m['rest']}"
+            return f"{head} {mk}{typeicons(d.get('modname'))}{m['rest']}"
         n_users, newest = usage.get(m["repo"], (0, ""))
-        return f"{head} {marker(d['n12'], d['archived'], d['legacy'], n_users, newest, user_cutoff)}{m['rest']}"
+        mk = marker(d["n12"], d["archived"], d["legacy"], n_users, newest, user_cutoff)
+        return f"{head} {mk}{typeicons(d.get('modname'))}{m['rest']}"
 
     page = BULLET_RX.sub(annotate, template)
 
@@ -430,6 +477,7 @@ def main() -> int:
     page = page.replace("%CASTOR_PUSHED%", (cinfo.get("pushed_at") or "")[:10])
     page = page.replace("%GENERATED%", today.isoformat())
     page = page.replace("%SCAN_TABLE%", scan_table(counts))
+    page = page.replace("%TYPE_LEGEND%", type_legend())
     page = page.replace("%N_PROJECT_REPOS%", str(n_projects))
 
     open(args.out, "w", encoding="utf-8").write(page)

@@ -54,6 +54,22 @@ modules = file.path("PredictiveEcology/scfm@development/modules",
 | ⚠ | still uses the retired `raster` / `sp` packages, so may need work to run on a current stack |
 | ·N | number of public projects that list this module |
 
+**What each module does**
+
+After the status markers, each entry carries one or more type icons saying what kind
+of work the module does. A module usually does more than one.
+
+%TYPE_LEGEND%
+
+`⏩` and `🔁` are the same question asked twice: both step forward through time, but
+only 🔁 gets its own output back. Fire changes vegetation, which changes fuels, which
+changes fire — so the fire modules form a loop. Birds do not change the forest, so bird
+models predict forward and stop.
+
+These are worked out from the module's code — what it calls, what it declares as inputs
+and outputs, and whether those outputs come back to it through other modules. A type
+marked `*` was inferred from the module's README instead, and is less reliable.
+
 **Which accounts were scanned.** Every public repository in these eight accounts was
 checked (a repository counts as a module if it has a `<name>.R` at its root):
 

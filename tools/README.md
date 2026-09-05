@@ -59,6 +59,56 @@ is still used is not the same thing as an abandoned one, and commit recency alon
 tell them apart — `fireSense_EscapeFit` had no commits for a year while 13 projects
 depended on it. That is why the usage graph exists.
 
+## Module types
+
+Each entry also carries type icons, after the status markers:
+
+```
+📥 Data            fetches or prepares inputs
+🎯 Parameterizing  fits a statistical model itself
+⏩ Prediction      steps forward through time, output never returns
+🔁 Simulation      steps forward AND its output returns
+📋 Summary         renders reports, summarises runs
+🔌 Translator      lets one module talk to another
+📚 Library         builds a reusable reference set
+✅ Validation      compares output against independent observations
+🚧 In development  no signal in code, description or README
+```
+
+`tools/classify.py` works these out, in this order of evidence:
+
+1. **Code.** What the module calls, and what it declares as `expectsInput` /
+   `createsOutput`.
+2. **Its own `description`** field, for Translator and Library.
+3. **The README, last resort only**, and the resulting type is marked `*` on the page.
+
+**⏩ versus 🔁 is a whole-workflow question, not a per-module one.** A module is 🔁 if its
+output comes back to it — directly, or round a loop through other modules. `fireSense`
+produces a burn map that drives regeneration, which changes vegetation, which changes
+fuels, which changes fire: nothing inside `fireSense` reveals that, only the graph does.
+So the classifier builds the whole producer/consumer graph over recurring modules and
+looks for strongly-connected components. Bird models sit outside any such loop — birds
+do not change the forest — which is why they stay ⏩.
+
+Two guards matter there:
+
+- **Static plumbing is excluded** (`studyArea`, `rasterToMatch`, `sppEquiv`, …). Left in,
+  unrelated modules that merely share setup objects appear to form loops.
+- **`BOGUS` lists declared-but-not-produced outputs.** `caribou_SSUD` declares
+  `timeSinceFire` as an output but only ever assigns it in `.inputObjects` as a default
+  for a missing input — a declaration error in the module. Left uncorrected it put
+  caribou inside the fire loop.
+
+**Boilerplate READMEs are detected and ignored.** Several modules still carry the
+unedited template, and its wording scores against the prose rules. They are found by
+comparing READMEs to each other after blanking module names — the four `SBW_*` are 98%
+identical, `bird_modelPredict` and `extractLand` 96%. Those modules stay 🚧, which is the
+honest answer: they describe themselves nowhere.
+
+**Object declarations come in three styles** and all must be parsed, or feedback loops go
+missing: `expectsInput("x", …)`, `expectsInput(objectName = "x", …)`, and single quotes.
+Missing the latter two once made Simulation look half as common as it is.
+
 ## How it runs
 
 1. **Enumerate** — every public repo in `ACCOUNTS`. A repo is a module if it has
