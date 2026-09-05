@@ -8,3 +8,6 @@
 .Rproj.user
 *-Ex.R
 *.tif
+tools/.wiki-cache/
+tools/__pycache__/
+__pycache__/
